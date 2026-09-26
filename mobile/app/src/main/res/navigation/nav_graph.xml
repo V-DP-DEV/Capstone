@@ -3,26 +3,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.capstone.myapplication.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
+        android:id="@+id/loginFragment"
+        android:name="com.capstone.myapplication.Authentication.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/activity_login">
 
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_loginFragment_to_userDashboard"
+            app:destination="@id/userDashboard" />
+
+        <action
+            android:id="@+id/action_loginFragment_to_adminDashboard"
+            app:destination="@id/adminDashboard" />
+
     </fragment>
+
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.capstone.myapplication.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        android:id="@+id/userDashboard"
+        android:name="com.capstone.myapplication.Dashboard.UserDashboard"
+        android:label="Home"
+        tools:layout="@layout/activity_user_dashboard" />
 
-        <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
-    </fragment>
+    <fragment
+        android:id="@+id/adminDashboard"
+        android:name="com.capstone.myapplication.Dashboard.AdminDashboard"
+        android:label="Admin Dashboard"
+        tools:layout="@layout/activity_admin_dashboard" />
+
 </navigation>

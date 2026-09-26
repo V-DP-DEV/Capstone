@@ -1,4 +1,4 @@
-package com.capstone.myapplication.Dashboard;
+package com.capstone.myapplication.Authentication;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,9 +11,9 @@ import androidx.fragment.app.Fragment;
 
 import com.capstone.myapplication.R;
 
-public class UserDashboard extends Fragment {
+public class LoginFragment extends Fragment {
 
-    public UserDashboard() {
+    public LoginFragment() {
         // Required empty public constructor
     }
 
@@ -24,6 +24,6 @@ public class UserDashboard extends Fragment {
             @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_user_dashboard, container, false);
+        return inflater.inflate(R.layout.fragment_login, container, false);
     }
 }
