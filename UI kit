@@ -1,1 +1,271 @@
+<resources>
+
+    < Brand colors>
+    <color name="primary">#A14078</color> (purple)
+    <color name="primary_dark">#3D132C</color>
+    <color name="secondary">#6d2950</color>
+
+    <color name="primary">#F58F00</color> (orange)
+        <color name="primary_dark">#8d5000</color>
+        <color name="secondary">#C06F00</color>
+
+<color name="primary">#312CAA</color> (blue)
+        <color name="primary_dark">#181562</color>
+        <color name="secondary">#5551d4</color>
+
+        <color name="primary">#026110</color> (green)
+                <color name="primary_dark">#001a01</color>
+                <color name="secondary">#013c06</color>
+
+    < Backgrounds>
+    <color name="background">#FFFFFF</color>
+    <color name="surface">#EEECFB</color>
+    <color name="card_background">#F6F8FC</color>
+
+    <Text >
+    <color name="text_primary">#000000</color>
+    <color name="text_secondary">#1C1C28</color>
+    <color name="text_tertiary">#8A8A97</color>
+    <color name="text_hint">#B7C0D2</color>
+    <color name="text_white">#FFFFFF</color>
+
+
+    <Feedback>
+    <color name="success">#388E3C</color>
+    <color name="error">#D32F2F</color>
+    <color name="warning">#F9A825</color>
+    <color name="info">#1976D2</color>
+
+</resources>
+
+<resources>
+
+    < Spacing>
+    <dimen name="spacing_xs">4dp</dimen>
+    <dimen name="spacing_sm">8dp</dimen>
+    <dimen name="spacing_md">12dp</dimen>
+    <dimen name="spacing_lg">16dp</dimen>
+    <dimen name="spacing_xl">24dp</dimen>
+    <dimen name="spacing_xxl">32dp</dimen>
+
+    < Corners>
+    <dimen name="radius_small">6dp</dimen>
+    <dimen name="radius_medium">10dp</dimen>
+    <dimen name="radius_large">16dp</dimen>
+
+    < Buttons >
+    <dimen name="button_height">52dp</dimen>
+
+    < Inputs >
+    <dimen name="input_height">52dp</dimen>
+
+    <Cards >
+    <dimen name="card_padding">16dp</dimen>
+
+</resources>
+
+<resources>
+
+    <style name="TextTitle">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextHeading">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextBody">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextSecondary">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+
+    <style name="TextCaption">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+
+</resources>
+
+primary button
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+<solid android:color="#FF868DA6"/>
+<corners android:radius="80dp"/>
+</shape>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent">
+<!--  Frame: Inner Container (440x56)  -->
+<!--  FRAME: Form Wrapper  -->
+<LinearLayout android:id="@+id/form_wrapper" android:orientation="vertical" android:layout_width="376dp" android:layout_height="56dp">
+<!--  INSTANCE: Button  -->
+<LinearLayout android:id="@+id/button" android:orientation="horizontal" android:layout_width="376dp" android:layout_height="56dp" android:background="@drawable/bg_rounded" android:paddingLeft="28dp" android:paddingTop="14dp" android:paddingRight="28dp" android:paddingBottom="14dp">
+<!--  TEXT: Text  -->
+<TextView android:id="@+id/text" android:text="Send reset link" android:textSize="16sp" android:textColor="#FFFFFFFF" android:gravity="center" android:fontFamily="Inter" android:layout_width="114dp" android:layout_height="24dp"/>
+<!--  INSTANCE: Outline Icons/Arrow rigth  -->
+<LinearLayout android:id="@+id/outline_icons_arrow_rigth" android:orientation="vertical" android:layout_width="16dp" android:layout_height="16dp" android:paddingLeft="2.3999998569488525dp" android:paddingTop="2.3999998569488525dp" android:paddingRight="2.3999998569488525dp" android:paddingBottom="2.3999998569488525dp">
+<!--  VECTOR: Element  -->
+<ImageView android:id="@+id/element" android:src="@drawable/ic_element" android:scaleType="fitXY" android:layout_width="11dp" android:layout_height="11dp"/>
+</LinearLayout>
+</LinearLayout>
+</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+<resources>
+<dimen name="dp_2.3999998569488525">2.3999998569488525dp</dimen>
+<dimen name="dp_11">11dp</dimen>
+<dimen name="dp_14">14dp</dimen>
+<dimen name="dp_16">16dp</dimen>
+<dimen name="dp_24">24dp</dimen>
+<dimen name="dp_28">28dp</dimen>
+<dimen name="dp_32">32dp</dimen>
+<dimen name="dp_56">56dp</dimen>
+<dimen name="dp_114">114dp</dimen>
+<dimen name="dp_376">376dp</dimen>
+<dimen name="dp_440">440dp</dimen>
+</resources>
+<resources>
+<style name="TextStyle_16sp">
+<item name="android:textSize">16sp</item>
+<item name="android:textColor">#FFFFFFFF</item>
+<item name="android:fontFamily">Inter</item>
+</style>
+</resources>
+
+-Text field
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <solid android:color="@color/background"/>
+
+    <stroke
+        android:width="1dp"
+        android:color="@color/border"/>
+
+    <corners android:radius="@dimen/radius_medium"/>
+
+    <padding
+        android:left="16dp"
+        android:right="16dp"/>
+
+</shape>
+
+-navbar
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://android.com"
+    android:id="@+id/Frame_1000006028"
+    android:layout_width="440dp"
+    android:layout_height="110dp">
+
+    <LinearLayout
+        android:id="@+id/Navigation_Bar"
+        android:layout_width="440dp"
+        android:layout_height="110dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingLeft="28dp"
+        android:paddingRight="28dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="28dp">
+
+        <LinearLayout
+            android:id="@+id/Nav_Wrapper"
+            android:layout_width="384dp"
+            android:layout_height="70dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+
+            <!-- Button 1 -->
+            <LinearLayout
+                android:id="@+id/Button_Rounded_1"
+                android:layout_width="72dp"
+                android:layout_height="54dp"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
+
+                <ImageView
+                    android:id="@+id/Outline_Icons_Home"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:tint="#312CAA" />
+
+                <TextView
+                    android:id="@+id/Text_Home"
+                    android:layout_width="29dp"
+                    android:layout_height="7dp"
+                    android:gravity="center"
+                    android:textSize="10sp"
+                    android:text="Home"
+                    android:textColor="#868DA6"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- Button 2 -->
+            <LinearLayout
+                android:id="@+id/Button_Rounded_2"
+                android:layout_width="72dp"
+                android:layout_height="54dp"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
+
+                <ImageView
+                    android:id="@+id/Outline_Icons_Search"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:tint="#868DA6" />
+
+                <TextView
+                    android:id="@+id/Text_Search"
+                    android:layout_width="34dp"
+                    android:layout_height="7dp"
+                    android:gravity="center"
+                    android:textSize="10sp"
+                    android:text="Search"
+                    android:textColor="#868DA6"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- Button 3 (Truncated in original source) -->
+            <LinearLayout
+                android:id="@+id/Button_Rounded_3"
+                android:layout_width="72dp"
+                android:layout_height="54dp"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
+
+                <ImageView
+                    android:id="@+id/Outline_Icons_Plus"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>
+
+
+
 
