@@ -1,14 +1,24 @@
 <?php
     class AuthController{
-        public function test(){
-            $token = Request::getToken();
-            JsonResponse::success(['token'=>getenv("DB_HOST")]);
-        }
-
         public function login(){
             Request::requireMethod("POST");
             $data = Request::json();
-            JsonResponse::success($data);
+            $result = AuthService::login($data);
+            JsonResponse::success($result);
+        }
+
+        public function logout(){
+            Request::requireMethod("POST");
+            $token = Request::getToken();
+            $result = AuthService::logout($token);
+            JsonResponse::success();
+        }
+
+        public function refresh(){
+            Request::requireMethod("POST");
+            $token = Request::getToken();
+            $result = AuthService::refresh($token);
+            JsonResponse::success($result);
         }
     }
 ?>

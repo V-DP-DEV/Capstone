@@ -5,7 +5,9 @@
         private static function connect(){
             if (self::$conn ===null){
                 self::$conn = new PDO("mysql:host=".getenv("DB_HOST") . ";dbname=". getenv('DB_NAME').";",getenv('DB_USER'),getenv('DB_PASSWORD'));
+
             }
+            self::$conn->exec("SET time_zone ='+00:00'");
             return self::$conn;
         }
 
@@ -25,6 +27,22 @@
             $stmt = self::connect()->prepare($sql);
             $stmt->execute($params);
             return $stmt->rowCount();
+        }
+
+        public static function lastInsertId(){
+            return self::$conn->lastInsertId();
+        }
+
+        public static function transaction(callable $callback){
+            try{
+                self::connect()->beginTransaction();
+                $result = $callback();
+                self::$conn->commit();
+                return $result;
+            }catch(Exception $e){
+                self::$conn->rollBack();
+                throw $e;
+            }
         }
     }
 ?>

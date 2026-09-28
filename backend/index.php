@@ -1,5 +1,8 @@
 <?php
     require_once 'autoLoad.php';
-    Env::load(__DIR__ . '/.env');
+    $config = require_once 'config.php';
+    Config::load($config);
+    date_default_timezone_set('UTC');
+    Env::load(Config::get('env_path'));
     Router::handle();
 ?>

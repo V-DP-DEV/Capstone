@@ -30,3 +30,9 @@ captures/
 Thumbs.db
 
 .env
+
+deploy.sh
+deployments/
+
+config.php
+hash.php

@@ -1,33 +1,42 @@
 <?php
     class AuthMiddleware{
-        public static function handle(){
-            $header = $_SERVER['HTTP_AUTHORIZATION'] ?? null;
-            if(!$header || !str_starts_with($header,'Bearer ')){
-                throw new UnauthorizedException();
+        public static function requireToken(){
+            
+
+            $token = Request::getToken();
+            if(!$token){
+                throw new UnauthorizedException("Bearer token not specified or in incorrect format");
             }
 
-            $token = substr($header,7);
-            $tokenHash = hash('sha256',$token);
+            $tokenHash = Token::hashToken($token);
             
-            $auth = Db::queryOne("",[$tokenHash]);
-            //do db check
-
+            $auth = AuthTokenRepository::findByTokenHash($tokenHash);
             if(!$auth){
                 throw new UnauthorizedException();
             }
 
-            //extract from db call
-            //RequestContext::setUser();
+            if($auth['revoked_at'] !== null){
+                throw new UnauthorizedException("Token revoked");
+            }
+
+            if($auth['expires_at'] < date('Y-m-d H:i:s')){
+                AuthTokenRepository::revokeByTokenHash($tokenHash);
+                Log::tryAuthLog($auth['user_id'],'LOGIN_EXPIRED',$auth['id']);
+                throw new UnauthorizedException("Token expired");
+            }
+            
+            $user = UserRepository::getUserRole($auth['user_id']);
+            RequestContext::setUser($auth['user_id'],$user['role']);
         }
         
         public static function requireUser(){
-            if(RequestContext::getRole()!== 'user'){
+            if(RequestContext::getRole()!== 'USER'){
                 throw new ForbiddenException();
             }
         }
 
         public static function requireAdmin(){
-            if(RequestContext::getRole()!== 'admin'){
+            if(RequestContext::getRole()!== 'ADMIN'){
                 throw new ForbiddenException();
             }
         }

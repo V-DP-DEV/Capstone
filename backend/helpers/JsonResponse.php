@@ -35,7 +35,8 @@
                     "message" => "An unexpected error occurred",
                     "details" => [
                         "file"=>$e->getFile(),
-                        "line"=>$e->getLine()
+                        "line"=>$e->getLine(),
+                        "message"=>$e->getMessage()
                     ]
                 ]
             ]);

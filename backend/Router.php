@@ -3,7 +3,7 @@
         private static array $publicRoutes = [
             'Auth/login',
             'Auth/register',
-            'Auth/test'
+            'Auth/logout'
         ];
 
         public static function handle(){
@@ -11,7 +11,8 @@
                 $path = trim(parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH),'/');
                 
                 //fix later when deploying
-                $basePath = 'mywebsite';
+                $basePath = Config::get('base_url');
+
 
                 if(str_starts_with($path,$basePath .'/')){
                     $path = substr($path, strlen($basePath) +1);
@@ -35,14 +36,13 @@
                 }
 
                 if(!in_array($path,self::$publicRoutes)){
-                    AuthMiddleware::handle();
-                }
-                else{
-                    if($controllerName ==="adminController"){
+                    AuthMiddleware::requireToken();
+
+                    if($controllerName ==="AdminController"){
                         AuthMiddleware::requireAdmin();
                     }
 
-                    if($controllerName ==="userController"){
+                    if($controllerName ==="UserController"){
                         AuthMiddleware::requireUser();
                     }
                 }

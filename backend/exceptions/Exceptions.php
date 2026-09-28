@@ -67,7 +67,7 @@
         ){
             parent::__construct(
                 400,
-                "VALIDATION_ERROR",
+                "FIELD_VALIDATION_ERROR",
                 $message,
                 $fields
             );

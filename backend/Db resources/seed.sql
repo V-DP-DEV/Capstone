@@ -1,0 +1,3 @@
+INSERT INTO users (email,password,role) VALUES ('admin@example.com','$2y$10$\/0VAp1X3HiYiWX14lMCjZuqOzIkZY\/WtWemSM9ovx1ektl2.C4s3S','ADMIN');
+INSERT INTO users (email,password,role) VALUES ('user@example.com','$2y$10$\/0VAp1X3HiYiWX14lMCjZuqOzIkZY\/WtWemSM9ovx1ektl2.C4s3S','USER');
+INSERT INTO users (email,password,role) VALUES ('user2@example.com','$2y$10$\/0VAp1X3HiYiWX14lMCjZuqOzIkZY\/WtWemSM9ovx1ektl2.C4s3S','USER');
