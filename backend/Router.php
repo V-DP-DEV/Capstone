@@ -13,11 +13,11 @@
                 //fix later when deploying
                 $basePath = Config::get('base_url');
 
-
                 if(str_starts_with($path,$basePath .'/')){
                     $path = substr($path, strlen($basePath) +1);
                 }
 
+                $path = ucfirst($path);
                 $parts = explode("/",$path);
 
                 if(count($parts) < 2){
