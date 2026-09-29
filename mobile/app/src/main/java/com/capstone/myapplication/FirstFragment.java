@@ -59,9 +59,7 @@ public class FirstFragment extends Fragment {
         String deviceId = UUID.randomUUID().toString();
         //only for login
         String deviceName = Build.MANUFACTURER + " " + Build.MODEL;
-
         request.setBody("{\"email\":\"admin@example.com\",\"password\":\"Password123\",\"deviceId\":\""+ deviceId +"\",\"deviceName\":\""+deviceName+"\"}");
-
         request.setMethodPost();
         request.execute(new ApiCallback() {
             @Override

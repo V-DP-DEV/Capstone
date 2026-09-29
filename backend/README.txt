@@ -81,7 +81,7 @@ Clarity
 structure
 introduction
 
-Technical
+-Technical-
 Definition
 Understanding
 Application
@@ -89,7 +89,7 @@ Architecture
 Implementation
 Past experience
 
-Problem solving
+-Problem solving-
 Trouble shooting
 Root cause analysis
 Risk awareness
