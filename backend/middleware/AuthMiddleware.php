@@ -1,33 +1,53 @@
 <?php
     class AuthMiddleware{
-        public static function handle(){
-            $header = $_SERVER['HTTP_AUTHORIZATION'] ?? null;
-            if(!$header || !str_starts_with($header,'Bearer ')){
-                throw new UnauthorizedException();
+        //require token
+        public static function requireToken(){
+            
+            //get the token
+            $token = Request::getToken();
+            //if no token throw not specified or incorrect format
+            if(!$token){
+                throw new UnauthorizedException("Bearer token not specified or in incorrect format");
             }
 
-            $token = substr($header,7);
-            $tokenHash = hash('sha256',$token);
+            //hash the token
+            $tokenHash = Token::hashToken($token);
             
-            $auth = Db::queryOne("",[$tokenHash]);
-            //do db check
-
+            //find the token
+            $auth = AuthTokenRepository::findByTokenHash($tokenHash);
+            //if not found throw unauthorized
             if(!$auth){
                 throw new UnauthorizedException();
             }
 
-            //extract from db call
-            //RequestContext::setUser();
+            //if revoked throw error revoked
+            if($auth['revoked_at'] !== null){
+                throw new UnauthorizedException("Token revoked");
+            }
+
+            //if expired, revoke token, log and throw expirer
+            if($auth['expires_at'] < date('Y-m-d H:i:s')){
+                AuthTokenRepository::revokeByTokenHash($tokenHash);
+                Log::tryAuthLog($auth['user_id'],'LOGIN_EXPIRED',$auth['id']);
+                throw new UnauthorizedException("Token expired");
+            }
+            
+            //get the user details
+            $user = UserRepository::getUserRole($auth['user_id']);
+            //set the requestContext with role and user_id
+            RequestContext::setUser($auth['user_id'],$user['role']);
         }
         
         public static function requireUser(){
-            if(RequestContext::getRole()!== 'user'){
+            //if not user throw exception
+            if(RequestContext::getRole()!== 'USER'){
                 throw new ForbiddenException();
             }
         }
 
         public static function requireAdmin(){
-            if(RequestContext::getRole()!== 'admin'){
+            //if not admin throw exception
+            if(RequestContext::getRole()!== 'ADMIN'){
                 throw new ForbiddenException();
             }
         }

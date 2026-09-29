@@ -1,4 +1,6 @@
 <?php
+    //defines exceptions to be thrown.
+    //each have a status code, error code, and a message and some have data but its not forced
     class ApiException extends Exception{
         public int $statusCode;
         public string $errorCode;
@@ -67,7 +69,7 @@
         ){
             parent::__construct(
                 400,
-                "VALIDATION_ERROR",
+                "FIELD_VALIDATION_ERROR",
                 $message,
                 $fields
             );
