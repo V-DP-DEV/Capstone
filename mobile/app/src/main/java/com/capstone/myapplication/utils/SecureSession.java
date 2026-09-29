@@ -17,6 +17,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 public class SecureSession {
+  //consts
   private static final String KEYSTORE_NAME = "AndroidKeyStore";
   private static final String KEY_ALIAS  = "session_key";
   private static final String KEY_IV = "iv";
@@ -25,6 +26,7 @@ public class SecureSession {
 
   private static SharedPreferences preferences;
 
+  //creates sessionClass and context is needed for shared prefs
   public SecureSession(Context context){
    preferences = context.getApplicationContext().getSharedPreferences(KEY_PREF_NAME,MODE_PRIVATE);
   }
@@ -50,17 +52,21 @@ public class SecureSession {
         .build()
     );
 
-
+    //generate the key
     return keyGenerator.generateKey();
   }
 
   public void saveToken(String token) throws Exception{
+    //get key
     SecretKey key = getOrCreateKey();
+    //get cipher 
     Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
     cipher.init(Cipher.ENCRYPT_MODE,key);
+    //encrypt and get iv
     byte[] encrypted = cipher.doFinal(token.getBytes(StandardCharsets.UTF_8));
     byte[] iv = cipher.getIV();
 
+    //save in preferences
     preferences.edit().
         putString(KEY_TOKEN,Base64.encodeToString(encrypted,Base64.NO_WRAP))
         .putString(KEY_IV,Base64.encodeToString(iv,Base64.NO_WRAP))
@@ -68,29 +74,39 @@ public class SecureSession {
   }
 
   public String getToken() throws Exception{
+    //get token and iv from prefs
     String encryptedString =
         preferences.getString(KEY_TOKEN, null);
 
     String ivString =
         preferences.getString(KEY_IV, null);
 
+    //if empty dont continue and return null key
     if(encryptedString==null || ivString==null){
       return null;
     }
+
+    //decode
     SecretKey key = getOrCreateKey();
     byte[] encrypted = Base64.decode(encryptedString, Base64.NO_WRAP);
     byte[] iv = Base64.decode(ivString,Base64.NO_WRAP);
 
+    ///set cipher to decrypt
     Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
     GCMParameterSpec spec = new GCMParameterSpec(128,iv);
     cipher.init(Cipher.DECRYPT_MODE,key,spec);
 
+    //decrypt
+
     byte[] decrypted = cipher.doFinal(encrypted);
+    //return encoded string
     return new String(decrypted,StandardCharsets.UTF_8);
   }
   public void clear(){
+    //clear preferences
     preferences.edit().clear().apply();
 
+    //try to clear keystore
     try{
       KeyStore keyStore = KeyStore.getInstance(KEYSTORE_NAME);
       keyStore.load(null);

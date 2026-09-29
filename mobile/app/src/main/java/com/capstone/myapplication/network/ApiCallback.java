@@ -1,5 +1,6 @@
 package com.capstone.myapplication.network;
 
+//defines events/ interface
 public interface ApiCallback {
 
   void onSuccess(ApiResponse response);
