@@ -9,6 +9,6 @@
     date_default_timezone_set('UTC');
     //load the environment values into the class, for db environment and api key
     Env::load(Config::get('env_path'));
-    //finally handle the incoming request
+    //finally handle the incoming requesty
     Router::handle();
 ?>
