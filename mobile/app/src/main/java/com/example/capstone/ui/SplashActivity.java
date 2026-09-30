@@ -1,4 +1,4 @@
-package com.example.capstone;
+package com.example.capstone.ui;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,7 +18,6 @@ public class SplashActivity extends Activity {
 
 
     PreferenceManager manager = new PreferenceManager(this);
-    manager.setRole(UserRole.USER);
 
     UserRole role = manager.getRole();
     if(role == null){

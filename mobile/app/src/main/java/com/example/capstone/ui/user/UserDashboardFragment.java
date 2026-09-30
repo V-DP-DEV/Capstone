@@ -1,4 +1,4 @@
-package com.example.capstone;
+package com.example.capstone.ui.user;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,11 +9,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.capstone.databinding.FragmentSecondBinding;
+import com.example.capstone.R;
+import com.example.capstone.databinding.FragmentUserDashboardBinding;
 
-public class SecondFragment extends Fragment {
+public class UserDashboardFragment extends Fragment {
 
-  private FragmentSecondBinding binding;
+  private FragmentUserDashboardBinding binding;
 
   @Override
   public View onCreateView(
@@ -21,7 +22,7 @@ public class SecondFragment extends Fragment {
       Bundle savedInstanceState
   ) {
 
-    binding = FragmentSecondBinding.inflate(inflater, container, false);
+    binding = FragmentUserDashboardBinding.inflate(inflater, container, false);
     return binding.getRoot();
 
   }
@@ -29,10 +30,7 @@ public class SecondFragment extends Fragment {
   public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    binding.buttonSecond.setOnClickListener(v ->
-        NavHostFragment.findNavController(SecondFragment.this)
-            .navigate(R.id.action_SecondFragment_to_FirstFragment)
-    );
+
   }
 
   @Override

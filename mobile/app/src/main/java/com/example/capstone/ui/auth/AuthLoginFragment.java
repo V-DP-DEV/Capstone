@@ -1,4 +1,4 @@
-package com.example.capstone;
+package com.example.capstone.ui.auth;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,11 +9,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.capstone.databinding.FragmentFirstBinding;
+import com.example.capstone.R;
+import com.example.capstone.databinding.FragmentAuthLoginBinding;
 
-public class FirstFragment extends Fragment {
+public class AuthLoginFragment extends Fragment {
 
-  private FragmentFirstBinding binding;
+  private FragmentAuthLoginBinding binding;
 
   @Override
   public View onCreateView(
@@ -21,7 +22,7 @@ public class FirstFragment extends Fragment {
       Bundle savedInstanceState
   ) {
 
-    binding = FragmentFirstBinding.inflate(inflater, container, false);
+    binding = FragmentAuthLoginBinding.inflate(inflater, container, false);
     return binding.getRoot();
 
   }
@@ -30,8 +31,8 @@ public class FirstFragment extends Fragment {
     super.onViewCreated(view, savedInstanceState);
 
     binding.buttonFirst.setOnClickListener(v ->
-        NavHostFragment.findNavController(FirstFragment.this)
-            .navigate(R.id.action_FirstFragment_to_SecondFragment)
+        NavHostFragment.findNavController(AuthLoginFragment.this)
+            .navigate(R.id.action_login_to_signup)
     );
   }
 

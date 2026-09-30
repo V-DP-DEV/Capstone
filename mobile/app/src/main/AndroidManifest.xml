@@ -14,7 +14,7 @@
       android:supportsRtl="true"
       android:theme="@style/Theme.Capstone">
     <activity
-        android:name=".SplashActivity"
+        android:name=".ui.SplashActivity"
         android:exported="true"
         android:theme="@style/Theme.Capstone">
       <intent-filter>
@@ -30,6 +30,7 @@
     <activity
         android:name=".ui.auth.AuthActivity"
         android:exported="false"
+        android:theme="@style/Theme.Capstone"
         android:windowSoftInputMode="adjustResize" />
     <activity
         android:name=".ui.user.UserActivity"
@@ -39,6 +40,7 @@
     <activity
         android:name=".ui.admin.AdminActivity"
         android:exported="false"
+        android:theme="@style/Theme.Capstone"
         android:windowSoftInputMode="adjustResize" />
     <activity
         android:name=".ui.user.AuthActivity"
