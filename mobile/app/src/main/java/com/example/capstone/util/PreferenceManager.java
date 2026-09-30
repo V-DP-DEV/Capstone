@@ -5,6 +5,8 @@ import static android.content.Context.MODE_PRIVATE;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.capstone.domainModels.UserRole;
+
 public class PreferenceManager {
 
     private static final String PREF_NAME = "settings";
@@ -18,14 +20,15 @@ public class PreferenceManager {
             .getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
 
-    public void setRole(String role) {
+    public void setRole(UserRole role) {
         preferences.edit()
-            .putString(KEY_ROLE, role)
+            .putString(KEY_ROLE, role.name())
             .apply();
     }
 
-    public String getRole() {
-        return preferences.getString(KEY_ROLE, "");
+    public UserRole getRole() {
+        String role = preferences.getString(KEY_ROLE, "");
+        return UserRole.valueOf(role);
     }
 
     public void setSessionExpiration(long expiration) {
