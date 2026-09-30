@@ -31,6 +31,19 @@
         android:name=".ui.auth.AuthActivity"
         android:exported="false"
         android:windowSoftInputMode="adjustResize" />
+    <activity
+        android:name=".ui.user.UserActivity"
+        android:exported="false"
+        android:theme="@style/Theme.Capstone"
+        android:windowSoftInputMode="adjustResize" />
+    <activity
+        android:name=".ui.admin.AdminActivity"
+        android:exported="false"
+        android:windowSoftInputMode="adjustResize" />
+    <activity
+        android:name=".ui.user.AuthActivity"
+        android:exported="false"
+        android:windowSoftInputMode="adjustResize" />
   </application>
 
 </manifest>

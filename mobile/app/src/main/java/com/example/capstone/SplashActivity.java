@@ -4,13 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
+import com.example.capstone.domainModels.UserRole;
+import com.example.capstone.ui.admin.AdminActivity;
 import com.example.capstone.ui.auth.AuthActivity;
+import com.example.capstone.ui.user.UserActivity;
 import com.example.capstone.util.PreferenceManager;
 
 public class SplashActivity extends Activity {
@@ -21,14 +18,20 @@ public class SplashActivity extends Activity {
 
 
     PreferenceManager manager = new PreferenceManager(this);
-    if(manager.getRole().toString() == ""){
-      startActivity(new Intent(this, MainActivity.class));
-    }
-    else{
+    manager.setRole(UserRole.USER);
+
+    UserRole role = manager.getRole();
+    if(role == null){
       startActivity(new Intent(this, AuthActivity.class));
     }
+    else{
+      if(role == UserRole.USER){
+        startActivity(new Intent(this, UserActivity.class));
+      }
+      if(role == UserRole.ADMIN){
+        startActivity(new Intent(this, AdminActivity.class));
+      }
+    }
     finish();
-
-
   }
 }

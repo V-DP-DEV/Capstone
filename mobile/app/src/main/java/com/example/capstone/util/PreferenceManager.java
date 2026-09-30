@@ -28,6 +28,11 @@ public class PreferenceManager {
 
     public UserRole getRole() {
         String role = preferences.getString(KEY_ROLE, "");
+
+        if (role.isEmpty()) {
+            return null;
+        }
+
         return UserRole.valueOf(role);
     }
 
@@ -39,5 +44,9 @@ public class PreferenceManager {
 
     public long getSessionExpiration() {
         return preferences.getLong(KEY_SESSION_EXPIRATION, 0L);
+    }
+
+    public void clear() {
+        preferences.edit().clear().apply();
     }
 }

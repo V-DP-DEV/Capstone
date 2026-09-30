@@ -5,13 +5,13 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.auth.AuthActivity">
+    tools:context=".ui.user.UserActivity">
 
   <TextView
-      android:id="@+id/textView2"
+      android:id="@+id/textView3"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="Auth"
-      tools:layout_editor_absoluteX="174dp"
-      tools:layout_editor_absoluteY="319dp" />
+      android:text="User"
+      tools:layout_editor_absoluteX="137dp"
+      tools:layout_editor_absoluteY="294dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
