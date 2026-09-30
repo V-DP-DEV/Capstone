@@ -1,35 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <!-- Basic -->
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-
-    <!-- AceIT Candidate -->
-    <color name="candidate_primary">#A14078</color>
-
-    <!-- AceIT Admin -->
-    <color name="admin_primary">#F58F00</color>
-
-    <!-- Supporting colours -->
-    <color name="purple">#7C74DB</color>
-    <color name="purple_light">#EEECFB</color>
-
-    <color name="green">#47C85D</color>
-    <color name="green_light">#E6F8EA</color>
-    <color name="dark_green">#026110</color>
-
-    <color name="tan">#C97400</color>
-    <color name="tan_light">#F6E3CA</color>
-
-    <!-- Neutral colours -->
-    <color name="app_background">#F5F5F5</color>
-    <color name="card_background">#F6F8FC</color>
-
-    <color name="heading_text">#54545D</color>
-    <color name="body_text">#8A8A97</color>
-    <color name="muted_text">#A7A7B0</color>
-
-    <color name="border">#E0E1E3</color>
-
+  <color name="black">#FF000000</color>
+  <color name="white">#FFFFFFFF</color>
 </resources>

@@ -3,13 +3,13 @@ plugins {
 }
 
 android {
-    namespace = "com.capstone.myapplication"
+    namespace = "com.example.capstone"
     compileSdk {
         version = release(37)
     }
 
     defaultConfig {
-        applicationId = "com.capstone.myapplication"
+        applicationId = "com.example.capstone"
         minSdk = 24
         targetSdk = 37
         versionCode = 1

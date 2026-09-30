@@ -22,5 +22,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "AceIT"
+rootProject.name = "Capstone"
 include(":app")
