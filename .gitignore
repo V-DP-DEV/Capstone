@@ -36,3 +36,9 @@ deployments/
 
 config.php
 hash.php
+
+# Dependencies
+/vendor/
+
+# PHPUnit
+.phpunit.result.cache
