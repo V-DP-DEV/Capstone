@@ -3,7 +3,7 @@
         //defines route that doesnt need token checks
         private static array $publicRoutes = [
             'Auth/login',
-            'Auth/register',
+            'Auth/signup',
             'Auth/logout'
         ];
 
@@ -31,7 +31,7 @@
 
                 //gets controller name by upper casing first letter and concat controller
                 $controllerName = ucfirst($parts[0]).'Controller';
-
+                
                 //get the action
                 $action = $parts[1] ?? 'index';
 
