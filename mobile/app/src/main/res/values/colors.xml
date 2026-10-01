@@ -1,35 +1,60 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-  <!-- Basic -->
   <color name="black">#FF000000</color>
+  <!-- [cite: 9]  -->
   <color name="white">#FFFFFFFF</color>
-
-  <!-- AceIT Candidate -->
-  <color name="candidate_primary">#A14078</color>
-
-  <!-- AceIT Admin -->
-  <color name="admin_primary">#F58F00</color>
-
-  <!-- Supporting colours -->
-  <color name="purple">#7C74DB</color>
-  <color name="purple_light">#EEECFB</color>
-
-  <color name="green">#47C85D</color>
-  <color name="green_light">#E6F8EA</color>
-  <color name="dark_green">#026110</color>
-
-  <color name="tan">#C97400</color>
-  <color name="tan_light">#F6E3CA</color>
-
-  <!-- Neutral colours -->
-  <color name="app_background">#F5F5F5</color>
-  <color name="card_background">#F6F8FC</color>
-
-  <color name="heading_text">#54545D</color>
-  <color name="body_text">#8A8A97</color>
-  <color name="muted_text">#A7A7B0</color>
-
-  <color name="border">#E0E1E3</color>
-
+  <!-- [cite: 10]  -->
+  <!--  Primary Theme & Accent Colors  -->
+  <color name="color_purple_primary">#FFA14078</color>
+  <!-- [cite: 10]  -->
+  <color name="color_green_progress">#FF026110</color>
+  <!-- [cite: 9]  -->
+  <color name="color_orange_progress">#FFF58F00</color>
+  <!-- [cite: 10]  -->
+  <color name="color_track_progress">#FFEBEFF6</color>
+  <!-- [cite: 10]  -->
+  <!--  Background & Card Surface Colors  -->
+  <color name="color_bg_main">#FFF6F8FC</color>
+  <!-- [cite: 10]  -->
+  <color name="color_card_offwhite">#FFFDFDFF</color>
+  <!-- [cite: 10]  -->
+  <color name="color_icon_inactive">#FFB7C0D2</color>
+  <!-- [cite: 10]  -->
+  <color name="card_background_alt">#FFFDFDFF</color>
+  <!-- [cite: 1, 10] -->
+  <color name="card_background">#FFFFFFFF</color>
+ 
+  <color name="screen_background">#FFF6F8FC</color>
+  <color name="primary_purple">#FFA14078</color>
+  <color name="icon_circle_bg">#FFF6F8FC</color>
+  <color name="primary_blue">#FF312CAA</color>
+  <color name="dark_slate_blue">#FF353E5C</color>
+  <color name="text_secondary">#FF666666</color>
+  <color name="progress_green">#FF026110</color>
+  <!-- [cite: 9] -->
+  <color name="progress_track">#FFEBEFF6</color>
+  <!-- [cite: 10] -->
+  <color name="progress_orange">#FFF58F00</color>
+  <!-- [cite: 10] -->
+  <color name="text_disabled">#FF868DA6</color>
+  <!--  Text Colors  -->
+  <color name="color_text_dark">#FF101010</color>
+  <!-- [cite: 9]  -->
+  <color name="color_text_title">#FF121212</color>
+  <!-- [cite: 9]  -->
+  <color name="color_text_subtitle">#FF040404</color>
+  <!-- [cite: 9]  -->
+  <color name="color_text_chart_val">#FF131414</color>
+  <!-- [cite: 9]  -->
+  <color name="color_text_chart_label_1">#FF0F0F0F</color>
+  <!-- [cite: 9]  -->
+  <color name="color_text_chart_val_2">#FF0D0D0D</color>
+  <!-- [cite: 9]  -->
+  <color name="color_text_chart_label_2">#FF0E0E0E</color>
+  <!-- [cite: 9]  -->
+  <color name="color_text_muted">#FF868DA6</color>
+  <!-- [cite: 9]  -->
+  <color name="text_primary">#FF101010</color>
+  <color name="gray_dark_15">#353E5C</color>
+  <color name="gray_dark_16">#868DA6</color>
+  <color name="gray_dark_18">#B7C0D2</color>
 </resources>

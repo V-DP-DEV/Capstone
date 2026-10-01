@@ -6,6 +6,4 @@
     android:layout_height="wrap_content"
     android:padding="16dp"
     android:text="Success"
-    android:textColor="@color/dark_green"
-    android:background="@color/green_light"
     android:textSize="14sp" />
