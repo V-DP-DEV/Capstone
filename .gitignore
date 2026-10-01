@@ -36,3 +36,6 @@ deployments/
 
 config.php
 hash.php
+
+# Dependencies
+/vendor/
