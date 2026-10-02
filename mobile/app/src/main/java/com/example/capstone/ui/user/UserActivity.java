@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
 
+import com.example.capstone.ui.BaseActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,7 +20,7 @@ import com.example.capstone.databinding.ActivityUserBinding;
 
 import com.example.capstone.R;
 
-public class UserActivity extends AppCompatActivity {
+public class UserActivity extends BaseActivity {
 
   private AppBarConfiguration appBarConfiguration;
 

@@ -8,6 +8,7 @@ import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.util.Base64;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.nio.charset.StandardCharsets;
@@ -37,6 +38,15 @@ public class SecureSession {
   public SecureSession(Context context){
    preferences = context.getApplicationContext().getSharedPreferences(KEY_PREF_NAME,MODE_PRIVATE);
   }
+
+  public LiveData<Boolean> getLoggedIn() {
+    return loggedIn;
+  }
+
+  public void notifySessionExpired() {
+    loggedIn.postValue(false);
+  }
+
   public void setSessionExpiration(long expiration) {
     preferences.edit()
         .putLong(KEY_SESSION_EXPIRATION, expiration)

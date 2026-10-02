@@ -11,6 +11,30 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 public class AppContainer {
+  public AuthRepository getAuthRepository() {
+    return authRepository;
+  }
+
+  public AuthService getAuthService() {
+    return authService;
+  }
+
+  public ApiClient getApiClient() {
+    return apiClient;
+  }
+
+  public PreferenceManager getPreferenceManager() {
+    return preferenceManager;
+  }
+
+  public SecureSession getSecureSession() {
+    return secureSession;
+  }
+
+  public Gson getGson() {
+    return gson;
+  }
+
   public final AuthRepository authRepository;
   public final AuthService authService;
   public final ApiClient apiClient;
