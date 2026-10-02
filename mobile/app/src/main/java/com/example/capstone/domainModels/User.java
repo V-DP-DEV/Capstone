@@ -6,17 +6,19 @@ public class User implements Serializable {
 
     private long userId;
     private String email;
-    private String fullName;
+    private String firstName;
+    private String surname;
     private UserRole role;
     private long createdAt;
 
     public User() {
     }
 
-    public User(long userId, String email, String fullName, UserRole role, long createdAt) {
+    public User(long userId, String email, String firstName, String surname, UserRole role, long createdAt) {
         this.userId = userId;
         this.email = email;
-        this.fullName = fullName;
+        this.firstName = firstName;
+        this.surname = surname;
         this.role = role;
         this.createdAt = createdAt;
     }
@@ -27,8 +29,11 @@ public class User implements Serializable {
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
-    public String getFullName() { return fullName; }
-    public void setFullName(String fullName) { this.fullName = fullName; }
+    public String getFirstName() { return firstName; }
+    public void setFirstName(String fullName) { this.firstName = firstName; }
+
+    public String getSurname() { return surname; }
+    public void setSurname(String surname) { this.surname = surname; }
 
     public UserRole getRole() { return role; }
     public void setRole(UserRole role) { this.role = role; }
