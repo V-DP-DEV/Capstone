@@ -1,0 +1,69 @@
+<resources>
+  <!--  Standard Spacing & Paddings  -->
+  <dimen name="fab_margin">16dp</dimen>
+  <dimen name="spacing_1">1dp</dimen>
+  <dimen name="spacing_3">3dp</dimen>
+  <dimen name="spacing_4">4dp</dimen>
+  <dimen name="spacing_5">5dp</dimen>
+  <dimen name="spacing_6">6dp</dimen>
+  <dimen name="spacing_7">7dp</dimen>
+  <dimen name="spacing_8">8dp</dimen>
+  <dimen name="spacing_9">9dp</dimen>
+  <!--  Rounded from 8.75dp  -->
+  <dimen name="spacing_10">10dp</dimen>
+  <dimen name="spacing_12">12dp</dimen>
+  <dimen name="spacing_13">13dp</dimen>
+  <dimen name="spacing_14">14dp</dimen>
+  <dimen name="spacing_16">16dp</dimen>
+  <dimen name="spacing_19">19dp</dimen>
+  <dimen name="spacing_20">20dp</dimen>
+  <dimen name="spacing_21">21dp</dimen>
+  <dimen name="spacing_23">23dp</dimen>
+  <!--  Merged 22.98dp  -->
+  <dimen name="spacing_24">24dp</dimen>
+  <dimen name="spacing_27">27dp</dimen>
+  <dimen name="spacing_28">28dp</dimen>
+  <dimen name="spacing_30">30dp</dimen>
+  <dimen name="spacing_32">32dp</dimen>
+  <dimen name="spacing_38">38dp</dimen>
+  <dimen name="spacing_48">48dp</dimen>
+  <dimen name="spacing_56">56dp</dimen>
+  <dimen name="spacing_57">57dp</dimen>
+  <dimen name="spacing_64">64dp</dimen>
+  <dimen name="spacing_68">68dp</dimen>
+  <dimen name="spacing_69">69dp</dimen>
+  <dimen name="spacing_72">72dp</dimen>
+  <dimen name="spacing_76">76dp</dimen>
+  <dimen name="spacing_77">77dp</dimen>
+  <dimen name="spacing_84">84dp</dimen>
+  <dimen name="spacing_90">90dp</dimen>
+  <!--  Component Heights / Widths  -->
+  <dimen name="size_103">103dp</dimen>
+  <dimen name="size_112">112dp</dimen>
+  <dimen name="size_118">118dp</dimen>
+  <dimen name="size_130">130dp</dimen>
+  <dimen name="size_132">132dp</dimen>
+  <dimen name="size_137">137dp</dimen>
+  <dimen name="size_141">141dp</dimen>
+  <!--  Rounded from 141.19dp  -->
+  <dimen name="size_148">148dp</dimen>
+  <dimen name="size_153">153dp</dimen>
+  <dimen name="size_154">154dp</dimen>
+  <dimen name="size_160">160dp</dimen>
+  <dimen name="size_168">168dp</dimen>
+  <dimen name="size_178">178dp</dimen>
+  <dimen name="size_198">198dp</dimen>
+  <dimen name="size_200">200dp</dimen>
+  <dimen name="size_240">240dp</dimen>
+  <dimen name="size_256">256dp</dimen>
+  <dimen name="size_277">277dp</dimen>
+  <dimen name="size_312">312dp</dimen>
+  <dimen name="size_330">330dp</dimen>
+  <dimen name="size_368">368dp</dimen>
+  <dimen name="size_376">376dp</dimen>
+  <dimen name="size_394">394dp</dimen>
+  <dimen name="size_424">424dp</dimen>
+  <dimen name="size_440">440dp</dimen>
+  <dimen name="size_447">447dp</dimen>
+  <dimen name="size_956">956dp</dimen>
+</resources>

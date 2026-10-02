@@ -1,0 +1,21 @@
+<resources>
+  <string name="app_name">MyApp</string>
+  <string name="send_label">Start interview</string>
+  <string name="request_label">View previous interviews</string>
+  <string name="section_title">Monthly Progress</string>
+  <string name="chart_value">89%</string>
+  <string name="chart_label">weekly target</string>
+  <string name="quick_actions_title">Quick actions</string>
+  <string name="promotion_title">Improve your skills Today!!</string>
+  <string name="promotion_subtitle">Build interview confidence</string>
+  <string name="text">Start Mock Interview</string>
+  <string name="view_profile">View Profile</string>
+  <string name="_67">67%</string>
+  <string name="interviews">Interviews</string>
+  <string name="improve_your_skills_ntoday">Improve your skills\nToday!!</string>
+  <string name="start_mock_interview">Start Mock Interview</string>
+    <string name="tips_nlibrary"><![CDATA[Tips &\nLibrary]]></string>
+    <string name="next">\@string/next\n</string>
+  <string name="previous">previous\n</string>
+  <string name="action_settings">action_settings\n</string>
+</resources>
