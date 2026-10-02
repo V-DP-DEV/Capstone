@@ -5,7 +5,7 @@ import java.util.Map;
 public class ApiError {
   private String code;
   private String message;
-  private Map<String, String > fields;
+  private Map<String, String > details;
 
   public String getCode(){
     return code;
@@ -13,7 +13,7 @@ public class ApiError {
   public String getMessage(){
     return message;
   }
-  public Map<String,String> getFields(){
-    return fields;
+  public Map<String,String> getDetails(){
+    return details;
   }
 }
