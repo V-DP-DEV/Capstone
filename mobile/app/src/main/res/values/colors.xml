@@ -57,4 +57,7 @@
   <color name="gray_dark_15">#353E5C</color>
   <color name="gray_dark_16">#868DA6</color>
   <color name="gray_dark_18">#B7C0D2</color>
+  <color name="app_background">#F8F8FF</color>
+  <color name="candidate_primary">#F5F5F5</color>
+  <color name="heading_text" >#FAF9F6</color>
 </resources>

@@ -18,7 +18,7 @@ public class SplashActivity extends Activity {
 
 
     PreferenceManager manager = new PreferenceManager(this);
-
+manager.setRole(UserRole.USER);
     UserRole role = manager.getRole();
     if(role == null){
       startActivity(new Intent(this, AuthActivity.class));

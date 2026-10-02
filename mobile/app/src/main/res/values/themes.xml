@@ -1,4 +1,21 @@
-<resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+  <!-- Base application theme. -->
+  <style name="Base.Theme.Capstone" parent="Theme.Material3.DayNight.NoActionBar">
+
+    <item name="android:windowBackground">@color/app_background</item>
+
+    <item name="colorPrimary">@color/candidate_primary</item>
+    <item name="colorOnPrimary">@color/white</item>
+
+    <item name="colorSurface">@color/white</item>
+    <item name="colorOnSurface">@color/heading_text</item>
+
+    <item name="android:navigationBarColor">@color/white</item>
+    <item name="android:statusBarColor">@color/app_background</item>
+
+  </style>
   <style name="TextStyle_14sp">
     <item name="android:textSize">14sp</item>
     <item name="android:textColor">@color/gray_dark_15</item>
@@ -21,5 +38,6 @@
     <item name="android:fontFamily">inter</item>
   </style>
 
+  <style name="Theme.Capstone" parent="Base.Theme.Capstone" />
 
 </resources>
