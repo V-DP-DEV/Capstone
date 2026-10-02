@@ -2,9 +2,14 @@ package com.example.capstone.service;
 
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 
 
+import com.example.capstone.model.request.LoginRequest;
+import com.example.capstone.model.request.SignupRequest;
+import com.example.capstone.model.response.LoginResponse;
 import com.example.capstone.network.ApiCallback;
+import com.example.capstone.network.ApiClient;
 import com.example.capstone.network.ApiRequest;
 import com.example.capstone.network.ApiResponse;
 import com.example.capstone.util.SecureSession;
@@ -12,43 +17,34 @@ import com.example.capstone.util.SecureSession;
 import org.json.JSONObject;
 
 import java.util.UUID;
+import java.util.prefs.AbstractPreferences;
 
 public class AuthService {
-
-  public static void login(
-      Context context,
-      String email,
-      String password,
-      ApiCallback callback
+  private final ApiClient apiClient;
+  private final SecureSession session;
+  public AuthService(ApiClient apiClient,SecureSession session){
+    this.apiClient = apiClient;
+    this.session = session;
+  }
+  public void login(
+      LoginRequest loginRequest,
+      ApiCallback<LoginResponse> callback
   ) {
     ApiRequest request = new ApiRequest("auth/login");
-
+    request.setRequiresAuthentication(false);
     try {
-      String deviceId = UUID.randomUUID().toString();
-      String deviceName = Build.MANUFACTURER + " " + Build.MODEL;
-
-      JSONObject body = new JSONObject();
-      body.put("email", email);
-      body.put("password", password);
-      body.put("deviceId", deviceId);
-      body.put("deviceName", deviceName);
-
-      request.setBody(body.toString());
+      request.setBody(loginRequest);
       request.setMethodPost();
 
-      request.execute(new ApiCallback() {
+      apiClient.execute(request,LoginResponse.class,new ApiCallback<LoginResponse>() {
 
         @Override
-        public void onSuccess(ApiResponse response) {
+        public void onSuccess(ApiResponse<LoginResponse> response) {
           try {
-            JSONObject json = new JSONObject(response.getData());
+            LoginResponse loginResponse = response.getData();
 
-            String token = json.getString("token");
-
-            SecureSession session =
-                new SecureSession(context);
-
-            session.saveToken(token);
+            String token = loginResponse.getToken();
+            session.saveAccessToken(token);
 
             // Pass the original response back to the screen
             callback.onSuccess(response);
@@ -64,7 +60,7 @@ public class AuthService {
         }
 
         @Override
-        public void onHttpError(ApiResponse response) {
+        public void onHttpError(ApiResponse<LoginResponse> response) {
           callback.onHttpError(response);
         }
       });
@@ -72,5 +68,9 @@ public class AuthService {
     } catch (Exception e) {
       callback.onGeneralError(e);
     }
+  }
+
+  public void signup(SignupRequest signupRequest, ApiCallback<Void> callback){
+
   }
 }
