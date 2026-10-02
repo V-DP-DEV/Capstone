@@ -22,7 +22,7 @@ public class ApiRequest {
   private String url;
   private Map<String,String> headers = new HashMap<>();
   private String method;
-  private String body = null;
+  private Object body;
 
   //create object with request, and put json body in header
   public ApiRequest(String url){
@@ -34,8 +34,12 @@ public class ApiRequest {
   public String getUrl() {
     return url;
   }
-  public String getBody() {
+  public Object getBody() {
     return body;
+  }
+
+  public void setBody(Object body) {
+    this.body = body;
   }
 
   public String getMethod() {

@@ -1,9 +1,9 @@
 package com.example.capstone.network;
 
 //defines events/ interface
-public interface ApiCallback {
+public interface ApiCallback<T> {
 
-  void onSuccess(ApiResponse response);
+  void onSuccess(ApiResponse<T> response);
   void onGeneralError(Exception e);
-  void onHttpError(ApiResponse response);
+  void onHttpError(ApiResponse<T> response);
 }

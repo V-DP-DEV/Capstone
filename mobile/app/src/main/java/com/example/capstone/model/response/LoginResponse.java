@@ -31,6 +31,7 @@ public class LoginResponse {
     this.tokenExpiresAt = tokenExpiresAt;
   }
 
+
   public long getRefreshTokenExpiresAt() {
     return refreshTokenExpiresAt;
   }

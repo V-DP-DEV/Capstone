@@ -6,6 +6,8 @@ import android.util.Log;
 
 
 import com.example.capstone.model.request.LoginRequest;
+import com.example.capstone.model.request.SignupRequest;
+import com.example.capstone.model.response.LoginResponse;
 import com.example.capstone.network.ApiCallback;
 import com.example.capstone.network.ApiClient;
 import com.example.capstone.network.ApiRequest;
@@ -26,30 +28,22 @@ public class AuthService {
   }
   public void login(
       LoginRequest loginRequest,
-      ApiCallback callback
+      ApiCallback<LoginResponse> callback
   ) {
     ApiRequest request = new ApiRequest("auth/login");
 
     try {
-
-      JSONObject body = new JSONObject();
-      body.put("email", loginRequest.getEmail());
-      body.put("password", loginRequest.getPassword());
-      body.put("deviceId", loginRequest.getDeviceId());
-      body.put("deviceName", loginRequest.getDeviceName());
-
-      request.setBody(body.toString());
+      request.setBody(loginRequest);
       request.setMethodPost();
 
-      apiClient.execute(request,new ApiCallback() {
+      apiClient.execute(request,LoginResponse.class,new ApiCallback<LoginResponse>() {
 
         @Override
-        public void onSuccess(ApiResponse response) {
+        public void onSuccess(ApiResponse<LoginResponse> response) {
           try {
-            JSONObject json = new JSONObject(response.getData());
+            LoginResponse loginResponse = response.getData();
 
-            String token = json.getString("token");
-
+            String token = loginResponse.getToken();
             session.saveAccessToken(token);
 
             // Pass the original response back to the screen
@@ -66,7 +60,7 @@ public class AuthService {
         }
 
         @Override
-        public void onHttpError(ApiResponse response) {
+        public void onHttpError(ApiResponse<LoginResponse> response) {
           callback.onHttpError(response);
         }
       });
@@ -74,5 +68,9 @@ public class AuthService {
     } catch (Exception e) {
       callback.onGeneralError(e);
     }
+  }
+
+  public void signup(SignupRequest signupRequest, ApiCallback<Void> callback){
+
   }
 }

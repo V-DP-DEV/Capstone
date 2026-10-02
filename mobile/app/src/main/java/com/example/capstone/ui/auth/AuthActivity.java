@@ -8,6 +8,7 @@ import androidx.activity.EdgeToEdge;
 import com.example.capstone.AppContainer;
 import com.example.capstone.MyApplication;
 import com.example.capstone.model.request.LoginRequest;
+import com.example.capstone.model.response.LoginResponse;
 import com.example.capstone.network.ApiCallback;
 import com.example.capstone.network.ApiResponse;
 import com.example.capstone.repository.AuthRepository;
@@ -71,12 +72,14 @@ public class AuthActivity extends AppCompatActivity {
 
       repo.login(
           loginRequest,
-          new ApiCallback() {
+          new ApiCallback<LoginResponse>() {
 
             @Override
-            public void onSuccess(ApiResponse response) {
+            public void onSuccess(ApiResponse<LoginResponse> response) {
               // Login worked
               // Move to the next Activity
+              LoginResponse loginResponse= response.getData();
+              System.out.println(loginResponse.getToken());
             }
 
             @Override
@@ -84,7 +87,7 @@ public class AuthActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onHttpError(ApiResponse response) {
+            public void onHttpError(ApiResponse<LoginResponse> response) {
 
             }
           }

@@ -4,11 +4,14 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.example.capstone.util.SecureSession;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -18,17 +21,19 @@ public class ApiClient {
   private static final String baseurl = "https://aceitapi.co.za/api/";
   private final Handler mainHandler = new Handler(Looper.getMainLooper());
   private final SecureSession secureSession;
+  private final Gson gson;
 
-  public ApiClient(SecureSession secureSession){
+  public ApiClient(SecureSession secureSession,Gson gson){
     this.secureSession = secureSession;
+    this.gson = gson;
   }
-  public void execute(ApiRequest request,ApiCallback callback){
+  public <T> void execute(ApiRequest request, Type responseType, ApiCallback<T> callback){
     //run off main thread
     new Thread(() -> {
       //try
       try {
         //perform the request
-        ApiResponse response = performRequest(request);
+        ApiResponse<T> response = performRequest(request,responseType);
         //if response received, handle back on main thread
         mainHandler.post(()->{
           //if http error return onHttpError event
@@ -52,7 +57,7 @@ public class ApiClient {
     }).start();
   }
 
-  private ApiResponse performRequest(ApiRequest request) throws Exception{
+  private <T> ApiResponse<T> performRequest(ApiRequest request,Type responseType) throws Exception{
     //create url
     URL url = new URL(
         baseurl+request.getUrl()
@@ -78,18 +83,21 @@ public class ApiClient {
     connection.setReadTimeout(5000);
 
     //if body is not null
-    if(request.getBody()!=null){
-      //set propery
+    if (request.getBody() != null) {
+
+      String jsonBody = gson.toJson(request.getBody());
+
       connection.setRequestProperty(
-          "Content-Type","application/json"
+          "Content-Type",
+          "application/json"
       );
+
       connection.setDoOutput(true);
 
-      //write body output
-      try (OutputStream output =
-               connection.getOutputStream()) {
-
-        output.write(request.getBody().getBytes(StandardCharsets.UTF_8));
+      try (OutputStream output = connection.getOutputStream()) {
+        output.write(
+            jsonBody.getBytes(StandardCharsets.UTF_8)
+        );
       }
     }
 
@@ -116,11 +124,11 @@ public class ApiClient {
         );
 
     //build output
-    StringBuilder response = new StringBuilder();
+    StringBuilder responseBody = new StringBuilder();
     String line;
 
     while ((line = reader.readLine()) != null) {
-      response.append(line);
+      responseBody.append(line);
     }
 
     //close reader and close connection
@@ -129,9 +137,12 @@ public class ApiClient {
 
     //log the response
     System.out.println("Status: " + responseCode);
-    System.out.println("Response: " + response);
+    System.out.println("Response: " + responseBody);
+
+    ApiResponse<T> response = gson.fromJson(responseBody.toString(),TypeToken.getParameterized(ApiResponse.class,responseType).getType());
+    response.setStatusCode();
+    return response;
 
     //return api response for execute to handle and call correct event
-    return new ApiResponse(responseCode,response.toString());
   }
 }
