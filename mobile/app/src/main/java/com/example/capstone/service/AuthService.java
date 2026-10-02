@@ -2,9 +2,12 @@ package com.example.capstone.service;
 
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 
 
+import com.example.capstone.model.request.LoginRequest;
 import com.example.capstone.network.ApiCallback;
+import com.example.capstone.network.ApiClient;
 import com.example.capstone.network.ApiRequest;
 import com.example.capstone.network.ApiResponse;
 import com.example.capstone.util.SecureSession;
@@ -12,31 +15,33 @@ import com.example.capstone.util.SecureSession;
 import org.json.JSONObject;
 
 import java.util.UUID;
+import java.util.prefs.AbstractPreferences;
 
 public class AuthService {
-
-  public static void login(
-      Context context,
-      String email,
-      String password,
+  private final ApiClient apiClient;
+  private final SecureSession session;
+  public AuthService(ApiClient apiClient,SecureSession session){
+    this.apiClient = apiClient;
+    this.session = session;
+  }
+  public void login(
+      LoginRequest loginRequest,
       ApiCallback callback
   ) {
     ApiRequest request = new ApiRequest("auth/login");
 
     try {
-      String deviceId = UUID.randomUUID().toString();
-      String deviceName = Build.MANUFACTURER + " " + Build.MODEL;
 
       JSONObject body = new JSONObject();
-      body.put("email", email);
-      body.put("password", password);
-      body.put("deviceId", deviceId);
-      body.put("deviceName", deviceName);
+      body.put("email", loginRequest.getEmail());
+      body.put("password", loginRequest.getPassword());
+      body.put("deviceId", loginRequest.getDeviceId());
+      body.put("deviceName", loginRequest.getDeviceName());
 
       request.setBody(body.toString());
       request.setMethodPost();
 
-      request.execute(new ApiCallback() {
+      apiClient.execute(request,new ApiCallback() {
 
         @Override
         public void onSuccess(ApiResponse response) {
@@ -45,10 +50,7 @@ public class AuthService {
 
             String token = json.getString("token");
 
-            SecureSession session =
-                new SecureSession(context);
-
-            session.saveToken(token);
+            session.saveAccessToken(token);
 
             // Pass the original response back to the screen
             callback.onSuccess(response);
