@@ -14,7 +14,6 @@
       android:layout_height="wrap_content"
       android:layout_gravity="center"
       android:text="XML"
-      android:textColor="@color/heading_text"
       android:textSize="20sp"
       android:textStyle="bold" />
 
