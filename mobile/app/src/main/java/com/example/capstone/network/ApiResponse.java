@@ -15,7 +15,7 @@ public class ApiResponse<T>{
   public int getStatusCode(){
     return statusCode;
   }
-  public void setStatusCode(){this.statusCode = statusCode;}
+  public void setStatusCode(int statusCode){this.statusCode = statusCode;}
   public T getData(){
     return data;
   }

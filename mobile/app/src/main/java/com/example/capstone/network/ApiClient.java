@@ -141,7 +141,7 @@ public class ApiClient {
     System.out.println("Response: " + responseBody);
 
     ApiResponse<T> response = gson.fromJson(responseBody.toString(),TypeToken.getParameterized(ApiResponse.class,responseType).getType());
-    response.setStatusCode();
+    response.setStatusCode(responseCode);
     return response;
 
     //return api response for execute to handle and call correct event
