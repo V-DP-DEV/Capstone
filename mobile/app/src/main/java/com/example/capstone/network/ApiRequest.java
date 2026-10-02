@@ -23,11 +23,19 @@ public class ApiRequest {
   private Map<String,String> headers = new HashMap<>();
   private String method;
   private Object body;
-
+  private boolean requiresAuthentication =true;
   //create object with request, and put json body in header
   public ApiRequest(String url){
     this.url = url;
     headers.put("Accept","application/json");
+  }
+
+  public boolean requiresAuthentication() {
+    return requiresAuthentication;
+  }
+
+  public void setRequiresAuthentication(boolean requiresAuthentication) {
+    this.requiresAuthentication = requiresAuthentication;
   }
 
   //getters

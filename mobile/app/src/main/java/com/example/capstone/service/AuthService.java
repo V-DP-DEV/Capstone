@@ -31,7 +31,7 @@ public class AuthService {
       ApiCallback<LoginResponse> callback
   ) {
     ApiRequest request = new ApiRequest("auth/login");
-
+    request.setRequiresAuthentication(false);
     try {
       request.setBody(loginRequest);
       request.setMethodPost();

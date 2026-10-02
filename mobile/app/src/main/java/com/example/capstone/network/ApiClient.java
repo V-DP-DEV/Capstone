@@ -27,6 +27,7 @@ public class ApiClient {
     this.secureSession = secureSession;
     this.gson = gson;
   }
+
   public <T> void execute(ApiRequest request, Type responseType, ApiCallback<T> callback){
     //run off main thread
     new Thread(() -> {
