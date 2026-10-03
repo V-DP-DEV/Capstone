@@ -73,4 +73,11 @@ public class AuthService {
   public void signup(SignupRequest signupRequest, ApiCallback<Void> callback){
 
   }
+  public void logout(ApiCallback<Void> callback){
+
+  }
+
+  public void logoutAllDevices(ApiCallback<Void> callback){
+
+  }
 }

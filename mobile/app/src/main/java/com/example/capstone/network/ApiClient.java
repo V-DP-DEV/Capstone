@@ -18,7 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class ApiClient {
-  private static final String baseurl = "http://10.0.2.2/mywebsite.local/";
+  private static final String baseurl = "https://aceitapi.co.za/api/";
   private final Handler mainHandler = new Handler(Looper.getMainLooper());
   private final SecureSession secureSession;
   private final Gson gson;

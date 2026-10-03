@@ -26,4 +26,13 @@ public class AuthRepository {
       ApiCallback<Void> callback){
     authService.signup(signupRequest,callback);
   }
+
+  public void logout(
+      ApiCallback<Void> callback){
+    authService.logout(callback);
+  }
+
+  public void logoutAllDevices(ApiCallback<Void> callback){
+    authService.logoutAllDevices(callback);
+  }
 }
