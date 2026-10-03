@@ -7,14 +7,22 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.capstone.AppContainer;
+import com.example.capstone.MyApplication;
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentAuthSignupBinding;
+import com.example.capstone.repository.AuthRepository;
+import com.example.capstone.viewmodel.LoginViewModel;
+import com.example.capstone.viewmodel.SignupViewModel;
+import com.example.capstone.viewmodel.ViewModelFactory;
 
 public class AuthSignupFragment extends Fragment {
 
   private FragmentAuthSignupBinding binding;
+  private SignupViewModel signupViewModel;
 
   @Override
   public View onCreateView(
@@ -30,6 +38,13 @@ public class AuthSignupFragment extends Fragment {
   public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
+    MyApplication app = (MyApplication) requireActivity().getApplication();
+    AppContainer container = app.getAppContainer();
+    AuthRepository authRepository = container.authRepository;
+    //create factory
+    ViewModelFactory<SignupViewModel> factory = new ViewModelFactory<>(
+        ()-> new SignupViewModel(authRepository));
+    signupViewModel = new ViewModelProvider(this,factory).get(SignupViewModel.class);
     binding.buttonSecond.setOnClickListener(v ->
         NavHostFragment.findNavController(AuthSignupFragment.this)
             .navigate(R.id.action_signup_to_login)
