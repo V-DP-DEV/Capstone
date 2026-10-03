@@ -2,6 +2,7 @@ package com.example.capstone.service;
 
 
 import com.example.capstone.model.request.LoginRequest;
+import com.example.capstone.model.request.RefreshRequest;
 import com.example.capstone.model.request.SignupRequest;
 import com.example.capstone.model.response.LoginResponse;
 import com.example.capstone.network.ApiCallback;
@@ -90,43 +91,121 @@ public class AuthService {
 
     public void logout(ApiCallback<Void> callback) {
 
-            ApiRequest request = new ApiRequest("auth/logout");
+        ApiRequest request = new ApiRequest("auth/logout");
 
-            request.setRequiresAuthentication(false);
+        request.setRequiresAuthentication(false);
 
-            String token = session.getAccessToken();
+        String token = session.getAccessToken();
 
-            request.addAuthHeader(token);
+        request.addAuthHeader(token);
 
-            request.setMethodPost();
+        request.setMethodPost();
 
-            apiClient.execute(request, Void.class, new ApiCallback<Void>() {
+        apiClient.execute(request, Void.class, new ApiCallback<Void>() {
 
-                @Override
-                public void onSuccess(ApiResponse<Void> response) {
-                    callback.onSuccess(response);
-                }
+            @Override
+            public void onSuccess(ApiResponse<Void> response) {
+                callback.onSuccess(response);
+            }
 
-                @Override
-                public void onGeneralError(Exception e) {
-                    callback.onGeneralError(e);
-                }
+            @Override
+            public void onGeneralError(Exception e) {
+                callback.onGeneralError(e);
+            }
 
-                @Override
-                public void onHttpError(ApiResponse<Void> response) {
-                    callback.onHttpError(response);
-                }
-            });
-        }
+            @Override
+            public void onHttpError(ApiResponse<Void> response) {
+                callback.onHttpError(response);
+            }
+        });
+    }
 
 
     public void logoutAllDevices(ApiCallback<Void> callback) {
 
+        ApiRequest request = new ApiRequest("auth/logoutAllDevices");
+
+        request.setRequiresAuthentication(false);
+
+        String token = session.getAccessToken();
+
+        request.addAuthHeader(token);
+
+        request.setMethodPost();
+
+        apiClient.execute(request, Void.class, new ApiCallback<Void>() {
+
+            @Override
+            public void onSuccess(ApiResponse<Void> response) {
+                callback.onSuccess(response);
+            }
+
+            @Override
+            public void onGeneralError(Exception e) {
+                callback.onGeneralError(e);
+            }
+
+            @Override
+            public void onHttpError(ApiResponse<Void> response) {
+                callback.onHttpError(response);
+            }
+        });
     }
 
     //only exception to no callback being passed
+
     public void refresh() {
+
+        String refreshToken = session.getRefreshToken();
+
+        RefreshRequest refreshRequest = new RefreshRequest();
+        refreshRequest.setRefreshToken(refreshToken);
+
+        ApiRequest request = new ApiRequest("auth/refresh");
+
+        request.setRequiresAuthentication(false);
+
+        request.setBody(refreshRequest);
+
+        request.setMethodPost();
+
+        apiClient.execute(
+                request,
+                LoginResponse.class,
+                new ApiCallback<LoginResponse>() {
+
+                    @Override
+                    public void onSuccess(ApiResponse<LoginResponse> response) {
+
+                        try {
+                            LoginResponse loginResponse = response.getData();
+
+                            // Save the new access token
+                            session.saveAccessToken(
+                                    loginResponse.getToken()
+                            );
+
+                            // Save the new refresh token
+                            session.saveRefreshToken(
+                                    loginResponse.getRefreshToken()
+                            );
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onGeneralError(Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onHttpError(ApiResponse<LoginResponse> response) {
+                        // HTTP error
+                    }
+                }
+        );
 
     }
 }
-
