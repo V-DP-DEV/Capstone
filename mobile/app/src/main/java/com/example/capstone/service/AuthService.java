@@ -33,42 +33,37 @@ public class AuthService {
   ) {
     ApiRequest request = new ApiRequest("auth/login");
     request.setRequiresAuthentication(false);
-    try {
-      request.setBody(loginRequest);
-      request.setMethodPost();
+    request.setBody(loginRequest);
+    request.setMethodPost();
 
-      apiClient.execute(request,LoginResponse.class,new ApiCallback<LoginResponse>() {
+    apiClient.execute(request,LoginResponse.class,new ApiCallback<LoginResponse>() {
 
-        @Override
-        public void onSuccess(ApiResponse<LoginResponse> response) {
-          try {
-            LoginResponse loginResponse = response.getData();
+      @Override
+      public void onSuccess(ApiResponse<LoginResponse> response) {
+        try {
+          LoginResponse loginResponse = response.getData();
 
-            String token = loginResponse.getToken();
-            session.saveAccessToken(token);
+          String token = loginResponse.getToken();
+          session.saveAccessToken(token);
 
-            // Pass the original response back to the screen
-            callback.onSuccess(response);
+          // Pass the original response back to the screen
+          callback.onSuccess(response);
 
-          } catch (Exception e) {
-            callback.onGeneralError(e);
-          }
-        }
-
-        @Override
-        public void onGeneralError(Exception e) {
+        } catch (Exception e) {
           callback.onGeneralError(e);
         }
+      }
 
-        @Override
-        public void onHttpError(ApiResponse<LoginResponse> response) {
-          callback.onHttpError(response);
+      @Override
+      public void onGeneralError(Exception e) {
+          callback.onGeneralError(e);
         }
-      });
+        @Override
 
-    } catch (Exception e) {
-      callback.onGeneralError(e);
-    }
+      public void onHttpError(ApiResponse<LoginResponse> response) {
+        callback.onHttpError(response);
+      }
+      });
   }
 
   public void signup(SignupRequest signupRequest, ApiCallback<Void> callback){
