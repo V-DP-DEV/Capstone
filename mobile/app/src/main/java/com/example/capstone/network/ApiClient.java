@@ -3,6 +3,7 @@ package com.example.capstone.network;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.example.capstone.repository.AuthRepository;
 import com.example.capstone.util.SecureSession;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -22,10 +23,15 @@ public class ApiClient {
   private final Handler mainHandler = new Handler(Looper.getMainLooper());
   private final SecureSession secureSession;
   private final Gson gson;
+  private Runnable refreshCallback;
 
-  public ApiClient(SecureSession secureSession,Gson gson){
+  public ApiClient(SecureSession secureSession, Gson gson){
     this.secureSession = secureSession;
     this.gson = gson;
+  }
+
+  public void setRefreshCaller(Runnable refreshCallback){
+    this.refreshCallback = refreshCallback;
   }
 
   public <T> void execute(ApiRequest request, Type responseType, ApiCallback<T> callback){

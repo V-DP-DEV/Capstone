@@ -6,6 +6,7 @@ import android.util.Log;
 
 
 import com.example.capstone.model.request.LoginRequest;
+import com.example.capstone.model.request.RefreshRequest;
 import com.example.capstone.model.request.SignupRequest;
 import com.example.capstone.model.response.LoginResponse;
 import com.example.capstone.network.ApiCallback;
@@ -78,6 +79,10 @@ public class AuthService {
   }
 
   public void logoutAllDevices(ApiCallback<Void> callback){
+
+  }
+  //only exception to no callback being passed
+  public void refresh(){
 
   }
 }

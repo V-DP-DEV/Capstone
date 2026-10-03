@@ -3,6 +3,7 @@ package com.example.capstone.repository;
 import android.content.Context;
 
 import com.example.capstone.model.request.LoginRequest;
+import com.example.capstone.model.request.RefreshRequest;
 import com.example.capstone.model.request.SignupRequest;
 import com.example.capstone.model.response.LoginResponse;
 import com.example.capstone.network.ApiCallback;
@@ -34,5 +35,9 @@ public class AuthRepository {
 
   public void logoutAllDevices(ApiCallback<Void> callback){
     authService.logoutAllDevices(callback);
+  }
+
+  public void refreshToken(){
+    authService.refresh();
   }
 }
