@@ -27,8 +27,9 @@
             Request::requireMethod("POST");
             //get the token
             $token = Request::getToken();
+            $data = Request::json();
             //attempt refresh, if any errors throws error
-            $result = AuthService::refresh($token);
+            $result = AuthService::refresh($data['refreshToken']);
             //return a response if no errors
             JsonResponse::success($result);
         }

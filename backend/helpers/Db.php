@@ -68,5 +68,14 @@
                 throw $e;
             }
         }
+        public static function beginTransaction(){
+            self::connect()->beginTransaction();
+        }
+        public static function commit(){
+            self::connect()->commit();
+        }
+        public static function rollBack(){
+            self::connect()->rollBack();
+        }
     }
 ?>

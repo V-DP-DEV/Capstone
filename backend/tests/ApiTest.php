@@ -20,6 +20,7 @@ class ApiTest extends TestCase
             '/auth/login',
             ['email' => 'admin@example.com', 'password' => 'Password123', "deviceId"=>"12","deviceName"=>"Hello"]
         );
+        print_r($response);
         $this->assertSame(200, $response['status']);
         $this->assertTrue($response['body']['success']);
         $this->tokenAdmin = $response['body']['data']['token'];
@@ -60,14 +61,14 @@ class ApiTest extends TestCase
             ['email' => 'admin@example.com', 'password' => 'Password123', "deviceId"=>"12","deviceName"=>"Hello"]
         );
         $token = $response['body']['data']['token'];
-
+        $refreshToken = $response['body']['data']['refreshToken'];
         $response = $this->http->request(
             'POST',
             '/auth/refresh',
-            null,
+            ['refreshToken' => $refreshToken],
             $token
         );
-
+        print_r($response);
         $this->assertSame(200, $response['status']);
 
         //test with no bearer token
