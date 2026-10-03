@@ -8,7 +8,6 @@
   <fragment
       android:id="@+id/userDashboardFragment"
       android:name="com.example.capstone.ui.user.UserDashboardFragment"
-      android:label="Dasboard"
-      tools:layout="@layout/fragment_user_dashboard">
-  </fragment>
+      android:label="Dashboard"
+      tools:layout="@layout/fragment_user_dashboard"></fragment>
 </navigation>

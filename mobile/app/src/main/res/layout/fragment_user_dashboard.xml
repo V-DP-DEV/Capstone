@@ -78,32 +78,165 @@
               app:layout_constraintTop_toBottomOf="@id/tv_promotion_title"/>
           <Button
               android:id="@+id/btn_start_interview"
-              android:layout_width="wrap_content" android:layout_height="50dp" android:layout_marginTop="20dp" android:background="@drawable/bg_pill_button" android:gravity="center" android:includeFontPadding="false" android:minWidth="0dp" android:minHeight="0dp" android:paddingHorizontal="24dp" android:paddingVertical="0dp" android:text="Start Mock Interview" android:textAllCaps="false" android:textColor="@color/white" android:textSize="15sp" app:backgroundTint="@null" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/tv_promotion_subtitle"/>
+              android:layout_width="wrap_content"
+              android:layout_height="50dp"
+              android:layout_marginTop="20dp"
+              android:background="@drawable/bg_pill_button"
+              android:gravity="center"
+              android:includeFontPadding="false"
+              android:minWidth="0dp"
+              android:minHeight="0dp"
+              android:paddingHorizontal="24dp"
+              android:paddingVertical="0dp"
+              android:text="Start Mock Interview"
+              android:textAllCaps="false"
+              android:textColor="@color/white"
+              android:textSize="15sp"
+              app:backgroundTint="@null"
+              app:layout_constraintBottom_toBottomOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@id/tv_promotion_subtitle"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+
       </FrameLayout>
       <!--  SECTION: MONTHLY PROGRESS  -->
-      <TextView android:id="@+id/tv_title_progress" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:text="Monthly Progress" android:textColor="@color/text_primary" android:textSize="18sp" android:textStyle="bold" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/card_promotion"/>
+      <TextView
+          android:id="@+id/tv_title_progress"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="24dp"
+          android:text="Monthly Progress"
+          android:textColor="@color/text_primary"
+          android:textSize="18sp"
+          android:textStyle="bold"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/card_promotion"/>
       <!--  Progress Cards Container  -->
-      <LinearLayout android:id="@+id/container_progress_cards" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:orientation="horizontal" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/tv_title_progress">
+      <LinearLayout
+          android:id="@+id/container_progress_cards"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="16dp"
+          android:orientation="horizontal"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/tv_title_progress">
+
         <!--  Progress Card 1  -->
-        <FrameLayout android:layout_width="0dp" android:layout_height="180dp" android:layout_marginEnd="8dp" android:layout_weight="1" android:background="@drawable/bg_card_shading" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="24dp" app:cardElevation="0dp">
-          <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent" android:layout_height="match_parent">
-            <ProgressBar android:id="@+id/progress_chart_1" style="?android:attr/progressBarStyleHorizontal" android:layout_width="130dp" android:layout_height="130dp" android:max="100" android:progress="67" android:progressDrawable="@drawable/circle_progress_green" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"/>
-            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:orientation="vertical" app:layout_constraintBottom_toBottomOf="@id/progress_chart_1" app:layout_constraintEnd_toEndOf="@id/progress_chart_1" app:layout_constraintStart_toStartOf="@id/progress_chart_1" app:layout_constraintTop_toTopOf="@id/progress_chart_1">
-              <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="67%" android:textColor="@color/text_primary" android:textSize="16sp" android:textStyle="bold"/>
-              <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Interviews\ntaken" android:textColor="#FF666666" android:textSize="12sp"/>
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="180dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_card_shading"
+            app:cardBackgroundColor="@color/card_background"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="0dp">
+
+          <androidx.constraintlayout.widget.ConstraintLayout
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+            <ProgressBar
+                android:id="@+id/progress_chart_1" style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:max="100"
+                android:progress="67"
+                android:progressDrawable="@drawable/circle_progress_green"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="@id/progress_chart_1"
+                app:layout_constraintEnd_toEndOf="@id/progress_chart_1"
+                app:layout_constraintStart_toStartOf="@id/progress_chart_1"
+                app:layout_constraintTop_toTopOf="@id/progress_chart_1">
+
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="67%"
+                  android:textColor="@color/text_primary"
+                  android:textSize="16sp"
+                  android:textStyle="bold"/>
+
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:gravity="center"
+                  android:text="Interviews\ntaken"
+                  android:textColor="#FF666666"
+                  android:textSize="12sp"/>
             </LinearLayout>
+
           </androidx.constraintlayout.widget.ConstraintLayout>
+
         </FrameLayout>
         <!--  Progress Card 2  -->
-        <androidx.cardview.widget.CardView android:layout_width="0dp" android:layout_height="180dp" android:layout_marginStart="8dp" android:layout_weight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="24dp" app:cardElevation="0dp">
-          <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent" android:background="@drawable/bg_card_shading" android:layout_height="match_parent">
-            <ProgressBar android:id="@+id/progress_chart_2" style="?android:attr/progressBarStyleHorizontal" android:layout_width="130dp" android:layout_height="130dp" android:max="100" android:progress="89" android:progressDrawable="@drawable/circle_progress_orange" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"/>
-            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:orientation="vertical" app:layout_constraintBottom_toBottomOf="@id/progress_chart_2" app:layout_constraintEnd_toEndOf="@id/progress_chart_2" app:layout_constraintStart_toStartOf="@id/progress_chart_2" app:layout_constraintTop_toTopOf="@id/progress_chart_2">
-              <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="89%" android:textColor="@color/text_primary" android:textSize="16sp" android:textStyle="bold"/>
-              <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="weekly\ntarget" android:textColor="#FF666666" android:textSize="12sp"/>
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="180dp"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            app:cardBackgroundColor="@color/card_background"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="0dp">
+
+          <androidx.constraintlayout.widget.ConstraintLayout
+              android:layout_width="match_parent"
+              android:background="@drawable/bg_card_shading"
+              android:layout_height="match_parent">
+
+            <ProgressBar
+                android:id="@+id/progress_chart_2" style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:max="100"
+                android:progress="89"
+                android:progressDrawable="@drawable/circle_progress_orange"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="@id/progress_chart_2"
+                app:layout_constraintEnd_toEndOf="@id/progress_chart_2"
+                app:layout_constraintStart_toStartOf="@id/progress_chart_2"
+                app:layout_constraintTop_toTopOf="@id/progress_chart_2">
+
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="89%"
+                  android:textColor="@color/text_primary"
+                  android:textSize="16sp"
+                  android:textStyle="bold"/>
+
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:gravity="center"
+                  android:text="weekly\ntarget"
+                  android:textColor="#FF666666"
+                  android:textSize="12sp"/>
+
             </LinearLayout>
+
           </androidx.constraintlayout.widget.ConstraintLayout>
+
         </androidx.cardview.widget.CardView>
       </LinearLayout>
       <!--  SECTION: QUICK ACTIONS  -->
@@ -134,7 +267,7 @@
               android:background="@drawable/bg_circle_action"
               android:padding="16dp"
               android:src="@drawable/ic_start_interview"
-              app:tint="@color/primary_purple" />
+              app:tint="@color/primary_blue" />
 
           <TextView
               android:layout_width="wrap_content"
@@ -224,13 +357,63 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
   </androidx.core.widget.NestedScrollView>
   <!--  FIXED BOTTOM NAVIGATION BAR  -->
-  <androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/bottom_nav_container" android:layout_width="0dp" android:layout_height="72dp" android:background="@drawable/bg_bottom_nav" android:elevation="8dp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent">
-    <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:orientation="horizontal" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent">
-      <ImageView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:padding="22dp" android:src="@drawable/ic_home" app:tint="@color/primary_purple"/>
-      <ImageView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:padding="22dp" android:src="@drawable/ic_settings" app:tint="#FF868DA6"/>
-      <ImageView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:padding="22dp" android:src="@drawable/ic_analytics" app:tint="#FF868DA6"/>
-      <ImageView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:padding="22dp" android:src="@drawable/ic_presentation" app:tint="#FF868DA6"/>
-      <ImageView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:padding="22dp" android:src="@drawable/ic_person" app:tint="#FF868DA6"/>
+  <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/bottom_nav_container"
+      android:layout_width="0dp"
+      android:layout_height="72dp"
+      android:background="@drawable/bg_bottom_nav"
+      android:elevation="8dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+      <ImageView
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:padding="22dp"
+          android:src="@drawable/ic_home"
+          app:tint="@color/primary_blue"/>
+
+      <ImageView
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:padding="22dp"
+          android:src="@drawable/ic_settings"
+          app:tint="#FF868DA6"/>
+
+      <ImageView
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:padding="22dp"
+          android:src="@drawable/ic_analytics"
+          app:tint="#FF868DA6"/>
+      <ImageView
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:padding="22dp"
+          android:src="@drawable/ic_presentation"
+          app:tint="#FF868DA6"/>
+
+      <ImageView
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:padding="22dp"
+          android:src="@drawable/ic_person"
+          app:tint="#FF868DA6"/>
     </LinearLayout>
   </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

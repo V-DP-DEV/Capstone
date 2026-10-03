@@ -18,18 +18,18 @@
   </style>
   <style name="TextStyle_14sp">
     <item name="android:textSize">14sp</item>
-    <item name="android:textColor">@color/gray_dark_15</item>
+    <item name="android:textColor">@color/dark_slate_blue</item>
     <item name="android:fontFamily">sans-serif</item>
     <!--  Fallback if 'Inter' isn't imported yet  -->
   </style>
   <style name="TextStyle_16sp">
     <item name="android:textSize">16sp</item>
-    <item name="android:textColor">@color/gray_dark_16</item>
+    <item name="android:textColor">@color/text_disabled</item>
     <item name="android:fontFamily">sans-serif</item>
   </style>
   <style name="TextStyle_20sp">
     <item name="android:textSize">20sp</item>
-    <item name="android:textColor">@color/gray_dark_18</item>
+    <item name="android:textColor">@color/color_icon_inactive</item>
     <item name="android:fontFamily">sans-serif</item>
   </style>
   <style name="TextStyle_32sp">
