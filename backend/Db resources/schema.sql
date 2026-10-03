@@ -321,6 +321,32 @@ CREATE TABLE auth_tokens (
 
 
 -- =========================================================
+-- REFRESH TOKENS
+-- =========================================================
+
+CREATE TABLE refresh_tokens (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT UNSIGNED NOT NULL,
+
+    token_hash CHAR(64) NOT NULL,
+
+    device_id VARCHAR(255) NULL,
+    device_name VARCHAR(255) NULL,
+
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expires_at DATETIME NOT NULL,
+    revoked_at DATETIME NULL,
+
+    CONSTRAINT uk_refresh_tokens_token_hash
+        UNIQUE (token_hash),
+
+    CONSTRAINT fk_refresh_tokens_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE
+);
+
+-- =========================================================
 -- AUTH LOGS
 -- =========================================================
 
