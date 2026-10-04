@@ -12,6 +12,7 @@ import com.example.capstone.model.response.LoginResponse;
 import com.example.capstone.network.ApiCallback;
 import com.example.capstone.network.ApiResponse;
 import com.example.capstone.repository.AuthRepository;
+import com.example.capstone.repository.IAuthRepository;
 import com.example.capstone.service.AuthService;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -63,7 +64,7 @@ public class AuthActivity extends AppCompatActivity {
       AppContainer container =
           app.getAppContainer();
 
-      AuthRepository repo = container.authRepository;
+      IAuthRepository repo = container.authRepository;
       LoginRequest loginRequest = new LoginRequest();
       loginRequest.setEmail("admin@example.com");
       loginRequest.setPassword("Password123");

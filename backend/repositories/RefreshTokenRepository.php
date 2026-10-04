@@ -11,5 +11,8 @@
         public static function revokeRefreshTokenByHash(string $tokenHash){
             return Db::execute("UPDATE refresh_tokens SET revoked_at = NOW() WHERE token_hash = ? AND revoked_at IS NULL",[$tokenHash]);
         }
+        public static function revokeAllByUserId(int $userId){
+            return Db::execute("UPDATE refresh_tokens SET revoked_at = NOW() WHERE user_id = ? AND revoked_at IS NULL",[$userId]);
+        }
     }
 ?>
