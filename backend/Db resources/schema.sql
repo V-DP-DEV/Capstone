@@ -319,6 +319,7 @@ CREATE TABLE auth_tokens (
     CONSTRAINT fk_auth_tokens_user
         FOREIGN KEY (user_id)
         REFERENCES users(id)
+        ON DELETE CASCADE
 );
 
 
@@ -362,11 +363,13 @@ CREATE TABLE auth_logs (
 
     CONSTRAINT fk_auth_log_user
         FOREIGN KEY (user_id)
-        REFERENCES users(id),
+        REFERENCES users(id)
+        ON DELETE SET NULL,
 
     CONSTRAINT fk_auth_log_token
         FOREIGN KEY (token_id)
         REFERENCES auth_tokens(id)
+        ON DELETE SET NULL
 );
 
 
@@ -376,14 +379,15 @@ CREATE TABLE auth_logs (
 
 CREATE TABLE audit_logs (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    admin_id BIGINT UNSIGNED NOT NULL,
+    user_id BIGINT UNSIGNED NULL,
     action VARCHAR(100) NOT NULL,
     ip_address VARCHAR(45) NOT NULL,
     entity_type VARCHAR(100) NOT NULL,
     entity_id BIGINT UNSIGNED NOT NULL,
     at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_audit_logs_admin
-        FOREIGN KEY (admin_id)
+    CONSTRAINT fk_audit_logs_user
+        FOREIGN KEY (user_id)
         REFERENCES users(id)
+        ON DELETE SET NULL
 );

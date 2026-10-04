@@ -14,5 +14,11 @@
         public function createUser(string $email, string $password, string $role,string $firstname,string $surname){
             return $this->db->execute("INSERT INTO users (email,password,role,firstname,surname) VALUES (?,?,?,?,?)",[$email,$password,$role,$firstname,$surname]);
         }
+        public function getPassword(int $userId){
+            return $this->db->queryOne("SELECT password FROM users WHERE id = ?",[$userId]);
+        }
+        public function delete(int $id){
+            return $this->db->execute("DELETE FROM users WHERE id = ?",[$id]);
+        }
     }
 ?>

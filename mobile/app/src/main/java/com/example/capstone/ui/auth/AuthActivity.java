@@ -8,6 +8,7 @@ import androidx.activity.EdgeToEdge;
 import com.example.capstone.AppContainer;
 import com.example.capstone.MyApplication;
 import com.example.capstone.model.request.LoginRequest;
+import com.example.capstone.model.request.SignupRequest;
 import com.example.capstone.model.response.LoginResponse;
 import com.example.capstone.network.ApiCallback;
 import com.example.capstone.network.ApiResponse;
@@ -65,11 +66,34 @@ public class AuthActivity extends AppCompatActivity {
           app.getAppContainer();
 
       IAuthRepository repo = container.authRepository;
+      SignupRequest request = new SignupRequest();
+      request.setEmail("vian@gmail.com");
+      request.setEmail("Password123");
+      request.setFirstname("ge");
+      request.setSurname("ge");
+
       LoginRequest loginRequest = new LoginRequest();
       loginRequest.setEmail("admin@example.com");
       loginRequest.setPassword("Password123");
       loginRequest.setDeviceId();
       loginRequest.setDeviceName();
+
+      repo.signup(request, new ApiCallback<Void>() {
+        @Override
+        public void onSuccess(ApiResponse<Void> response) {
+
+        }
+
+        @Override
+        public void onGeneralError(Exception e) {
+
+        }
+
+        @Override
+        public void onHttpError(ApiResponse<Void> response) {
+
+        }
+      });
 
       repo.login(
           loginRequest,

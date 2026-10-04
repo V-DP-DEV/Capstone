@@ -158,10 +158,21 @@
             if(empty($data['email'])){
                 $fieldErrors['email'] = "Email is required";
             }
-            //if password empty add error
-            if(empty($data['password'])){
-                $fieldErrors['password'] = "Password is required";
+            else if(!filter_var($data['email'], FILTER_VALIDATE_EMAIL)){
+                $fieldErrors['email'] = "Email is not valid";
             }
+            
+            //if password empty add error
+            if (strlen($data['password']) < 8) {
+                $fieldErrors['password'] = "Password must be at least 8 characters";
+            }
+            else if (!preg_match('/\d/', $data['password'])) {
+                $fieldErrors['password'] = "Password must contain a number";
+            }
+            else if (!preg_match('/[^a-zA-Z0-9]/', $data['password'])) {
+                $fieldErrors['password'] = "Password must contain a special character";
+            }
+
             //if firstname empty add error
             if(empty($data['firstname'])){
                 $fieldErrors['firstname'] = "Firstname is required";
@@ -180,7 +191,6 @@
             
             //create the user in db
             $this->userRepository->createUser($data['email'],$hashedPassword,'USER',$data['firstname'],$data['surname']);
-            
         }
     }
 ?>

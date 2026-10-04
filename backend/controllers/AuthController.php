@@ -45,7 +45,7 @@
             JsonResponse::success($result);
         }
 
-        public function signup(){
+        public function signup(){            
             Request::requireMethod("POST");
             $data = Request::json();
             $result = $this->authService->signup($data);

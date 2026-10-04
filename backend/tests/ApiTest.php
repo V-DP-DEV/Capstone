@@ -20,7 +20,7 @@ class ApiTest extends TestCase
             '/auth/login',
             ['email' => 'admin@example.com', 'password' => 'Password123', "deviceId"=>"12","deviceName"=>"Hello"]
         );
-        print_r($response);
+        //print_r($response);
         $this->assertSame(200, $response['status']);
         $this->assertTrue($response['body']['success']);
         $this->tokenAdmin = $response['body']['data']['token'];
@@ -40,7 +40,7 @@ class ApiTest extends TestCase
             null,
             $response['body']['data']['token']
         );
-        print_r($response);
+        //print_r($response);
         $this->assertSame(200, $response['status']);
     }
 
@@ -86,7 +86,7 @@ class ApiTest extends TestCase
             ['refreshToken' => $refreshToken],
             $token
         );
-        print_r($response);
+        //print_r($response);
         $this->assertSame(200, $response['status']);
 
         //test with no bearer token
@@ -98,5 +98,56 @@ class ApiTest extends TestCase
 
         $this->assertSame(401, $response['status']);
     }
+    public function testSignup():void
+    {
+        //test with bearer token
+        $response = $this->http->request(
+            'POST',
+            '/auth/signup',
+            ['email' => 'admin2@example.com', 'password' => 'Password123', "firstname"=>"12","surname"=>"Hello"]
+        );
+        
+        //print_r($response);
+        $this->assertSame(400, $response['status']);
+        $response = $this->http->request(
+            'POST',
+            '/auth/signup',
+            ['email' => 'admin@example.com', 'password' => 'Password123', "firstname"=>"12","surname"=>"Hello"]
+        );
+        print_r($response);
+        $this->assertSame(400, $response['status']);
+    }
+    public function testDeleteUser():void
+    {
+        $response = $this->http->request(
+            'POST',
+            '/auth/login',
+            ['email' => 'user@example.com', 'password' => 'Password123', "deviceId"=>"12","deviceName"=>"Hello"]
+        );
+        $token = $response['body']['data']['token'];
+        print_r($response);
+        $response = $this->http->request(
+            'DELETE',
+            '/user/delete',
+            ['password' => 'Password123'],
+            $token
+        );
+        print_r($response);
 
+        $response = $this->http->request(
+            'POST',
+            '/auth/login',
+            ['email' => 'user2@example.com', 'password' => 'Password123', "deviceId"=>"12","deviceName"=>"Hello"]
+        );
+        $token = $response['body']['data']['token'];
+        print_r($response);
+        $response = $this->http->request(
+            'DELETE',
+            '/user/delete',
+            ['password' => 'Password13'],
+            $token
+        );
+
+        $this->assertSame(401, $response['status']);
+    }
 }
