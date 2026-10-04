@@ -1,6 +1,6 @@
 <?php
     class UserService{
-        public function __construct(private UserRepository $userRepository, private RequestContext $requestContext){}
+        public function __construct(private UserRepository $userRepository, private RequestContext $requestContext,private Log $log){}
 
         public function deleteUser($data){
             
@@ -11,7 +11,7 @@
             if(!password_verify($data['password'], $password['password'])){
                 throw new UnauthorizedException("Invalid password");
             }
-            
+            $this->log->tryAuditLog($this->requestContext->getUserId(),'DELETE_ACCOUNT_ATTEMPT','user',$this->requestContext->getUserId());
             $this->userRepository->delete($this->requestContext->getUserId());
         }
 
@@ -40,6 +40,7 @@
             }
             $newPasswordHash = password_hash($data['newPassword'], PASSWORD_DEFAULT);
             $this->userRepository->updatePassword($this->requestContext->getUserId(), $newPasswordHash);
+            $this->log->tryAuditLog($this->requestContext->getUserId(),'CHANGE_PASSWORD','user',$this->requestContext->getUserId());
         }
     }
 ?>
