@@ -32,4 +32,21 @@ public class ApiResponse<T>{
     }
     return false;
   }
+
+  public boolean isUnauthorized(){
+    return statusCode == 401;
+  }
+  public boolean isForbidden(){
+    return statusCode ==403;
+  }
+
+  public boolean isNotFound(){
+    return statusCode == 404;
+  }
+  public boolean isServerError(){
+    return statusCode >= 500;
+  }
+  public boolean isValidationError(){
+    return statusCode == 400;
+  }
 }

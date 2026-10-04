@@ -16,4 +16,7 @@ public class ApiError {
   public Map<String,String> getDetails(){
     return details;
   }
+  public boolean isFieldValidationError(){
+    return "FIELD_VALIDATION_ERROR".equals(code);
+  }
 }
