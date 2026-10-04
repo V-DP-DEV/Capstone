@@ -10,5 +10,12 @@
             $result = $this->userService->deleteUser($data);
             JsonResponse::success($result);
         }
+
+        public function changePassword(){
+            Request::requireMethod("PATCH");
+            $data = Request::json();
+            $result = $this->userService->changePassword($data);
+            JsonResponse::success($result);
+        }
     }
 ?>

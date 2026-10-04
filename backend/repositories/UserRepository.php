@@ -20,5 +20,8 @@
         public function delete(int $id){
             return $this->db->execute("DELETE FROM users WHERE id = ?",[$id]);
         }
+        public function updatePassword(int $userId, string $newPasswordHash){
+            return $this->db->execute("UPDATE users SET password = ? WHERE id = ?",[$newPasswordHash,$userId]);
+        }
     }
 ?>

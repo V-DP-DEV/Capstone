@@ -150,4 +150,22 @@ class ApiTest extends TestCase
 
         $this->assertSame(401, $response['status']);
     }
+
+    public function testUpdatePassword():void
+    {
+        $response = $this->http->request(
+            'POST',
+            '/auth/login',
+            ['email' => 'user2@example.com', 'password' => 'Password123', "deviceId"=>"12","deviceName"=>"Hello"]
+        );
+
+        $response = $this->http->request(
+            'PATCH',
+            '/user/changePassword',
+            ['oldPassword' => 'Password123', 'newPassword' => 'NewPassword123!'],
+            $response['body']['data']['token']
+        );
+        print_r($response);
+        $this->assertSame(200, $response['status']);
+    }
 }
