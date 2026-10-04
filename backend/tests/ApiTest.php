@@ -26,6 +26,24 @@ class ApiTest extends TestCase
         $this->tokenAdmin = $response['body']['data']['token'];
     }
 
+    public function testLogoutAllDevices():void
+    {
+        //login and than logout with the token
+        $response = $this->http->request(
+            'POST',
+            '/auth/login',
+            ['email' => 'admin@example.com', 'password' => 'Password123', "deviceId"=>"12","deviceName"=>"Hello"]
+        );
+        $response = $this->http->request(
+            'POST',
+            '/auth/logoutAllDevices',
+            null,
+            $response['body']['data']['token']
+        );
+        print_r($response);
+        $this->assertSame(200, $response['status']);
+    }
+
     public function testLogout():void
     {
         //login and than logout with the token

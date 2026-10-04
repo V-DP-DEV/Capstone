@@ -1,13 +1,18 @@
 <?php
-    class UserRepository{
+    class UserRepository implements IUserRepository{
         //find user by email
-        public static function findByEmail(string $email){
-            return Db::queryOne("SELECT * FROM users WHERE email = ?",[$email]);
+        public function __construct(private Db $db){}
+        public function findByEmail(string $email){
+            return $this->db->queryOne("SELECT * FROM users WHERE email = ?",[$email]);
         }
 
         //get user role
-        public static function getUserRole(int $userId){
-            return Db::queryOne("SELECT role FROM users WHERE id = ?",[$userId]);
+        public function getUserRole(int $userId){
+            return $this->db->queryOne("SELECT role FROM users WHERE id = ?",[$userId]);
+        }
+
+        public function createUser(string $email, string $password, string $role,string $firstname,string $surname){
+            return $this->db->execute("INSERT INTO users (email,password,role,firstname,surname) VALUES (?,?,?,?,?)",[$email,$password,$role,$firstname,$surname]);
         }
     }
 ?>
