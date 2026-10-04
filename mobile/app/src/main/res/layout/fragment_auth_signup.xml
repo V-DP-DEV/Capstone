@@ -1,34 +1,271 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.auth.AuthSignupFragment">
+    android:background="@color/screen_background">
 
-  <androidx.constraintlayout.widget.ConstraintLayout
+  <androidx.core.widget.NestedScrollView
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:padding="16dp">
+      android:fillViewport="true">
 
-    <Button
-        android:id="@+id/button_second"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/previous"
-        app:layout_constraintBottom_toTopOf="@id/textview_second"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:paddingHorizontal="32dp"
+        android:paddingTop="32dp"
+        android:paddingBottom="32dp">
 
-    <TextView
-        android:id="@+id/textview_second"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button_second" />
-  </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+      <!-- Screen Title -->
+      <TextView
+          android:id="@+id/tv_title"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="24dp"
+          android:fontFamily="sans-serif-medium"
+          android:gravity="center"
+          android:text="@string/create_account"
+          android:textColor="@color/text_primary"
+          android:textSize="22sp"
+          android:textStyle="bold"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+
+      <!-- Name Label -->
+
+      <!-- Name Input -->
+      <TextView
+          android:id="@+id/tv_label_name"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="40dp"
+          android:fontFamily="sans-serif-medium"
+          android:gravity="center"
+          android:paddingHorizontal="24dp"
+          android:text="@string/Name"
+          android:textColor="@color/text_primary"
+          android:textColorHint="@color/color_icon_inactive"
+          android:textSize="15sp"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintHorizontal_bias="0.0"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/tv_title" />
+
+      <!-- Surname Label -->
+      <EditText
+          android:id="@+id/et_name"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:minHeight="56dp"
+          android:layout_marginTop="8dp"
+          android:autofillHints="personGivenName"
+          android:background="@drawable/bg_pill_input"
+          android:fontFamily="sans-serif-medium"
+          android:hint="@string/Name"
+          android:imeOptions="actionNext"
+          android:inputType="textCapWords|textPersonName"
+          android:maxLines="1"
+          android:paddingHorizontal="24dp"
+          android:textColor="@color/text_primary"
+          android:textColorHint="@color/color_icon_inactive"
+          android:textSize="15sp"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/tv_label_name" />
+
+      <TextView
+          android:id="@+id/tv_label_surname"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="20dp"
+          android:fontFamily="sans-serif-medium"
+          android:text="@string/Surname"
+          android:textColor="@color/text_primary"
+          android:textSize="16sp"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/et_name" />
+
+      <!-- Surname Input -->
+      <EditText
+          android:id="@+id/et_surname"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:minHeight="56dp"
+          android:layout_marginTop="8dp"
+          android:autofillHints="personFamilyName"
+          android:background="@drawable/bg_pill_input"
+          android:fontFamily="sans-serif-medium"
+          android:hint="@string/Surname"
+          android:imeOptions="actionNext"
+          android:inputType="textCapWords|textPersonName"
+          android:maxLines="1"
+          android:paddingHorizontal="24dp"
+          android:textColor="@color/text_primary"
+          android:textColorHint="@color/color_icon_inactive"
+          android:textSize="15sp"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/tv_label_surname" />
+
+      <!-- Email Label -->
+      <TextView
+          android:id="@+id/tv_label_email"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="20dp"
+          android:fontFamily="sans-serif-medium"
+          android:text="@string/Email"
+          android:textColor="@color/text_primary"
+          android:textSize="16sp"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/et_surname" />
+
+      <!-- Email Input -->
+      <EditText
+          android:id="@+id/et_email"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:minHeight="56dp"
+          android:layout_marginTop="8dp"
+          android:autofillHints="emailAddress"
+          android:background="@drawable/bg_pill_input"
+          android:fontFamily="sans-serif-medium"
+          android:hint="@string/Email"
+          android:imeOptions="actionNext"
+          android:inputType="textEmailAddress"
+          android:maxLines="1"
+          android:paddingHorizontal="24dp"
+          android:textColor="@color/text_primary"
+          android:textColorHint="@color/color_icon_inactive"
+          android:textSize="15sp"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/tv_label_email" />
+
+      <!-- Password Label -->
+      <TextView
+          android:id="@+id/tv_label_password"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="20dp"
+          android:fontFamily="sans-serif-medium"
+          android:text="@string/password"
+          android:textColor="@color/text_primary"
+          android:textSize="16sp"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/et_email" />
+
+      <!-- Password Input -->
+      <EditText
+          android:id="@+id/et_password"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:minHeight="56dp"
+          android:layout_marginTop="8dp"
+          android:autofillHints="newPassword"
+          android:background="@drawable/bg_pill_input"
+          android:fontFamily="sans-serif-medium"
+          android:hint="@string/password"
+          android:imeOptions="actionNext"
+          android:inputType="textPassword"
+          android:paddingHorizontal="24dp"
+          android:textColor="@color/text_primary"
+          android:textColorHint="@color/color_icon_inactive"
+          android:textSize="15sp"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/tv_label_password" />
+
+      <!-- Password Requirements Container -->
+      <LinearLayout
+          android:id="@+id/ll_password_requirements"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="8dp"
+          android:orientation="vertical"
+          android:paddingHorizontal="12dp"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/et_password">
+
+        <TextView
+            android:id="@+id/tv_req_length"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:text="@string/password_must_be_at_least_8_characters"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tv_req_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:fontFamily="sans-serif"
+            android:text="@string/password_must_contain_at_least_one_number"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp" />
+
+      </LinearLayout>
+
+      <!-- Confirm Password Label -->
+      <TextView
+          android:id="@+id/tv_label_confirm_password"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="20dp"
+          android:fontFamily="sans-serif-medium"
+          android:text="@string/confirm_password"
+          android:textColor="@color/text_primary"
+          android:textSize="16sp"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/ll_password_requirements" />
+
+      <!-- Confirm Password Input -->
+      <EditText
+          android:id="@+id/et_confirm_password"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:minHeight="56dp"
+          android:layout_marginTop="8dp"
+          android:autofillHints="password"
+          android:background="@drawable/bg_pill_input"
+          android:fontFamily="sans-serif-medium"
+          android:hint="@string/confirm_password"
+          android:imeOptions="actionDone"
+          android:inputType="textPassword"
+          android:maxLines="1"
+          android:paddingHorizontal="24dp"
+          android:textColor="@color/text_primary"
+          android:textColorHint="@color/color_icon_inactive"
+          android:textSize="15sp"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/tv_label_confirm_password" />
+
+      <!-- Done Button -->
+      <androidx.appcompat.widget.AppCompatButton
+          android:id="@+id/btn_done"
+          android:layout_width="0dp"
+          android:layout_height="56dp"
+          android:layout_marginTop="36dp"
+          android:background="@drawable/bg_pill_button"
+          android:fontFamily="sans-serif-medium"
+          android:text="@string/Create_Profile"
+          android:textAllCaps="false"
+          android:textColor="@color/white"
+          android:textSize="16sp"
+          android:textStyle="bold"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/et_confirm_password" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+  </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

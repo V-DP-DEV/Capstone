@@ -30,7 +30,7 @@ public class AuthSignupFragment extends Fragment {
   public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    binding.buttonSecond.setOnClickListener(v ->
+    binding.tvTitle.setOnClickListener(v ->
         NavHostFragment.findNavController(AuthSignupFragment.this)
             .navigate(R.id.action_signup_to_login)
     );
