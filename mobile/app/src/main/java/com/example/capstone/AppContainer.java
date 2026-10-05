@@ -44,7 +44,7 @@ public class AppContainer {
     gson = new Gson();
 
     apiClient = new ApiClient(secureSession,gson);
-    authService = new AuthService(apiClient,secureSession);
+    authService = new AuthService(apiClient,secureSession,preferenceManager);
     authRepository = new AuthRepository(authService);
 
     apiClient.setRefreshCaller(()->authRepository.refreshToken());
