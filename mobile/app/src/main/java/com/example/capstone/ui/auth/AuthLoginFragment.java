@@ -1,5 +1,6 @@
 package com.example.capstone.ui.auth;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentAuthLoginBinding;
+import com.example.capstone.ui.user.UserActivity;
 
 public class AuthLoginFragment extends Fragment {
 
@@ -25,6 +27,14 @@ public class AuthLoginFragment extends Fragment {
   ) {
 
     binding = FragmentAuthLoginBinding.inflate(inflater, container, false);
+    binding.btnSignIn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        Intent intent = new Intent(requireContext(), UserActivity.class);
+        startActivity(intent);
+      }
+    });
+
     return binding.getRoot();
 
   }
