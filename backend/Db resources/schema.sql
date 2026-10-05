@@ -7,6 +7,8 @@ CREATE TABLE users (
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     role ENUM('USER', 'ADMIN') NOT NULL DEFAULT 'USER',
+    firstname varchar(255) NOT NULL,
+    surname varchar(255) NOT NULL,
 
     CONSTRAINT uk_users_email
         UNIQUE (email)
@@ -317,8 +319,35 @@ CREATE TABLE auth_tokens (
     CONSTRAINT fk_auth_tokens_user
         FOREIGN KEY (user_id)
         REFERENCES users(id)
+        ON DELETE CASCADE
 );
 
+
+-- =========================================================
+-- REFRESH TOKENS
+-- =========================================================
+
+CREATE TABLE refresh_tokens (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT UNSIGNED NOT NULL,
+
+    token_hash CHAR(64) NOT NULL,
+
+    device_id VARCHAR(255) NULL,
+    device_name VARCHAR(255) NULL,
+
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expires_at DATETIME NOT NULL,
+    revoked_at DATETIME NULL,
+
+    CONSTRAINT uk_refresh_tokens_token_hash
+        UNIQUE (token_hash),
+
+    CONSTRAINT fk_refresh_tokens_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE
+);
 
 -- =========================================================
 -- AUTH LOGS
@@ -334,11 +363,13 @@ CREATE TABLE auth_logs (
 
     CONSTRAINT fk_auth_log_user
         FOREIGN KEY (user_id)
-        REFERENCES users(id),
+        REFERENCES users(id)
+        ON DELETE SET NULL,
 
     CONSTRAINT fk_auth_log_token
         FOREIGN KEY (token_id)
         REFERENCES auth_tokens(id)
+        ON DELETE SET NULL
 );
 
 
@@ -348,14 +379,15 @@ CREATE TABLE auth_logs (
 
 CREATE TABLE audit_logs (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    admin_id BIGINT UNSIGNED NOT NULL,
+    user_id BIGINT UNSIGNED NULL,
     action VARCHAR(100) NOT NULL,
     ip_address VARCHAR(45) NOT NULL,
     entity_type VARCHAR(100) NOT NULL,
     entity_id BIGINT UNSIGNED NOT NULL,
     at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_audit_logs_admin
-        FOREIGN KEY (admin_id)
+    CONSTRAINT fk_audit_logs_user
+        FOREIGN KEY (user_id)
         REFERENCES users(id)
+        ON DELETE SET NULL
 );

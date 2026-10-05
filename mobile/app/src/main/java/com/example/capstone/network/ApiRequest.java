@@ -85,8 +85,7 @@ public class ApiRequest {
   }
 
   //used to add to auth header
-  /*public void addAuthHeader(String token){
+  public void addAuthHeader(String token){
     headers.put("Authorization","Bearer " + token);
   }
-  */
 }
