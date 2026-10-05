@@ -42,6 +42,9 @@ public class SecureSession {
   public LiveData<Boolean> getLoggedIn() {
     return loggedIn;
   }
+  public void setLoggedIn(boolean value){
+    loggedIn.setValue(value);
+  }
 
   public void notifySessionExpired() {
     loggedIn.postValue(false);

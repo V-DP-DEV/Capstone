@@ -1,24 +1,30 @@
 package com.example.capstone.service;
 
-
 import com.example.capstone.model.request.LoginRequest;
 import com.example.capstone.model.request.RefreshRequest;
 import com.example.capstone.model.request.SignupRequest;
 import com.example.capstone.model.response.LoginResponse;
 import com.example.capstone.network.ApiCallback;
 import com.example.capstone.network.ApiClient;
+import com.example.capstone.network.ApiError;
 import com.example.capstone.network.ApiRequest;
 import com.example.capstone.network.ApiResponse;
+import com.example.capstone.util.PreferenceManager;
 import com.example.capstone.util.SecureSession;
 
-public class AuthService {
-    private final ApiClient apiClient;
-    private final SecureSession session;
+import java.util.UUID;
+import java.util.prefs.AbstractPreferences;
+import java.util.prefs.PreferenceChangeEvent;
 
-    public AuthService(ApiClient apiClient, SecureSession session) {
-        this.apiClient = apiClient;
-        this.session = session;
-    }
+public class AuthService {
+  private final ApiClient apiClient;
+  private final SecureSession session;
+  private final PreferenceManager prefManager;
+  public AuthService(ApiClient apiClient,SecureSession session,PreferenceManager prefManager){
+    this.apiClient = apiClient;
+    this.session = session;
+    this.prefManager = prefManager;
+  }
 
     public void login(
             LoginRequest loginRequest,

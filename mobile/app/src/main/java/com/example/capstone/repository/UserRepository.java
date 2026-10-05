@@ -6,7 +6,7 @@ import com.example.capstone.model.request.UpdateUserRequest;
 import com.example.capstone.network.ApiCallback;
 import com.example.capstone.service.UserService;
 
-public class UserRepository {
+public class UserRepository implements IUserRepository{
   private final UserService userService;
   public UserRepository(UserService userService){
     this.userService = userService;
