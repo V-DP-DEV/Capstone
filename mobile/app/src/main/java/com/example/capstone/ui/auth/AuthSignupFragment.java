@@ -15,6 +15,7 @@ import com.example.capstone.MyApplication;
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentAuthSignupBinding;
 import com.example.capstone.repository.AuthRepository;
+import com.example.capstone.repository.IAuthRepository;
 import com.example.capstone.viewmodel.LoginViewModel;
 import com.example.capstone.viewmodel.SignupViewModel;
 import com.example.capstone.viewmodel.ViewModelFactory;
@@ -40,7 +41,7 @@ public class AuthSignupFragment extends Fragment {
 
     MyApplication app = (MyApplication) requireActivity().getApplication();
     AppContainer container = app.getAppContainer();
-    AuthRepository authRepository = container.authRepository;
+    IAuthRepository authRepository = container.authRepository;
     //create factory
     ViewModelFactory<SignupViewModel> factory = new ViewModelFactory<>(
         ()-> new SignupViewModel(authRepository));

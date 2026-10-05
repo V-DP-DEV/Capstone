@@ -1,7 +1,10 @@
 <?php
     class AuthMiddleware{
         //require token
-        public static function requireToken(){
+        public function __construct(private IAuthTokenRepository $authTokenRepository,private IUserRepository $userRepository,private Log $log,private RequestContext $requestContext){}
+
+        
+        public function requireToken(){
             
             //get the token
             $token = Request::getToken();
@@ -14,7 +17,7 @@
             $tokenHash = Token::hashToken($token);
             
             //find the token
-            $auth = AuthTokenRepository::findByTokenHash($tokenHash);
+            $auth = $this->authTokenRepository->findByTokenHash($tokenHash);
             //if not found throw unauthorized
             if(!$auth){
                 throw new UnauthorizedException();
@@ -27,27 +30,27 @@
 
             //if expired, revoke token, log and throw expirer
             if($auth['expires_at'] < date('Y-m-d H:i:s')){
-                AuthTokenRepository::revokeByTokenHash($tokenHash);
-                Log::tryAuthLog($auth['user_id'],'LOGIN_EXPIRED',$auth['id']);
+                $this->authTokenRepository->revokeByTokenHash($tokenHash);
+                $this->log->tryAuthLog($auth['user_id'],'LOGIN_EXPIRED',$auth['id']);
                 throw new UnauthorizedException("Token expired");
             }
             
             //get the user details
-            $user = UserRepository::getUserRole($auth['user_id']);
+            $user = $this->userRepository->getUserRole($auth['user_id']);
             //set the requestContext with role and user_id
-            RequestContext::setUser($auth['user_id'],$user['role']);
+            $this->requestContext->setUser($auth['user_id'],$user['role']);
         }
         
-        public static function requireUser(){
+        public function requireUser(){
             //if not user throw exception
-            if(RequestContext::getRole()!== 'USER'){
+            if($this->requestContext->getRole()!== 'USER'){
                 throw new ForbiddenException();
             }
         }
 
-        public static function requireAdmin(){
+        public function requireAdmin(){
             //if not admin throw exception
-            if(RequestContext::getRole()!== 'ADMIN'){
+            if($this->requestContext->getRole()!== 'ADMIN'){
                 throw new ForbiddenException();
             }
         }

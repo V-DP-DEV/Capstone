@@ -11,6 +11,7 @@ import com.example.capstone.model.request.SignupRequest;
 import com.example.capstone.model.response.LoginResponse;
 import com.example.capstone.network.ApiCallback;
 import com.example.capstone.network.ApiClient;
+import com.example.capstone.network.ApiError;
 import com.example.capstone.network.ApiRequest;
 import com.example.capstone.network.ApiResponse;
 import com.example.capstone.util.SecureSession;

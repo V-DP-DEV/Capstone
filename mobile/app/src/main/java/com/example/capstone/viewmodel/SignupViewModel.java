@@ -7,13 +7,14 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.capstone.repository.AuthRepository;
+import com.example.capstone.repository.IAuthRepository;
 
 import java.lang.invoke.MutableCallSite;
 
 import kotlin.MustUseReturnValue;
 
 public class SignupViewModel extends ViewModel {
-  private final AuthRepository authRepository;
+  private final IAuthRepository authRepository;
 
   private final MutableLiveData<Boolean> loading = new MutableLiveData<>(false);
   private final MutableLiveData<Boolean> signUpSuccess = new MutableLiveData<>(false);
@@ -58,7 +59,7 @@ public class SignupViewModel extends ViewModel {
     return generalError;
   }
 
-  public SignupViewModel(AuthRepository authRepository){
+  public SignupViewModel(IAuthRepository authRepository){
     this.authRepository = authRepository;
   }
   public LiveData<Boolean> getLoading(){

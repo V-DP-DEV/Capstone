@@ -9,7 +9,7 @@ import com.example.capstone.model.response.LoginResponse;
 import com.example.capstone.network.ApiCallback;
 import com.example.capstone.service.AuthService;
 
-public class AuthRepository {
+public class AuthRepository implements IAuthRepository{
   private final AuthService authService;
 
   public AuthRepository(AuthService authService){
