@@ -1,63 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <!-- Base Colors -->
   <color name="black">#FF000000</color>
-  <!-- [cite: 9]  -->
   <color name="white">#FFFFFFFF</color>
-  <!-- [cite: 10]  -->
-  <!--  Primary Theme & Accent Colors  -->
-  <color name="color_purple_primary">#FFA14078</color>
-  <!-- [cite: 10]  -->
-  <color name="color_green_progress">#FF026110</color>
-  <!-- [cite: 9]  -->
-  <color name="color_orange_progress">#FFF58F00</color>
-  <!-- [cite: 10]  -->
-  <color name="color_track_progress">#FFEBEFF6</color>
-  <!-- [cite: 10]  -->
-  <!--  Background & Card Surface Colors  -->
-  <color name="color_bg_main">#FFF6F8FC</color>
-  <!-- [cite: 10]  -->
-  <color name="color_card_offwhite">#FFFDFDFF</color>
-  <!-- [cite: 10]  -->
-  <color name="color_icon_inactive">#FFB7C0D2</color>
-  <!-- [cite: 10]  -->
-  <color name="card_background_alt">#FFFDFDFF</color>
-  <!-- [cite: 1, 10] -->
-  <color name="card_background">#FFFFFFFF</color>
- 
-  <color name="screen_background">#FFF6F8FC</color>
+
+  <!-- Primary Brand & Accent Colors -->
   <color name="primary_purple">#FFA14078</color>
-  <color name="icon_circle_bg">#FFF6F8FC</color>
+  <color name="color_purple_primary">@color/primary_purple</color>
+
   <color name="primary_blue">#FF312CAA</color>
   <color name="dark_slate_blue">#FF353E5C</color>
-  <color name="text_secondary">#FF666666</color>
-  <color name="progress_green">#FF026110</color>
-  <!-- [cite: 9] -->
-  <color name="progress_track">#FFEBEFF6</color>
-  <!-- [cite: 10] -->
-  <color name="progress_orange">#FFF58F00</color>
-  <!-- [cite: 10] -->
-  <color name="text_disabled">#FF868DA6</color>
-  <!--  Text Colors  -->
-  <color name="color_text_dark">#FF101010</color>
-  <!-- [cite: 9]  -->
-  <color name="color_text_title">#FF121212</color>
-  <!-- [cite: 9]  -->
-  <color name="color_text_subtitle">#FF040404</color>
-  <!-- [cite: 9]  -->
-  <color name="color_text_chart_val">#FF131414</color>
-  <!-- [cite: 9]  -->
-  <color name="color_text_chart_label_1">#FF0F0F0F</color>
-  <!-- [cite: 9]  -->
-  <color name="color_text_chart_val_2">#FF0D0D0D</color>
-  <!-- [cite: 9]  -->
-  <color name="color_text_chart_label_2">#FF0E0E0E</color>
-  <!-- [cite: 9]  -->
-  <color name="color_text_muted">#FF868DA6</color>
-  <!-- [cite: 9]  -->
+  <color name="gray_dark_15">#FF353E5C</color>
+
+  <!-- Surfaces & Backgrounds -->
+  <color name="screen_background">#FFF6F8FC</color>
+  <color name="color_bg_main">@color/screen_background</color>
+  <color name="icon_circle_bg">@color/screen_background</color>
+
+  <color name="card_background">#FFFFFFFF</color>
+  <color name="card_background_alt">#FFFDFDFF</color>
+  <color name="color_card_offwhite">#FFFDFDFF</color>
+
+  <color name="app_background">#FFF8F8FF</color>
+  <color name="candidate_primary">#FFF5F5F5</color>
+
+  <!-- Typography / Text Colors -->
   <color name="text_primary">#FF101010</color>
-  <color name="gray_dark_15">#353E5C</color>
-  <color name="gray_dark_16">#868DA6</color>
-  <color name="gray_dark_18">#B7C0D2</color>
-  <color name="app_background">#F8F8FF</color>
-  <color name="candidate_primary">#F5F5F5</color>
-  <color name="heading_text" >#FAF9F6</color>
+  <color name="color_text_dark">@color/text_primary</color>
+  <color name="color_text_title">@color/text_primary</color>
+  <color name="color_text_subtitle">@color/text_primary</color>
+  <color name="color_text_chart_val">@color/text_primary</color>
+  <color name="color_text_chart_label_1">@color/text_primary</color>
+  <color name="color_text_chart_val_2">@color/text_primary</color>
+  <color name="color_text_chart_label_2">@color/text_primary</color>
+
+  <color name="text_secondary">#FF666666</color>
+  <color name="heading_text">#FFFAF9F6</color>
+
+  <color name="text_disabled">#FF868DA6</color>
+  <color name="color_text_muted">@color/text_disabled</color>
+  <color name="gray_dark_16">@color/text_disabled</color>
+
+  <color name="color_icon_inactive">#FFB7C0D2</color>
+  <color name="gray_dark_18">@color/color_icon_inactive</color>
+
+  <!-- Progress & Status Colors -->
+  <color name="progress_green">#FF026110</color>
+  <color name="color_green_progress">@color/progress_green</color>
+
+
+  <color name="progress_orange">#FFF58F00</color>
+  <color name="color_orange_progress">@color/progress_orange</color>
+
+  <color name="progress_track">#FFEBEFF6</color>
+  <color name="color_track_progress">@color/progress_track</color>
+  <color name="red">#FF0000</color>
 </resources>
