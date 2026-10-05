@@ -32,7 +32,7 @@ public class AuthSignupFragment extends Fragment {
 
     binding.tvTitle.setOnClickListener(v ->
         NavHostFragment.findNavController(AuthSignupFragment.this)
-            .navigate(R.id.action_signup_to_login)
+            .navigate(R.id.action_signUpFragment_to_authLoginFragment)
     );
   }
 

@@ -48,9 +48,11 @@
   <color name="progress_green">#FF026110</color>
   <color name="color_green_progress">@color/progress_green</color>
 
+
   <color name="progress_orange">#FFF58F00</color>
   <color name="color_orange_progress">@color/progress_orange</color>
 
   <color name="progress_track">#FFEBEFF6</color>
   <color name="color_track_progress">@color/progress_track</color>
+  <color name="red">#FF0000</color>
 </resources>

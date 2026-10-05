@@ -6,7 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.capstone.R;
@@ -27,13 +29,15 @@ public class AuthLoginFragment extends Fragment {
 
   }
 
-  public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+  @Override
+  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    binding.btnSignIn.setOnClickListener(v ->
-        NavHostFragment.findNavController(AuthLoginFragment.this)
-            .navigate(R.id.action_login_to_signup)
-    );
+    // Navigate to Sign Up Fragment when prompt is clicked
+    binding.tvSignUpPrompt.setOnClickListener(v -> {
+      Navigation.findNavController(v)
+              .navigate(R.id.action_authLoginFragment_to_authSignUpFragment);
+    });
   }
 
   @Override

@@ -16,23 +16,22 @@
       android:theme="@style/Theme.Capstone">
     <activity
         android:name=".ui.SplashActivity"
-        android:exported="true"
-        android:theme="@style/Theme.Capstone">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
-
-        <category android:name="android.intent.category.LAUNCHER" />
-      </intent-filter>
-    </activity>
+        android:exported="false"
+        android:theme="@style/Theme.Capstone" />
     <activity
         android:name=".MainActivity"
         android:exported="false"
         android:theme="@style/Theme.Capstone" />
     <activity
         android:name=".ui.auth.AuthActivity"
-        android:exported="false"
+        android:exported="true"
         android:theme="@style/Theme.Capstone"
-        android:windowSoftInputMode="adjustResize" />
+        android:windowSoftInputMode="adjustResize">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
     <activity
         android:name=".ui.user.UserActivity"
         android:exported="false"
@@ -43,10 +42,7 @@
         android:exported="false"
         android:theme="@style/Theme.Capstone"
         android:windowSoftInputMode="adjustResize" />
-    <activity
-        android:name=".ui.user.AuthActivity"
-        android:exported="false"
-        android:windowSoftInputMode="adjustResize" />
+
   </application>
 
 </manifest>
