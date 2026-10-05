@@ -55,6 +55,21 @@
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toBottomOf="@id/tv_title" />
 
+      <TextView
+          android:id="@+id/tv_name_error"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="16dp"
+          android:layout_marginTop="4dp"
+          android:textColor="#D32F2F"
+          android:textSize="12sp"
+          android:visibility="gone"
+          app:layout_constraintEnd_toEndOf="@id/et_name"
+          app:layout_constraintStart_toStartOf="@id/et_name"
+          app:layout_constraintTop_toBottomOf="@id/et_name"
+          tools:text="Please enter your name"
+          tools:visibility="visible" />
+
       <!-- Surname Label -->
       <EditText
           android:id="@+id/et_name"
@@ -111,6 +126,21 @@
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toBottomOf="@id/tv_label_surname" />
 
+      <TextView
+          android:id="@+id/tv_surname_error"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="16dp"
+          android:layout_marginTop="4dp"
+          android:textColor="#D32F2F"
+          android:textSize="12sp"
+          android:visibility="gone"
+          app:layout_constraintEnd_toEndOf="@id/et_surname"
+          app:layout_constraintStart_toStartOf="@id/et_surname"
+          app:layout_constraintTop_toBottomOf="@id/et_surname"
+          tools:text="Please enter your surname"
+          tools:visibility="visible" />
+
       <!-- Email Label -->
       <TextView
           android:id="@+id/tv_label_email"
@@ -146,6 +176,21 @@
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toBottomOf="@id/tv_label_email" />
 
+      <TextView
+          android:id="@+id/tv_email_error"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="16dp"
+          android:layout_marginTop="4dp"
+          android:textColor="#D32F2F"
+          android:textSize="12sp"
+          android:visibility="gone"
+          app:layout_constraintEnd_toEndOf="@id/et_email"
+          app:layout_constraintStart_toStartOf="@id/et_email"
+          app:layout_constraintTop_toBottomOf="@id/et_email"
+          tools:text="Please enter a valid email address"
+          tools:visibility="visible" />
+
       <!-- Password Label -->
       <TextView
           android:id="@+id/tv_label_password"
@@ -179,6 +224,21 @@
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toBottomOf="@id/tv_label_password" />
+
+      <TextView
+          android:id="@+id/tv_password_error"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="16dp"
+          android:layout_marginTop="4dp"
+          android:textColor="#D32F2F"
+          android:textSize="12sp"
+          android:visibility="gone"
+          app:layout_constraintEnd_toEndOf="@id/et_password"
+          app:layout_constraintStart_toStartOf="@id/et_password"
+          app:layout_constraintTop_toBottomOf="@id/et_password"
+          tools:text="Password does not meet requirements"
+          tools:visibility="visible" />
 
       <!-- Password Requirements Container -->
       <LinearLayout
@@ -247,6 +307,21 @@
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toBottomOf="@id/tv_label_confirm_password" />
+
+      <TextView
+          android:id="@+id/tv_confirm_password_error"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="16dp"
+          android:layout_marginTop="4dp"
+          android:textColor="#D32F2F"
+          android:textSize="12sp"
+          android:visibility="gone"
+          app:layout_constraintEnd_toEndOf="@id/et_confirm_password"
+          app:layout_constraintStart_toStartOf="@id/et_confirm_password"
+          app:layout_constraintTop_toBottomOf="@id/et_confirm_password"
+          tools:text="Passwords do not match"
+          tools:visibility="visible" />
 
       <!-- Done Button -->
       <androidx.appcompat.widget.AppCompatButton
