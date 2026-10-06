@@ -10,6 +10,8 @@ import com.example.capstone.network.ApiResponse;
 import com.example.capstone.repository.IAuthRepository;
 import com.example.capstone.util.FormValidator;
 
+import java.util.Map;
+
 public class SignupViewModel extends ViewModel {
 
   private final IAuthRepository authRepository;
@@ -59,8 +61,6 @@ public class SignupViewModel extends ViewModel {
   }
 
 
-
-
   public LiveData<String> getFirstname() {
     return firstname;
   }
@@ -80,6 +80,7 @@ public class SignupViewModel extends ViewModel {
   public LiveData<String> getConfirmPassword() {
     return confirmPassword;
   }
+
 
   public LiveData<String> getFirstnameError() {
     return firstnameError;
@@ -135,10 +136,8 @@ public class SignupViewModel extends ViewModel {
   }
 
 
-
   public void signup() {
 
-    // Clear previous errors
     firstnameError.setValue(null);
     surnameError.setValue(null);
     emailError.setValue(null);
@@ -162,56 +161,51 @@ public class SignupViewModel extends ViewModel {
 
     boolean validConfirmPassword =
             password.getValue() != null
-                    && password.getValue().equals(confirmPassword.getValue());
+                    && password.getValue().equals(
+                    confirmPassword.getValue()
+            );
 
 
-    // First name validation
     if (!validFirstname) {
       firstnameError.setValue(
               "First name is required."
       );
     }
 
-    // Surname validation
     if (!validSurname) {
       surnameError.setValue(
               "Surname is required."
       );
     }
 
-    // Email validation
     if (!validEmail) {
       emailError.setValue(
               "Please enter a valid email address."
       );
     }
 
-    // Password validation
     if (!validPassword) {
       passwordError.setValue(
               "Password must be at least 8 characters and contain a number and special character."
       );
     }
 
-    // Confirm password validation
     if (!validConfirmPassword) {
       confirmPasswordError.setValue(
               "Passwords do not match."
       );
     }
 
-    // Stop if anything is invalid
+
     if (!validFirstname
             || !validSurname
             || !validEmail
             || !validPassword
             || !validConfirmPassword) {
-
       return;
     }
 
 
-    // Create signup request
     SignupRequest request = new SignupRequest();
 
     request.setFirstname(firstname.getValue());
@@ -219,26 +213,24 @@ public class SignupViewModel extends ViewModel {
     request.setEmail(email.getValue());
     request.setPassword(password.getValue());
 
-
-    // Start loading
     loading.setValue(true);
 
-
-    // Call repository
     authRepository.signup(
             request,
             new ApiCallback<Void>() {
 
               @Override
-              public void onSuccess(ApiResponse<Void> response) {
-
+              public void onSuccess(
+                      ApiResponse<Void> response
+              ) {
                 loading.setValue(false);
                 signUpSuccess.setValue(true);
               }
 
               @Override
-              public void onGeneralError(Exception e) {
-
+              public void onGeneralError(
+                      Exception e
+              ) {
                 loading.setValue(false);
 
                 generalError.setValue(
@@ -250,8 +242,51 @@ public class SignupViewModel extends ViewModel {
               public void onHttpError(
                       ApiResponse<Void> response
               ) {
-
                 loading.setValue(false);
+
+                if (response != null
+                        && response.isValidationError()
+                        && response.getError() != null
+                        && response.getError().isFieldValidationError()) {
+
+                  Map<String, String> details =
+                          response.getError().getDetails();
+
+                  if (details != null) {
+
+                    if (details.containsKey("firstname")) {
+                      firstnameError.setValue(
+                              details.get("firstname")
+                      );
+                    }
+
+                    if (details.containsKey("surname")) {
+                      surnameError.setValue(
+                              details.get("surname")
+                      );
+                    }
+
+                    if (details.containsKey("email")) {
+                      emailError.setValue(
+                              details.get("email")
+                      );
+                    }
+
+                    if (details.containsKey("password")) {
+                      passwordError.setValue(
+                              details.get("password")
+                      );
+                    }
+
+                    if (details.containsKey("confirmPassword")) {
+                      confirmPasswordError.setValue(
+                              details.get("confirmPassword")
+                      );
+                    }
+                  }
+
+                  return;
+                }
 
                 if (response != null
                         && response.getError() != null) {

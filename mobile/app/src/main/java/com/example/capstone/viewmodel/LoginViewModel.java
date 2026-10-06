@@ -1,4 +1,4 @@
- package com.example.capstone.viewmodel;
+package com.example.capstone.viewmodel;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -10,6 +10,8 @@ import com.example.capstone.network.ApiCallback;
 import com.example.capstone.network.ApiResponse;
 import com.example.capstone.repository.IAuthRepository;
 import com.example.capstone.util.FormValidator;
+
+import java.util.Map;
 
 public class LoginViewModel extends ViewModel {
 
@@ -82,13 +84,15 @@ public class LoginViewModel extends ViewModel {
 
   public void login() {
 
-    // Clear previous errors
     emailError.setValue(null);
     passwordError.setValue(null);
     generalError.setValue(null);
 
-    // Validate email
-    boolean validEmail = FormValidator.isValidEmail(email.getValue());
+    boolean validEmail =
+            FormValidator.isValidEmail(email.getValue());
+
+    boolean validPassword =
+            FormValidator.isValidPassword(password.getValue());
 
     if (!validEmail) {
       emailError.setValue(
@@ -96,21 +100,16 @@ public class LoginViewModel extends ViewModel {
       );
     }
 
-// Validate password
-    boolean validPassword = FormValidator.isValidPassword(password.getValue());
-
     if (!validPassword) {
       passwordError.setValue(
               "Password must be at least 8 characters and contain a number and special character."
       );
     }
 
-// Stop if either field is invalid
     if (!validEmail || !validPassword) {
       return;
     }
 
-    // Create login request
     LoginRequest request = new LoginRequest();
 
     request.setEmail(email.getValue());
@@ -119,10 +118,8 @@ public class LoginViewModel extends ViewModel {
     request.setDeviceId();
     request.setDeviceName();
 
-    // Start loading
     loading.setValue(true);
 
-    // Call repository
     authRepository.login(
             request,
             new ApiCallback<LoginResponse>() {
@@ -151,6 +148,32 @@ public class LoginViewModel extends ViewModel {
                 loading.setValue(false);
 
                 if (response != null
+                        && response.isValidationError()
+                        && response.getError() != null
+                        && response.getError().isFieldValidationError()) {
+
+                  Map<String, String> details =
+                          response.getError().getDetails();
+
+                  if (details != null) {
+
+                    if (details.containsKey("email")) {
+                      emailError.setValue(
+                              details.get("email")
+                      );
+                    }
+
+                    if (details.containsKey("password")) {
+                      passwordError.setValue(
+                              details.get("password")
+                      );
+                    }
+                  }
+
+                  return;
+                }
+
+                if (response != null
                         && response.getError() != null) {
 
                   generalError.setValue(
@@ -168,4 +191,3 @@ public class LoginViewModel extends ViewModel {
     );
   }
 }
-
