@@ -278,9 +278,12 @@
           app:layout_constraintTop_toBottomOf="@id/tv_title_quick_actions">
         <!--  Action 1  -->
         <LinearLayout
+            android:id="@+id/action_start_interview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
@@ -300,6 +303,7 @@
               android:text="Start\ninterview"
               android:textColor="@color/text_primary"
               android:textSize="12sp" />
+
         </LinearLayout>
         <!--  Action 2  -->
         <LinearLayout

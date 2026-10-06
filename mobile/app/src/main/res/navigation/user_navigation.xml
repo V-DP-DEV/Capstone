@@ -10,4 +10,24 @@
       android:name="com.example.capstone.ui.user.UserDashboardFragment"
       android:label="Login"
       tools:layout="@layout/fragment_auth_login"></fragment>
+
+  <fragment
+      android:id="@+id/userDashboardFragment"
+      android:name="com.example.capstone.ui.user.UserDashboardFragment"
+      android:label="User Dashboard"
+      tools:layout="@layout/fragment_user_dashboard">
+
+    <!-- Action targeting Select Difficulty Fragment -->
+    <action
+        android:id="@+id/action_userDashboardFragment_to_selectDifficultyFragment"
+        app:destination="@id/selectDifficultyFragment" />
+  </fragment>
+
+  <!-- Select Difficulty Screen -->
+  <fragment
+      android:id="@+id/selectDifficultyFragment"
+      android:name="com.example.capstone.ui.mockInterview.SelectDifficultyFragment"
+      android:label="Select Difficulty"
+      tools:layout="@layout/fragment_select_difficulty" />
+
 </navigation>
