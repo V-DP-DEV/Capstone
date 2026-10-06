@@ -198,7 +198,10 @@ CREATE TABLE interview_user_attempts (
 
     CONSTRAINT fk_interview_user_attempts_interview
         FOREIGN KEY (interview_id)
-        REFERENCES interviews(id)
+        REFERENCES interviews(id),
+
+    CONSTRAINT uk_interview_user_attempt
+        UNIQUE (user_id, interview_id)
 );
 
 
@@ -211,7 +214,7 @@ CREATE TABLE interview_question_attempts (
     user_attempt_id BIGINT UNSIGNED NOT NULL,
     question_id BIGINT UNSIGNED NOT NULL,
     answer TEXT NOT NULL,
-    time_taken INT UNSIGNED NOT NULL,
+    seconds_spent INT UNSIGNED NOT NULL,
 
     CONSTRAINT fk_interview_question_attempts_user_attempt
         FOREIGN KEY (user_attempt_id)

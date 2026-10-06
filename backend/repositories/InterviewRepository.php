@@ -8,7 +8,8 @@
         }
 
         public function getUserInterview(int $id){
-            $query = "SELECT id,interview_name,difficulty,estimated_time_in_minutes FROM interviews WHERE id = ?";
+            //map as to match frontend
+            $query = "SELECT id,interview_name as name,difficulty,estimated_time_in_minutes as duration FROM interviews WHERE id = ?";
             $interview = $this->db->queryOne($query,[$id]);
             
             $query = "SELECT iq.id,iq.difficulty,iq.text,qt.name FROM interview_questions iq JOIN question_types qt ON iq.type_id = qt.id WHERE iq.active =1 AND iq.interview_id=?";
@@ -18,8 +19,8 @@
         }
 
         public function getUserInterviews(?int $categoryId = null, ?string $name = null, ?string $difficulty = null){
-            //return ["fah"=>"ga"];
-            $query = "SELECT id,interview_name,difficulty FROM interviews WHERE 1=1";
+            //map name for frontEnd purposes
+            $query = "SELECT id,interview_name as name,difficulty FROM interviews WHERE 1=1";
 
             //add filters
             $params = [];
@@ -64,7 +65,7 @@
             foreach ($generalInterview as &$interview) {
                 $id = $interview['id'];
 
-                $interview['question_types'] =$typesByInterview[$id] ?? [];
+                $interview['questionTypes'] =$typesByInterview[$id] ?? [];
                 unset($interview);
             }
             return $generalInterview;

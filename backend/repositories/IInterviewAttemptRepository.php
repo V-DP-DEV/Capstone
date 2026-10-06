@@ -1,4 +1,4 @@
 <?php
     interface IInterviewAttemptRepository{
-        public function submitAttempt($interviewId,$answers);
+        public function submitAttempt($userId,$interviewId,$answers);
     }
