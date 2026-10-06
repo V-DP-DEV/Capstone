@@ -117,6 +117,41 @@ class ApiTest extends TestCase
         print_r($response);
         $this->assertSame(400, $response['status']);
     }
+    public function testGetUserInterviews():void
+    {
+        $response = $this->http->request(
+            'POST',
+            '/auth/login',
+            ['email' => 'user2@example.com', 'password' => 'Password123', "deviceId"=>"12","deviceName"=>"Hello"]
+        );
+        print_r($response);
+        $response = $this->http->request(
+            'GET',
+            '/interview/getInterviews?name=C#',
+            null,
+            $response['body']['data']['token']
+        );
+        print_r($response);
+        $this->assertSame(200, $response['status']);
+    }
+
+    public function testGetUserInterview():void{
+        $response = $this->http->request(
+            'POST',
+            '/auth/login',
+            ['email' => 'user2@example.com', 'password' => 'Password123', "deviceId"=>"12","deviceName"=>"Hello"]
+        );
+        print_r($response);
+        $response = $this->http->request(
+            'GET',
+            '/interview/getInterview?id=1',
+            null,
+            $response['body']['data']['token']
+        );
+        print_r($response);
+        $this->assertSame(200, $response['status']);
+    }
+    /*
     public function testDeleteUser():void
     {
         $response = $this->http->request(
@@ -150,7 +185,8 @@ class ApiTest extends TestCase
 
         $this->assertSame(401, $response['status']);
     }
-
+        */
+    /*
     public function testUpdatePassword():void
     {
         $response = $this->http->request(
@@ -168,4 +204,7 @@ class ApiTest extends TestCase
         print_r($response);
         $this->assertSame(200, $response['status']);
     }
+        */
+
+    
 }

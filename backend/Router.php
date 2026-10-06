@@ -4,7 +4,8 @@
         private static array $publicRoutes = [
             'Auth/login',
             'Auth/signup',
-            'Auth/logout'
+            'Auth/logout',
+            'Interview/getAllInterviewCategories',
         ];
 
         public static function handle($container){
@@ -36,7 +37,7 @@
                 $action = $parts[1] ?? 'index';
 
                 //get the paramaters
-                $params = array_slice($parts,2);
+                $params = [$_GET];
 
                 //if controller doesnt exist throw error
                 if(!class_exists($controllerName)){
