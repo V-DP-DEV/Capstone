@@ -11,21 +11,26 @@ import com.example.capstone.model.request.SignupRequest;
 import com.example.capstone.model.response.LoginResponse;
 import com.example.capstone.network.ApiCallback;
 import com.example.capstone.network.ApiClient;
+import com.example.capstone.network.ApiError;
 import com.example.capstone.network.ApiRequest;
 import com.example.capstone.network.ApiResponse;
+import com.example.capstone.util.PreferenceManager;
 import com.example.capstone.util.SecureSession;
 
 import org.json.JSONObject;
 
 import java.util.UUID;
 import java.util.prefs.AbstractPreferences;
+import java.util.prefs.PreferenceChangeEvent;
 
 public class AuthService {
   private final ApiClient apiClient;
   private final SecureSession session;
-  public AuthService(ApiClient apiClient,SecureSession session){
+  private final PreferenceManager prefManager;
+  public AuthService(ApiClient apiClient,SecureSession session,PreferenceManager prefManager){
     this.apiClient = apiClient;
     this.session = session;
+    this.prefManager = prefManager;
   }
   public void login(
       LoginRequest loginRequest,

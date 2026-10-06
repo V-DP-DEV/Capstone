@@ -7,11 +7,12 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.capstone.repository.AuthRepository;
+import com.example.capstone.repository.IAuthRepository;
 
 import java.lang.invoke.MutableCallSite;
 
 public class LoginViewModel extends ViewModel {
-  private final AuthRepository authRepository;
+  private final IAuthRepository authRepository;
 
   private final MutableLiveData<Boolean> loading = new MutableLiveData<>(false);
   private final MutableLiveData<String> generalError = new MutableLiveData<>();
@@ -39,7 +40,7 @@ public class LoginViewModel extends ViewModel {
     return generalError;
   }
 
-  public LoginViewModel(AuthRepository authRepository){
+  public LoginViewModel(IAuthRepository authRepository){
     this.authRepository = authRepository;
   }
   public LiveData<Boolean> getLoading(){

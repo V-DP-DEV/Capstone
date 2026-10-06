@@ -15,7 +15,7 @@ public class SplashActivity extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
+    System.out.println("Going through splash + rerouting");
 
     PreferenceManager manager = new PreferenceManager(this);
     manager.clear();

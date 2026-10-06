@@ -4,6 +4,9 @@ import android.content.Context;
 
 import com.example.capstone.network.ApiClient;
 import com.example.capstone.repository.AuthRepository;
+import com.example.capstone.repository.IAuthRepository;
+import com.example.capstone.repository.IInterviewAttemptsRepository;
+import com.example.capstone.repository.IUserRepository;
 import com.example.capstone.repository.InterviewAttemptsRepository;
 import com.example.capstone.repository.UserRepository;
 import com.example.capstone.service.AuthService;
@@ -24,12 +27,12 @@ public class AppContainer {
     return gson;
   }
 
-  public final AuthRepository authRepository;
+  public final IAuthRepository authRepository;
   public final AuthService authService;
-  public final UserRepository userRepository;
+  public final IUserRepository userRepository;
   public final UserService userService;
   public final InterviewAttemptsService interviewAttemptsService;
-  public final InterviewAttemptsRepository interviewAttemptsRepository;
+  public final IInterviewAttemptsRepository interviewAttemptsRepository;
   public final ApiClient apiClient;
   public final PreferenceManager preferenceManager;
   public final SecureSession secureSession;
@@ -41,7 +44,7 @@ public class AppContainer {
     gson = new Gson();
 
     apiClient = new ApiClient(secureSession,gson);
-    authService = new AuthService(apiClient,secureSession);
+    authService = new AuthService(apiClient,secureSession,preferenceManager);
     authRepository = new AuthRepository(authService);
 
     apiClient.setRefreshCaller(()->authRepository.refreshToken());

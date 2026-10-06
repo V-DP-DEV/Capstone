@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -15,6 +16,7 @@ import com.example.capstone.MyApplication;
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentAuthSignupBinding;
 import com.example.capstone.repository.AuthRepository;
+import com.example.capstone.repository.IAuthRepository;
 import com.example.capstone.viewmodel.LoginViewModel;
 import com.example.capstone.viewmodel.SignupViewModel;
 import com.example.capstone.viewmodel.ViewModelFactory;
@@ -31,24 +33,19 @@ public class AuthSignupFragment extends Fragment {
   ) {
 
     binding = FragmentAuthSignupBinding.inflate(inflater, container, false);
+    binding.btnDone.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        NavHostFragment.findNavController(AuthSignupFragment.this)
+            .navigate(R.id.action_signUpFragment_to_authLoginFragment);
+      }
+    });
     return binding.getRoot();
 
   }
 
   public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-
-    MyApplication app = (MyApplication) requireActivity().getApplication();
-    AppContainer container = app.getAppContainer();
-    AuthRepository authRepository = container.authRepository;
-    //create factory
-    ViewModelFactory<SignupViewModel> factory = new ViewModelFactory<>(
-        ()-> new SignupViewModel(authRepository));
-    signupViewModel = new ViewModelProvider(this,factory).get(SignupViewModel.class);
-    binding.buttonSecond.setOnClickListener(v ->
-        NavHostFragment.findNavController(AuthSignupFragment.this)
-            .navigate(R.id.action_signup_to_login)
-    );
   }
 
   @Override
