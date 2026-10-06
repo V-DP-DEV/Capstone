@@ -9,6 +9,7 @@ import com.example.capstone.network.ApiCallback;
 import com.example.capstone.network.ApiClient;
 import com.example.capstone.network.ApiRequest;
 import com.example.capstone.network.ApiResponse;
+import com.example.capstone.util.DateTime;
 import com.example.capstone.util.PreferenceManager;
 import com.example.capstone.util.SecureSession;
 
@@ -97,10 +98,74 @@ public class AuthService {
 
     public void signup(
             SignupRequest signupRequest,
-            ApiCallback<Void> callback
+            ApiCallback<LoginResponse> callback
     ) {
+        ApiRequest request = new ApiRequest("auth/signup");
+        request.setRequiresAuthentication(false);
+        request.setBody(signupRequest);
+        request.setMethodPost();
 
+        apiClient.execute(
+                request,
+                LoginResponse.class,
+                new ApiCallback<LoginResponse>() {
+
+                    @Override
+                    public void onSuccess(ApiResponse<LoginResponse> response) {
+                        try {
+                            LoginResponse signupResponse = response.getData();
+
+                            session.saveAccessToken(
+                                    signupResponse.getToken()
+                            );
+
+                            session.saveRefreshToken(
+                                    signupResponse.getRefreshToken()
+                            );
+
+                            session.setSessionExpiration(
+                                    DateTime.utcToLocalMillis(
+                                            signupResponse.getTokenExpiresAt()
+                                    )
+                            );
+
+                            session.setRefreshExpiration(
+                                    DateTime.utcToLocalMillis(
+                                            signupResponse.getRefreshTokenExpiresAt()
+                                    )
+                            );
+
+                            if (signupResponse.getUserRole() != null) {
+                                prefManager.setRole(
+                                        com.example.capstone.domainModels.UserRole.valueOf(
+                                                signupResponse.getUserRole()
+                                        )
+                                );
+                            }
+
+                            session.setLoggedIn(true);
+
+                            callback.onSuccess(response);
+
+                        } catch (Exception e) {
+                            callback.onGeneralError(e);
+                        }
+                    }
+
+
+                    @Override
+                    public void onGeneralError(Exception e) {
+                        callback.onGeneralError(e);
+                    }
+
+                    @Override
+                    public void onHttpError(ApiResponse<LoginResponse> response) {
+                        callback.onHttpError(response);
+                    }
+                }
+        );
     }
+
 
     public void logout(ApiCallback<Void> callback) {
 
