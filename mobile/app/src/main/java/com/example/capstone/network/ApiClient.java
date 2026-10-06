@@ -12,9 +12,11 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
@@ -32,6 +34,42 @@ public class ApiClient {
 
   public void setRefreshCaller(Runnable refreshCallback){
     this.refreshCallback = refreshCallback;
+  }
+
+  private String buildUrl(ApiRequest request) throws UnsupportedEncodingException {
+
+    String urlString = baseurl + request.getUrl();
+
+    Map<String, String> params = request.getQueryParams();
+
+    if (!params.isEmpty()) {
+      StringBuilder query = new StringBuilder("?");
+
+      boolean first = true;
+
+      for (Map.Entry<String, String> param : params.entrySet()) {
+
+        if (!first) {
+          query.append("&");
+        }
+
+        query.append(
+            URLEncoder.encode(param.getKey(), "UTF-8")
+        );
+
+        query.append("=");
+
+        query.append(
+            URLEncoder.encode(param.getValue(), "UTF-8")
+        );
+
+        first = false;
+      }
+
+      urlString += query;
+    }
+
+    return urlString;
   }
 
   public <T> void execute(ApiRequest request, Type responseType, ApiCallback<T> callback){
@@ -66,9 +104,7 @@ public class ApiClient {
 
   private <T> ApiResponse<T> performRequest(ApiRequest request,Type responseType) throws Exception{
     //create url
-    URL url = new URL(
-        baseurl+request.getUrl()
-    );
+    URL url = new URL(buildUrl(request));
 
     //open connection
     HttpURLConnection connection =
