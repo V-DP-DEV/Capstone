@@ -9,35 +9,36 @@ import com.example.capstone.model.response.LoginResponse;
 import com.example.capstone.network.ApiCallback;
 import com.example.capstone.service.AuthService;
 
-public class AuthRepository implements IAuthRepository{
+public class AuthRepository implements IAuthRepository {
   private final AuthService authService;
 
-  public AuthRepository(AuthService authService){
+  public AuthRepository(AuthService authService) {
     this.authService = authService;
   }
 
   public void login(
-                    LoginRequest loginRequest,
-                    ApiCallback<LoginResponse> callback){
-    authService.login(loginRequest,callback);
+          LoginRequest loginRequest,
+          ApiCallback<LoginResponse> callback) {
+    authService.login(loginRequest, callback);
   }
 
   public void signup(
-      SignupRequest signupRequest,
-      ApiCallback<Void> callback){
-    authService.signup(signupRequest,callback);
+          SignupRequest signupRequest,
+          ApiCallback<LoginResponse> callback) {
+    authService.signup(signupRequest, callback);
   }
 
+
   public void logout(
-      ApiCallback<Void> callback){
+          ApiCallback<Void> callback) {
     authService.logout(callback);
   }
 
-  public void logoutAllDevices(ApiCallback<Void> callback){
+  public void logoutAllDevices(ApiCallback<Void> callback) {
     authService.logoutAllDevices(callback);
   }
 
-  public void refreshToken(){
+  public void refreshToken() {
     authService.refresh();
   }
 }
