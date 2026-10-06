@@ -4,27 +4,29 @@ import com.example.capstone.model.request.LoginRequest;
 import com.example.capstone.model.request.RefreshRequest;
 import com.example.capstone.model.request.SignupRequest;
 import com.example.capstone.model.response.LoginResponse;
+import com.example.capstone.model.response.RefreshResponse;
 import com.example.capstone.network.ApiCallback;
 import com.example.capstone.network.ApiClient;
-import com.example.capstone.network.ApiError;
 import com.example.capstone.network.ApiRequest;
 import com.example.capstone.network.ApiResponse;
 import com.example.capstone.util.PreferenceManager;
 import com.example.capstone.util.SecureSession;
 
-import java.util.UUID;
-import java.util.prefs.AbstractPreferences;
-import java.util.prefs.PreferenceChangeEvent;
-
 public class AuthService {
-  private final ApiClient apiClient;
-  private final SecureSession session;
-  private final PreferenceManager prefManager;
-  public AuthService(ApiClient apiClient,SecureSession session,PreferenceManager prefManager){
-    this.apiClient = apiClient;
-    this.session = session;
-    this.prefManager = prefManager;
-  }
+
+    private final ApiClient apiClient;
+    private final SecureSession session;
+    private final PreferenceManager prefManager;
+
+    public AuthService(
+            ApiClient apiClient,
+            SecureSession session,
+            PreferenceManager prefManager
+    ) {
+        this.apiClient = apiClient;
+        this.session = session;
+        this.prefManager = prefManager;
+    }
 
     public void login(
             LoginRequest loginRequest,
@@ -35,131 +37,144 @@ public class AuthService {
         request.setBody(loginRequest);
         request.setMethodPost();
 
-        apiClient.execute(request, LoginResponse.class, new ApiCallback<LoginResponse>() {
+        apiClient.execute(
+                request,
+                LoginResponse.class,
+                new ApiCallback<LoginResponse>() {
 
-            @Override
-            public void onSuccess(ApiResponse<LoginResponse> response) {
-                try {
-                    LoginResponse loginResponse = response.getData();
+                    @Override
+                    public void onSuccess(ApiResponse<LoginResponse> response) {
+                        try {
+                            LoginResponse loginResponse = response.getData();
 
-                    String token = loginResponse.getToken();
-                    session.saveAccessToken(token);
+                            session.saveAccessToken(
+                                    loginResponse.getToken()
+                            );
 
-                    // Pass the original response back to the screen
-                    callback.onSuccess(response);
+                            session.saveRefreshToken(
+                                    loginResponse.getRefreshToken()
+                            );
 
-                } catch (Exception e) {
-                    callback.onGeneralError(e);
+                            session.setSessionExpiration(
+                                    loginResponse.getTokenExpiresAt()
+                            );
+
+                            session.setRefreshExpiration(
+                                    loginResponse.getRefreshTokenExpiresAt()
+                            );
+
+                            if (loginResponse.getUserRole() != null) {
+                                prefManager.setRole(
+                                        com.example.capstone.domainModels.UserRole.valueOf(
+                                                loginResponse.getUserRole()
+                                        )
+                                );
+                            }
+
+                            session.setLoggedIn(true);
+
+                            callback.onSuccess(response);
+
+                        } catch (Exception e) {
+                            callback.onGeneralError(e);
+                        }
+                    }
+
+                    @Override
+                    public void onGeneralError(Exception e) {
+                        callback.onGeneralError(e);
+                    }
+
+                    @Override
+                    public void onHttpError(
+                            ApiResponse<LoginResponse> response
+                    ) {
+                        callback.onHttpError(response);
+                    }
                 }
-            }
-
-            @Override
-            public void onGeneralError(Exception e) {
-                callback.onGeneralError(e);
-            }
-
-            @Override
-
-            public void onHttpError(ApiResponse<LoginResponse> response) {
-                callback.onHttpError(response);
-            }
-        });
+        );
     }
 
-    public void signup(SignupRequest signupRequest, ApiCallback<Void> callback) {
+    public void signup(
+            SignupRequest signupRequest,
+            ApiCallback<Void> callback
+    ) {
 
-        ApiRequest request = new ApiRequest("auth/signup");
-
-        request.setRequiresAuthentication(false);
-
-        request.setBody(signupRequest);
-
-        request.setMethodPost();
-
-        apiClient.execute(request, Void.class, new ApiCallback<Void>() {
-
-            @Override
-            public void onSuccess(ApiResponse<Void> response) {
-                callback.onSuccess(response);
-            }
-
-            @Override
-            public void onGeneralError(Exception e) {
-                callback.onGeneralError(e);
-            }
-
-            @Override
-            public void onHttpError(ApiResponse<Void> response) {
-                callback.onHttpError(response);
-            }
-        });
     }
 
     public void logout(ApiCallback<Void> callback) {
 
+        String accessToken = session.getAccessToken();
+
         ApiRequest request = new ApiRequest("auth/logout");
-
         request.setRequiresAuthentication(false);
-
-        String token = session.getAccessToken();
-
-        request.addAuthHeader(token);
-
+        request.addAuthHeader(accessToken);
         request.setMethodPost();
 
-        apiClient.execute(request, Void.class, new ApiCallback<Void>() {
+        apiClient.execute(
+                request,
+                Void.class,
+                new ApiCallback<Void>() {
 
-            @Override
-            public void onSuccess(ApiResponse<Void> response) {
-                callback.onSuccess(response);
-            }
+                    @Override
+                    public void onSuccess(ApiResponse<Void> response) {
+                        session.clear();
+                        prefManager.clear();
+                        session.setLoggedIn(false);
 
-            @Override
-            public void onGeneralError(Exception e) {
-                callback.onGeneralError(e);
-            }
+                        callback.onSuccess(response);
+                    }
 
-            @Override
-            public void onHttpError(ApiResponse<Void> response) {
-                callback.onHttpError(response);
-            }
-        });
+                    @Override
+                    public void onGeneralError(Exception e) {
+                        callback.onGeneralError(e);
+                    }
+
+                    @Override
+                    public void onHttpError(ApiResponse<Void> response) {
+                        callback.onHttpError(response);
+                    }
+                }
+        );
     }
-
 
     public void logoutAllDevices(ApiCallback<Void> callback) {
 
+        String accessToken = session.getAccessToken();
+
         ApiRequest request = new ApiRequest("auth/logoutAllDevices");
-
         request.setRequiresAuthentication(false);
-
-        String token = session.getAccessToken();
-
-        request.addAuthHeader(token);
-
+        request.addAuthHeader(accessToken);
         request.setMethodPost();
 
-        apiClient.execute(request, Void.class, new ApiCallback<Void>() {
+        apiClient.execute(
+                request,
+                Void.class,
+                new ApiCallback<Void>() {
 
-            @Override
-            public void onSuccess(ApiResponse<Void> response) {
-                callback.onSuccess(response);
-            }
+                    @Override
+                    public void onSuccess(ApiResponse<Void> response) {
+                        session.clear();
+                        prefManager.clear();
+                        session.setLoggedIn(false);
 
-            @Override
-            public void onGeneralError(Exception e) {
-                callback.onGeneralError(e);
-            }
+                        callback.onSuccess(response);
+                    }
 
-            @Override
-            public void onHttpError(ApiResponse<Void> response) {
-                callback.onHttpError(response);
-            }
-        });
+                    @Override
+                    public void onGeneralError(Exception e) {
+                        callback.onGeneralError(e);
+                    }
+
+                    @Override
+                    public void onHttpError(ApiResponse<Void> response) {
+                        callback.onHttpError(response);
+                    }
+                }
+        );
     }
 
-    //only exception to no callback being passed
-
+    // Only exception to no callback being passed
     public void refresh() {
 
         String refreshToken = session.getRefreshToken();
@@ -168,50 +183,70 @@ public class AuthService {
         refreshRequest.setRefreshToken(refreshToken);
 
         ApiRequest request = new ApiRequest("auth/refresh");
-
         request.setRequiresAuthentication(false);
-
         request.setBody(refreshRequest);
-
         request.setMethodPost();
 
         apiClient.execute(
                 request,
-                LoginResponse.class,
-                new ApiCallback<LoginResponse>() {
+                RefreshResponse.class,
+                new ApiCallback<RefreshResponse>() {
 
                     @Override
-                    public void onSuccess(ApiResponse<LoginResponse> response) {
-
+                    public void onSuccess(
+                            ApiResponse<RefreshResponse> response
+                    ) {
                         try {
-                            LoginResponse loginResponse = response.getData();
+                            RefreshResponse refreshResponse =
+                                    response.getData();
 
-                            // Save the new access token
                             session.saveAccessToken(
-                                    loginResponse.getToken()
+                                    refreshResponse.getToken()
                             );
 
-                            // Save the new refresh token
                             session.saveRefreshToken(
-                                    loginResponse.getRefreshToken()
+                                    refreshResponse.getRefreshToken()
                             );
+
+                            session.setSessionExpiration(
+                                    refreshResponse.getTokenExpiresAt()
+                            );
+
+                            session.setRefreshExpiration(
+                                    refreshResponse.getRefreshTokenExpiresAt()
+                            );
+
+                            if (refreshResponse.getUserRole() != null) {
+                                prefManager.setRole(
+                                        com.example.capstone.domainModels.UserRole.valueOf(
+                                                refreshResponse.getUserRole()
+                                        )
+                                );
+                            }
 
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            session.clear();
+                            prefManager.clear();
+                            session.setLoggedIn(false);
                         }
                     }
 
                     @Override
                     public void onGeneralError(Exception e) {
-                        e.printStackTrace();
+                        session.clear();
+                        prefManager.clear();
+                        session.setLoggedIn(false);
                     }
 
                     @Override
-                    public void onHttpError(ApiResponse<LoginResponse> response) {
-                        // HTTP error
+                    public void onHttpError(
+                            ApiResponse<RefreshResponse> response
+                    ) {
+                        session.clear();
+                        prefManager.clear();
+                        session.setLoggedIn(false);
                     }
                 }
         );
-
     }
 }
