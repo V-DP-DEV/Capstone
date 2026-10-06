@@ -9,7 +9,7 @@ import com.example.capstone.service.AuthService;
 public interface IAuthRepository {
   void login(LoginRequest loginRequest, ApiCallback<LoginResponse> callback);
 
-  void signup(SignupRequest signupRequest, ApiCallback<Void> callback);
+  void signup(SignupRequest signupRequest, ApiCallback<LoginResponse> callback);
   void logout(ApiCallback<Void> callback);
   void logoutAllDevices(ApiCallback<Void> callback);
   void refreshToken();
