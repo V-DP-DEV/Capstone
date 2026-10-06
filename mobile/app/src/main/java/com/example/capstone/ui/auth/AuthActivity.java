@@ -78,22 +78,22 @@ public class AuthActivity extends AppCompatActivity {
       loginRequest.setDeviceId();
       loginRequest.setDeviceName();
 
-      repo.signup(request, new ApiCallback<Void>() {
-        @Override
-        public void onSuccess(ApiResponse<Void> response) {
+        repo.signup(request, new ApiCallback<LoginResponse>() {
+            @Override
+            public void onSuccess(ApiResponse<LoginResponse> response) {
 
-        }
+            }
 
-        @Override
-        public void onGeneralError(Exception e) {
+            @Override
+            public void onGeneralError(Exception e) {
 
-        }
+            }
 
-        @Override
-        public void onHttpError(ApiResponse<Void> response) {
+            @Override
+            public void onHttpError(ApiResponse<LoginResponse> response) {
 
-        }
-      });
+            }
+        });
 
       repo.login(
           loginRequest,
