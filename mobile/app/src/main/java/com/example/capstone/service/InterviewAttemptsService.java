@@ -1,5 +1,6 @@
 package com.example.capstone.service;
 
+import com.example.capstone.model.request.SubmitInterviewAttemptRequest;
 import com.example.capstone.network.ApiCallback;
 import com.example.capstone.network.ApiClient;
 
@@ -11,6 +12,10 @@ public class InterviewAttemptsService {
   }
 
   public void deleteAllInterviewAttempts(ApiCallback<Void> callback){
+
+  }
+
+  public void submitInterviewAttempt(SubmitInterviewAttemptRequest attemptRequest, ApiCallback<Void> callback){
 
   }
 }

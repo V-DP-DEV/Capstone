@@ -1,5 +1,6 @@
 package com.example.capstone.repository;
 
+import com.example.capstone.model.request.SubmitInterviewAttemptRequest;
 import com.example.capstone.network.ApiCallback;
 import com.example.capstone.service.InterviewAttemptsService;
 
@@ -11,5 +12,10 @@ public class InterviewAttemptsRepository implements IInterviewAttemptsRepository
 
   public void deleteAllInterviewAttempts(ApiCallback<Void> callback){
     interviewAttemptsService.deleteAllInterviewAttempts(callback);
+  }
+
+  @Override
+  public void submitInterviewAttempt(SubmitInterviewAttemptRequest attemptRequest,ApiCallback<Void> callback) {
+    interviewAttemptsService.submitInterviewAttempt(attemptRequest,callback);
   }
 }

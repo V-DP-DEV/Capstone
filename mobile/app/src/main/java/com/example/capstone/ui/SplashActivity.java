@@ -21,6 +21,7 @@ public class SplashActivity extends Activity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+
     MyApplication app = (MyApplication) getApplication();
     AppContainer container =
         app.getAppContainer();
@@ -38,6 +39,8 @@ public class SplashActivity extends Activity {
         //authRepository.refreshToken();
       }
     }
+
+    System.out.println("Going through splash + rerouting");
 
 
     UserRole role = manager.getRole();

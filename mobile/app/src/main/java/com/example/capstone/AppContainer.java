@@ -6,11 +6,14 @@ import com.example.capstone.network.ApiClient;
 import com.example.capstone.repository.AuthRepository;
 import com.example.capstone.repository.IAuthRepository;
 import com.example.capstone.repository.IInterviewAttemptsRepository;
+import com.example.capstone.repository.IInterviewRepository;
 import com.example.capstone.repository.IUserRepository;
 import com.example.capstone.repository.InterviewAttemptsRepository;
+import com.example.capstone.repository.InterviewRepository;
 import com.example.capstone.repository.UserRepository;
 import com.example.capstone.service.AuthService;
 import com.example.capstone.service.InterviewAttemptsService;
+import com.example.capstone.service.InterviewService;
 import com.example.capstone.service.UserService;
 import com.example.capstone.util.PreferenceManager;
 import com.example.capstone.util.SecureSession;
@@ -36,6 +39,8 @@ public class AppContainer {
   public final ApiClient apiClient;
   public final PreferenceManager preferenceManager;
   public final SecureSession secureSession;
+  public final IInterviewRepository interviewRepository;
+  public final InterviewService interviewService;
   public final Gson gson;
 
   public AppContainer(Context context){
@@ -54,5 +59,9 @@ public class AppContainer {
 
     interviewAttemptsService = new InterviewAttemptsService(apiClient);
     interviewAttemptsRepository = new InterviewAttemptsRepository(interviewAttemptsService);
+
+    interviewService = new InterviewService(apiClient);
+    interviewRepository = new InterviewRepository(interviewService);
+
   }
 }

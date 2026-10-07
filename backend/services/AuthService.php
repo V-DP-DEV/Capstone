@@ -52,7 +52,7 @@
             //try to log the token
             $this->log->tryAuthLog($user['id'],'LOGIN',$this->db->lastInsertId());
             //return token, expiration and user role
-            return ['token'=>$token,'tokenExpiresAt'=>$expiresAt,'refreshToken'=>$refreshToken,'refreshTokenExpiresAt'=>$refreshExpiresAt,'userRole'=>$user['role'] ];
+            return ['token'=>$token,'tokenExpiresAt'=>TimeUtil::toMillis($expiresAt),'refreshToken'=>$refreshToken,'refreshTokenExpiresAt'=>TimeUtil::toMillis($refreshExpiresAt),'userRole'=>$user['role'] ];
         }
 
         public function logout($token){
@@ -148,7 +148,7 @@
             $this->log->tryAuthLog($dbToken['user_id'],'REFRESH',$dbToken['id']);
 
             //return the token, expiration
-            return ['token'=>$token,'tokenExpiresAt'=>$expiresAt,'refreshToken'=>$newRefreshToken,'refreshTokenExpiresAt'=>$newRefreshExpiresAt,'userRole'=>$user['role'] ];
+            return ['token'=>$token,'tokenExpiresAt'=>TimeUtil::toMillis($expiresAt),'refreshToken'=>$newRefreshToken,'refreshTokenExpiresAt'=>TimeUtil::toMillis($newRefreshExpiresAt),'userRole'=>$user['role'] ];
         }
 
         public function signup($data){

@@ -12,7 +12,8 @@
             'services',
             'repositories',
             'middleware',
-            'helpers'
+            'helpers',
+            'builders'
         ];
 
         //go through each file and include them
