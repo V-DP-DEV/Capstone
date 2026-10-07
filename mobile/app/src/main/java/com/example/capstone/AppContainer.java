@@ -52,7 +52,7 @@ public class AppContainer {
     authService = new AuthService(apiClient,secureSession,preferenceManager);
     authRepository = new AuthRepository(authService);
 
-    apiClient.setRefreshCaller(()->authRepository.refreshToken());
+    apiClient.setRefreshCaller((refreshCallback)->authRepository.refreshToken(refreshCallback));
 
     userService = new UserService(apiClient);
     userRepository = new UserRepository(userService);

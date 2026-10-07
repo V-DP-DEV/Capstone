@@ -9,6 +9,8 @@ import com.example.capstone.network.ApiCallback;
 import com.example.capstone.network.ApiClient;
 import com.example.capstone.network.ApiRequest;
 import com.example.capstone.network.ApiResponse;
+import com.example.capstone.network.RefreshCallback;
+import com.example.capstone.network.RefreshError;
 import com.example.capstone.util.DateTime;
 import com.example.capstone.util.PreferenceManager;
 import com.example.capstone.util.SecureSession;
@@ -203,17 +205,20 @@ public class AuthService {
     }
 
     // Only exception to no callback being passed
-    public void refresh() {
+    public void refresh(RefreshCallback callback) {
 
         String refreshToken = session.getRefreshToken();
 
         RefreshRequest refreshRequest = new RefreshRequest();
         refreshRequest.setRefreshToken(refreshToken);
 
+        System.out.println("Retrieved" +refreshToken);
         ApiRequest request = new ApiRequest("auth/refresh");
         request.setRequiresAuthentication(false);
         request.setBody(refreshRequest);
         request.setMethodPost();
+
+        System.out.println("requesting refresh token");
 
         apiClient.execute(
                 request,
@@ -251,11 +256,14 @@ public class AuthService {
                                         )
                                 );
                             }
+                            callback.onSuccess();
+
 
                         } catch (Exception e) {
                             session.clear();
                             prefManager.clear();
                             session.setLoggedIn(false);
+                            callback.onError(RefreshError.NETWORK_ERROR);
                         }
                     }
 
@@ -264,6 +272,7 @@ public class AuthService {
                         session.clear();
                         prefManager.clear();
                         session.setLoggedIn(false);
+                        callback.onError(RefreshError.NETWORK_ERROR);
                     }
 
                     @Override
@@ -273,6 +282,7 @@ public class AuthService {
                         session.clear();
                         prefManager.clear();
                         session.setLoggedIn(false);
+                        callback.onError(RefreshError.SERVER_ERROR);
                     }
                 }
         );

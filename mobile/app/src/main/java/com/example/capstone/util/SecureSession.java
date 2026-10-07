@@ -36,7 +36,7 @@ public class SecureSession {
 
   //creates sessionClass and context is needed for shared prefs
   public SecureSession(Context context){
-   preferences = context.getApplicationContext().getSharedPreferences(KEY_PREF_NAME,MODE_PRIVATE);
+    preferences = context.getApplicationContext().getSharedPreferences(KEY_PREF_NAME,MODE_PRIVATE);
   }
 
   public LiveData<Boolean> getLoggedIn() {
@@ -66,6 +66,13 @@ public class SecureSession {
         .apply();
   }
 
+  public boolean isAccessTokenExpired(){
+    return getSessionExpiration()<=System.currentTimeMillis();
+  }
+  public boolean isRefreshExpired(){
+    return getRefreshExpiration()<=System.currentTimeMillis();
+  }
+
   public long getRefreshExpiration() {
     return preferences.getLong(KEY_REFRESH_EXPIRATION, 0L);
   }
@@ -83,13 +90,13 @@ public class SecureSession {
     //key not exists
     KeyGenerator keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES,KEYSTORE_NAME);
     keyGenerator.init(new KeyGenParameterSpec.Builder(
-        KEY_ALIAS,
-        KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT
+            KEY_ALIAS,
+            KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT
         )
-        .setKeySize(256)
-        .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
-        .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-        .build()
+            .setKeySize(256)
+            .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+            .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+            .build()
     );
 
     //generate the key
