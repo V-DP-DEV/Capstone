@@ -49,4 +49,5 @@
   <string name="Name">Name</string>
   <string name="Create_Profile">Create Profile</string>
     <string name="start_mock_interview2">Start Mock Interview</string>
+    <string name="select_interview">Select Interview</string>
 </resources>
