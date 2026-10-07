@@ -1,5 +1,6 @@
 package com.example.capstone.repository;
 
+import com.example.capstone.domainModels.InterviewCategory;
 import com.example.capstone.domainModels.UserInterview;
 import com.example.capstone.domainModels.UserInterviewSummary;
 import com.example.capstone.network.ApiCallback;
@@ -20,4 +21,11 @@ public class InterviewRepository implements IInterviewRepository{
   public void getUserInterviews(long categoryId, String name,String difficulty,ApiCallback<UserInterviewSummary> callback) {
     interviewService.getUserInterviews(categoryId,name,callback);
   }
+
+  @Override
+  public void getCategories(ApiCallback<InterviewCategory> callback) {
+    interviewService.getCategories(callback);
+  }
+
+
 }

@@ -1,5 +1,6 @@
 package com.example.capstone.service;
 
+import com.example.capstone.domainModels.InterviewCategory;
 import com.example.capstone.domainModels.UserInterview;
 import com.example.capstone.domainModels.UserInterviewSummary;
 import com.example.capstone.network.ApiCallback;
@@ -25,5 +26,9 @@ public class InterviewService {
 
   public void getUserInterviews(long categoryId,String name, ApiCallback<UserInterviewSummary> callback){
     getInterviews(categoryId,name, UserInterviewSummary.class,callback);
+  }
+
+  public void getCategories(ApiCallback<InterviewCategory> callback){
+
   }
 }
