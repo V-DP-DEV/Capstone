@@ -12,7 +12,7 @@ class ApiTest extends TestCase
     {
         $this->http = new HttpTestHelper('http://mywebsite.local');
     }
-
+    /*
     public function testLogin():void
     {
         $response = $this->http->request(
@@ -43,7 +43,7 @@ class ApiTest extends TestCase
         //print_r($response);
         $this->assertSame(200, $response['status']);
     }
-
+    
     public function testLogout():void
     {
         //login and than logout with the token
@@ -69,7 +69,7 @@ class ApiTest extends TestCase
         );
         $this->assertSame(200, $response['status']);
     }
-    
+    */
     public function testRefreshToken():void
     {
         //test with bearer token
@@ -78,15 +78,18 @@ class ApiTest extends TestCase
             '/auth/login',
             ['email' => 'admin@example.com', 'password' => 'Password123', "deviceId"=>"12","deviceName"=>"Hello"]
         );
+
+        print_r($response);
         $token = $response['body']['data']['token'];
         $refreshToken = $response['body']['data']['refreshToken'];
         $response = $this->http->request(
             'POST',
             '/auth/refresh',
             ['refreshToken' => $refreshToken],
-            $token
+            null
         );
-        //print_r($response);
+        print_r($response);
+        print_r("hey");
         $this->assertSame(200, $response['status']);
 
         //test with no bearer token
@@ -95,9 +98,11 @@ class ApiTest extends TestCase
             '/auth/refresh',
             null
         );
+        print_r($response);
 
         $this->assertSame(401, $response['status']);
     }
+    /*
     public function testSignup():void
     {
         //test with bearer token

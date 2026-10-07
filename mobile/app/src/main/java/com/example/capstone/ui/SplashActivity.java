@@ -7,6 +7,8 @@ import android.os.Bundle;
 import com.example.capstone.AppContainer;
 import com.example.capstone.MyApplication;
 import com.example.capstone.domainModels.UserRole;
+import com.example.capstone.network.RefreshCallback;
+import com.example.capstone.network.RefreshError;
 import com.example.capstone.repository.AuthRepository;
 import com.example.capstone.repository.IAuthRepository;
 import com.example.capstone.ui.admin.AdminActivity;
@@ -16,45 +18,96 @@ import com.example.capstone.util.PreferenceManager;
 import com.example.capstone.util.SecureSession;
 
 public class SplashActivity extends Activity {
+  MyApplication app;
+  AppContainer container;
 
+  PreferenceManager manager;
+  SecureSession session;
+  IAuthRepository authRepository;
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    app = (MyApplication) getApplication();
+    container = app.getAppContainer();
 
-    MyApplication app = (MyApplication) getApplication();
-    AppContainer container =
-        app.getAppContainer();
+    manager = container.preferenceManager;
+    session = container.secureSession;
+    authRepository = container.authRepository;
 
-    PreferenceManager manager = container.preferenceManager;
-    SecureSession session = container.secureSession;
-    IAuthRepository authRepository = container.authRepository;
+    long sessionExpiration = session.getSessionExpiration();
+    long refreshExpiration = session.getRefreshExpiration();
+    long now = System.currentTimeMillis();
 
-    if(session.getSessionExpiration() <= System.currentTimeMillis()){
-      if(session.getRefreshExpiration()<= System.currentTimeMillis()){
-        session.clear();
-        manager.clear();
-      }
-      else{
-        //authRepository.refreshToken();
-      }
+
+    // No session at all
+    if (sessionExpiration == 0L) {
+      routeToAuth();
+      return;
     }
 
-    System.out.println("Going through splash + rerouting");
-
-
-    UserRole role = manager.getRole();
-    if(role == null){
-      startActivity(new Intent(this, AuthActivity.class));
+    // Access token is still valid
+    if (sessionExpiration > now) {
+      routeToCorrectDashboard(manager.getRole());
+      return;
     }
-    else{
-      if(role == UserRole.USER){
-        startActivity(new Intent(this, UserActivity.class));
-      }
-      if(role == UserRole.ADMIN){
-        startActivity(new Intent(this, AdminActivity.class));
-      }
+
+    // Access token expired and refresh token is also expired
+    if (refreshExpiration <= now) {
+      clearSessionAndRouteToAuth();
+      return;
     }
+
+    // Access token expired, but refresh token is still valid
+    authRepository.refreshToken(new RefreshCallback() {
+
+      @Override
+      public void onSuccess() {
+        System.out.println("Refresh succeeded");
+        routeToCorrectDashboard(manager.getRole());
+      }
+
+      @Override
+      public void onError(RefreshError error) {
+        System.out.println(
+            "Clearing due to refresh failing: " + error
+        );
+
+        clearSessionAndRouteToAuth();
+      }
+    });
+  }
+
+  private void routeToCorrectDashboard(UserRole role) {
+    if (role == null) {
+      routeToAuth();
+      return;
+    }
+
+    Intent intent;
+
+    if (role == UserRole.USER) {
+      intent = new Intent(this, UserActivity.class);
+    } else if (role == UserRole.ADMIN) {
+      intent = new Intent(this, AdminActivity.class);
+    } else {
+      routeToAuth();
+      return;
+    }
+
+    startActivity(intent);
+    finish();
+  }
+
+  private void clearSessionAndRouteToAuth() {
+    session.clear();
+    manager.clear();
+
+    routeToAuth();
+  }
+
+  private void routeToAuth() {
+    startActivity(new Intent(this, AuthActivity.class));
     finish();
   }
 }

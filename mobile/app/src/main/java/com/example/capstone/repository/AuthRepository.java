@@ -7,6 +7,7 @@ import com.example.capstone.model.request.RefreshRequest;
 import com.example.capstone.model.request.SignupRequest;
 import com.example.capstone.model.response.LoginResponse;
 import com.example.capstone.network.ApiCallback;
+import com.example.capstone.network.RefreshCallback;
 import com.example.capstone.service.AuthService;
 
 public class AuthRepository implements IAuthRepository {
@@ -38,7 +39,8 @@ public class AuthRepository implements IAuthRepository {
     authService.logoutAllDevices(callback);
   }
 
-  public void refreshToken() {
-    authService.refresh();
+  public void refreshToken(RefreshCallback callback) {
+    callback.onSuccess();
+    authService.refresh(callback);
   }
 }

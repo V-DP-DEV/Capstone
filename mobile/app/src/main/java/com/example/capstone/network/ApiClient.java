@@ -19,21 +19,22 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class ApiClient {
   private static final String baseurl = "https://aceitapi.co.za/api/";
   private final Handler mainHandler = new Handler(Looper.getMainLooper());
   private final SecureSession secureSession;
   private final Gson gson;
-  private Runnable refreshCallback;
+  private Consumer<RefreshCallback> refreshCaller;
 
   public ApiClient(SecureSession secureSession, Gson gson){
     this.secureSession = secureSession;
     this.gson = gson;
   }
 
-  public void setRefreshCaller(Runnable refreshCallback){
-    this.refreshCallback = refreshCallback;
+  public void setRefreshCaller(Consumer<RefreshCallback> refreshCallback){
+    this.refreshCaller = refreshCallback;
   }
 
   private String buildUrl(ApiRequest request) throws UnsupportedEncodingException {
@@ -73,6 +74,28 @@ public class ApiClient {
   }
 
   public <T> void execute(ApiRequest request, Type responseType, ApiCallback<T> callback){
+    if(request.requiresAuthentication()){
+      if (secureSession.isAccessTokenExpired()) {
+        refreshCaller.accept(new RefreshCallback() {
+          @Override
+          public void onSuccess() {
+            executeRequest(request,responseType,callback);
+          }
+
+          @Override
+          public void onError(RefreshError error) {
+            secureSession.setLoggedIn(false);
+          }
+        });
+
+        return;
+      }
+    }
+
+    executeRequest(request, responseType, callback);
+  }
+
+  public <T> void executeRequest(ApiRequest request, Type responseType, ApiCallback<T> callback){
     //run off main thread
     new Thread(() -> {
       //try
@@ -110,8 +133,13 @@ public class ApiClient {
     HttpURLConnection connection =
         (HttpURLConnection) url.openConnection();
 
+
     //set request method
     connection.setRequestMethod(request.getMethod());
+
+    if(request.requiresAuthentication()){
+      request.addAuthHeader(secureSession.getAccessToken());
+    }
 
     //add all the headers to the request header with key pair value
     for (Map.Entry<String, String> header : request.getHeaders().entrySet()) {
@@ -120,6 +148,8 @@ public class ApiClient {
           header.getValue()
       );
     }
+
+
 
     //set time out
     connection.setConnectTimeout(5000);
