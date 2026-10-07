@@ -24,7 +24,7 @@ public class AuthRepository implements IAuthRepository {
 
   public void signup(
           SignupRequest signupRequest,
-          ApiCallback<LoginResponse> callback) {
+          ApiCallback<Void> callback) {
     authService.signup(signupRequest, callback);
   }
 

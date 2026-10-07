@@ -65,59 +65,6 @@ public class AuthActivity extends AppCompatActivity {
       AppContainer container =
           app.getAppContainer();
 
-      IAuthRepository repo = container.authRepository;
-      SignupRequest request = new SignupRequest();
-      request.setEmail("vian@gmail.com");
-      request.setEmail("Password123");
-      request.setFirstname("ge");
-      request.setSurname("ge");
-
-      LoginRequest loginRequest = new LoginRequest();
-      loginRequest.setEmail("admin@example.com");
-      loginRequest.setPassword("Password123");
-      loginRequest.setDeviceId();
-      loginRequest.setDeviceName();
-
-        repo.signup(request, new ApiCallback<LoginResponse>() {
-            @Override
-            public void onSuccess(ApiResponse<LoginResponse> response) {
-
-            }
-
-            @Override
-            public void onGeneralError(Exception e) {
-
-            }
-
-            @Override
-            public void onHttpError(ApiResponse<LoginResponse> response) {
-
-            }
-        });
-
-      repo.login(
-          loginRequest,
-          new ApiCallback<LoginResponse>() {
-
-            @Override
-            public void onSuccess(ApiResponse<LoginResponse> response) {
-              // Login worked
-              // Move to the next Activity
-              LoginResponse loginResponse= response.getData();
-              System.out.println(loginResponse.getToken());
-            }
-
-            @Override
-            public void onGeneralError(Exception e) {
-            }
-
-            @Override
-            public void onHttpError(ApiResponse<LoginResponse> response) {
-
-            }
-          }
-      );
-
       NavController navController = navHostFragment.getNavController();
 
       appBarConfiguration =

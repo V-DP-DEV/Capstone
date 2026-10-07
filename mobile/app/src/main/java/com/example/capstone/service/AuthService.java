@@ -98,7 +98,7 @@ public class AuthService {
 
     public void signup(
             SignupRequest signupRequest,
-            ApiCallback<LoginResponse> callback
+            ApiCallback<Void> callback
     ) {
         ApiRequest request = new ApiRequest("auth/signup");
         request.setRequiresAuthentication(false);
@@ -107,49 +107,12 @@ public class AuthService {
 
         apiClient.execute(
                 request,
-                LoginResponse.class,
-                new ApiCallback<LoginResponse>() {
+                Void.class,
+                new ApiCallback<Void>() {
 
                     @Override
-                    public void onSuccess(ApiResponse<LoginResponse> response) {
-                        try {
-                            LoginResponse signupResponse = response.getData();
-
-                            session.saveAccessToken(
-                                    signupResponse.getToken()
-                            );
-
-                            session.saveRefreshToken(
-                                    signupResponse.getRefreshToken()
-                            );
-
-                            session.setSessionExpiration(
-                                    DateTime.utcToLocalMillis(
-                                            signupResponse.getTokenExpiresAt()
-                                    )
-                            );
-
-                            session.setRefreshExpiration(
-                                    DateTime.utcToLocalMillis(
-                                            signupResponse.getRefreshTokenExpiresAt()
-                                    )
-                            );
-
-                            if (signupResponse.getUserRole() != null) {
-                                prefManager.setRole(
-                                        com.example.capstone.domainModels.UserRole.valueOf(
-                                                signupResponse.getUserRole()
-                                        )
-                                );
-                            }
-
-                            session.setLoggedIn(true);
-
-                            callback.onSuccess(response);
-
-                        } catch (Exception e) {
-                            callback.onGeneralError(e);
-                        }
+                    public void onSuccess(ApiResponse<Void> response) {
+                        callback.onSuccess(response);
                     }
 
 
@@ -159,7 +122,7 @@ public class AuthService {
                     }
 
                     @Override
-                    public void onHttpError(ApiResponse<LoginResponse> response) {
+                    public void onHttpError(ApiResponse<Void> response) {
                         callback.onHttpError(response);
                     }
                 }
