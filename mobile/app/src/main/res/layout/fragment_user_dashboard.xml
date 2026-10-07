@@ -88,7 +88,7 @@
               android:minHeight="0dp"
               android:paddingHorizontal="24dp"
               android:paddingVertical="0dp"
-              android:text="Start Mock Interview"
+              android:text="@string/start_mock_interview2"
               android:textAllCaps="false"
               android:textColor="@color/white"
               android:textSize="15sp"
@@ -278,9 +278,12 @@
           app:layout_constraintTop_toBottomOf="@id/tv_title_quick_actions">
         <!--  Action 1  -->
         <LinearLayout
+            android:id="@+id/action_start_interview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
@@ -297,10 +300,11 @@
               android:layout_height="wrap_content"
               android:layout_marginTop="8dp"
               android:gravity="center"
-              android:text="Start\ninterview"
+              android:text="Start\interview"
               android:textColor="@color/text_primary"
               android:textSize="12sp" />
         </LinearLayout>
+
         <!--  Action 2  -->
         <LinearLayout
             android:layout_width="0dp"

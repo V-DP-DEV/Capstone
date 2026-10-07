@@ -6,6 +6,18 @@
     android:layout_height="match_parent"
     android:background="#F6F8FC">
 
+    <ImageView
+        android:id="@+id/img_profile_avatar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_circle_action"
+        android:padding="12dp"
+        android:src="@drawable/ic_person"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/primary_blue"/>
     <!-- Top Bar Title -->
     <TextView
         android:id="@+id/tv_title"

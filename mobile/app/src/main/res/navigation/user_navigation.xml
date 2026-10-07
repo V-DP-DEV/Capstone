@@ -4,10 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph2"
     app:startDestination="@id/userDashboardFragment">
-
+  <!-- User Dashboard Screen -->
   <fragment
       android:id="@+id/userDashboardFragment"
       android:name="com.example.capstone.ui.user.UserDashboardFragment"
-      android:label="Login"
-      tools:layout="@layout/fragment_auth_login"></fragment>
+      android:label="User Dashboard"
+      tools:layout="@layout/fragment_user_dashboard">
+
+    <!-- Action targeting Select Difficulty Fragment -->
+    <action
+        android:id="@+id/action_userDashboardFragment_to_selectDifficultyFragment"
+        app:destination="@id/selectDifficultyFragment" />
+  </fragment>
+
+  <!-- Select Difficulty Screen -->
+  <fragment
+      android:id="@+id/selectDifficultyFragment"
+      android:name="com.example.capstone.ui.mock.SelectDifficultyFragment"
+      android:label="Select Difficulty"
+      tools:layout="@layout/fragment_select_difficulty" />
+
+
 </navigation>
+
