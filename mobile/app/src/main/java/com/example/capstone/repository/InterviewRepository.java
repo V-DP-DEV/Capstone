@@ -24,7 +24,7 @@ public class InterviewRepository implements IInterviewRepository{
 
   @Override
   public void getCategories(ApiCallback<InterviewCategory> callback) {
-
+    interviewService.getCategories(callback);
   }
 
 
