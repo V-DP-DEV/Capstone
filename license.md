@@ -28,7 +28,7 @@ Publish modified or unmodified versions of this software or substantial portions
 Intellectual Property
 This license grants only the permissions expressly stated above.
 
-Nothing in this license is intended to transfer ownership of, or override intellectual-property rights belonging to, Eduvos, third-party contributors, or any other applicable rights holder.
+Nothing in this license is intended to transfer ownership of, or override intellectual-property rights belonging to, [University Name], third-party contributors, or any other applicable rights holder.
 
 Any university-owned or third-party intellectual property contained within or associated with this project remains subject to the rights and policies applicable to that intellectual property.
 
