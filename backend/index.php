@@ -10,7 +10,6 @@
     $container->bind(IRefreshTokenRepository::class, RefreshTokenRepository::class);
     $container->bind(ILogRepository::class, LogRepository::class);
     $container->bind(IInterviewAttemptRepository::class, InterviewAttemptRepository::class);
-
     
 
     //load config values into the class

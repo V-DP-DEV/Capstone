@@ -217,6 +217,24 @@ class ApiTest extends TestCase
 
         print_r($response);
     }
+
+    public function testAnalyse(){
+         $response = $this->http->request(
+            'POST',
+            '/auth/login',
+            ['email' => 'user2@example.com', 'password' => 'Password123', "deviceId"=>"12","deviceName"=>"Hello"]
+        );
+        print_r($response);
+
+        $response = $this->http->request(
+            'POST',
+            '/interviewAttempt/analyse',
+            [],
+            $response['body']['data']['token']
+        );
+
+        print_r($response);
+    }
     /*
     public function testDeleteUser():void
     {

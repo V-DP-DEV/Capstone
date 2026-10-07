@@ -1,6 +1,6 @@
 <?php
     class InterviewAttemptController{
-        public function __construct(private InterviewAttemptService $interviewAttemptService,private RequestContext $requestContext){} 
+        public function __construct(private InterviewAttemptService $interviewAttemptService,private RequestContext $requestContext,private InterviewEvaluationBuilder $evaluationBuilder,private OpenAIService $openAiService){} 
 
         public function submitAttempt(){
             
@@ -13,7 +13,13 @@
 
             $result = $this->interviewAttemptService->submitAttempt($interviewId,$answers);
             JsonResponse::success();
-            
+        }
+
+        public function analyse(){
+            $body = $this->evaluationBuilder->build([],[]);
+
+            $response = $this->openAiService->createResponse($body);
+            JsonResponse::success($response);
         }
     }
 ?>
