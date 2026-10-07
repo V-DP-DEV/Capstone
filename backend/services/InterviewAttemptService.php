@@ -5,7 +5,8 @@
         }
 
         public function submitAttempt($interviewId,$answers){
-            $this->interviewAttemptRepository->submitAttempt($interviewId,$answers);
+     
+            return $this->interviewAttemptRepository->submitAttempt($this->request_context->getUserId(),$interviewId,$answers);
         }
     }
 ?>
