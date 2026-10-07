@@ -43,5 +43,18 @@
             });
             
         }
+
+        public function getAttempt(int $attemptId):array{
+            return $this->db->queryOne("SELECT * FROM interview_user_attempts WHERE interview_id=?",[$attemptId]);
+        }
+
+        public function getQuestionsForAnalysis(int $attemptId): array{
+            $query = "SELECT iq.id,iq.answer as expected_answer,iq.text as question,iqa.answer 
+                FROM interview_questions iq 
+                JOIN interview_question_attempts iqa ON iq.id = iqa.question_id 
+                WHERE interview_id =?";
+            return $this->db->queryAll($query,[$attemptId]);
+        }
+
     }
 ?>

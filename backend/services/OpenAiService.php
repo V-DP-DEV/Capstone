@@ -32,9 +32,12 @@ class OpenAIService
 
         curl_close($ch);
 
-        if ($statusCode < 200 || $statusCode >= 300) {
-            throw new Exception("OpenAI request failed: HTTP $statusCode");
-        }
+        if ($statusCode >= 400) {
+    throw new Exception(
+        "OpenAI request failed: HTTP {$statusCode}\n" .
+        "Response: {$response}"
+    );
+}
 
         return json_decode($response, true);
     }

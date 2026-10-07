@@ -70,4 +70,35 @@
             }
             return $generalInterview;
         }
+
+        public function getInterviewCompetencies(int $interviewId): array{
+            $query = "SELECT DISTINCT cb.id,cb.name
+                        FROM interview_questions iq 
+                        JOIN question_types qt ON iq.type_id=qt.id
+                        JOIN question_type_competency_breakdowns qtc ON qtc.question_type_id=qt.id
+                        JOIN competency_breakdowns cb ON cb.competency_id=qtc.competency_breakdown_id
+                        WHERE iq.interview_id=?
+                        ORDER BY id ASC";
+            return $this->db->queryAll($query,[$interviewId]);
+        }
+
+        public function getQuestionCompetencies(int $interviewId): array{
+            $query = "SELECT iq.id as question_id,cb.id as competency_breakdown_id,cb.name as competency_name FROM interview_questions iq 
+	                    JOIN question_types qt ON iq.type_id=qt.id
+                        JOIN question_type_competency_breakdowns qtc ON qtc.question_type_id=qt.id
+                        JOIN competency_breakdowns cb ON qtc.competency_breakdown_id=cb.id
+                        WHERE iq.interview_id=?
+                        ORDER BY question_id ASC";
+            return $this->db->queryAll($query,[$interviewId]);
+        }
+
+        public function getQuestionConcepts(int $interviewId): array{
+            $query = "SELECT iq.id as question_id,c.id as concept_id, c.name
+                        FROM interview_questions iq 
+                        JOIN interview_question_concepts iqc ON iqc.question_id = iq.id
+                        JOIN concepts c ON c.id= iqc.concept_id
+                        WHERE iq.interview_id=?
+                        ORDER BY question_id ASC";
+            return $this->db->queryAll($query,[$interviewId]);
+        }
     }

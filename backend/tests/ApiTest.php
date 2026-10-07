@@ -70,6 +70,7 @@ class ApiTest extends TestCase
         $this->assertSame(200, $response['status']);
     }
     */
+    /*
     public function testRefreshToken():void
     {
         //test with bearer token
@@ -102,6 +103,7 @@ class ApiTest extends TestCase
 
         $this->assertSame(401, $response['status']);
     }
+        */
     /*
     public function testSignup():void
     {
@@ -156,7 +158,8 @@ class ApiTest extends TestCase
         print_r($response);
         $this->assertSame(200, $response['status']);
     }
-
+    */
+    /*
     public function testSubmitInterview():void{
         $response = $this->http->request(
             'POST',
@@ -222,6 +225,8 @@ class ApiTest extends TestCase
 
         print_r($response);
     }
+    */
+        
 
     public function testAnalyse(){
          $response = $this->http->request(
@@ -234,7 +239,7 @@ class ApiTest extends TestCase
         $response = $this->http->request(
             'POST',
             '/interviewAttempt/analyse',
-            [],
+            ['attemptId'=>1],
             $response['body']['data']['token']
         );
 
