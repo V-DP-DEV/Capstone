@@ -1,76 +1,290 @@
 package com.example.capstone.service;
 
-import android.content.Context;
-import android.os.Build;
-import android.util.Log;
-
-
 import com.example.capstone.model.request.LoginRequest;
+import com.example.capstone.model.request.RefreshRequest;
 import com.example.capstone.model.request.SignupRequest;
 import com.example.capstone.model.response.LoginResponse;
+import com.example.capstone.model.response.RefreshResponse;
 import com.example.capstone.network.ApiCallback;
 import com.example.capstone.network.ApiClient;
 import com.example.capstone.network.ApiRequest;
 import com.example.capstone.network.ApiResponse;
+import com.example.capstone.network.RefreshCallback;
+import com.example.capstone.network.RefreshError;
+import com.example.capstone.util.DateTime;
+import com.example.capstone.util.PreferenceManager;
 import com.example.capstone.util.SecureSession;
 
-import org.json.JSONObject;
-
-import java.util.UUID;
-import java.util.prefs.AbstractPreferences;
-
 public class AuthService {
-  private final ApiClient apiClient;
-  private final SecureSession session;
-  public AuthService(ApiClient apiClient,SecureSession session){
-    this.apiClient = apiClient;
-    this.session = session;
-  }
-  public void login(
-      LoginRequest loginRequest,
-      ApiCallback<LoginResponse> callback
-  ) {
-    ApiRequest request = new ApiRequest("auth/login");
-    request.setRequiresAuthentication(false);
-    try {
-      request.setBody(loginRequest);
-      request.setMethodPost();
 
-      apiClient.execute(request,LoginResponse.class,new ApiCallback<LoginResponse>() {
+    private final ApiClient apiClient;
+    private final SecureSession session;
+    private final PreferenceManager prefManager;
 
-        @Override
-        public void onSuccess(ApiResponse<LoginResponse> response) {
-          try {
-            LoginResponse loginResponse = response.getData();
-
-            String token = loginResponse.getToken();
-            session.saveAccessToken(token);
-
-            // Pass the original response back to the screen
-            callback.onSuccess(response);
-
-          } catch (Exception e) {
-            callback.onGeneralError(e);
-          }
-        }
-
-        @Override
-        public void onGeneralError(Exception e) {
-          callback.onGeneralError(e);
-        }
-
-        @Override
-        public void onHttpError(ApiResponse<LoginResponse> response) {
-          callback.onHttpError(response);
-        }
-      });
-
-    } catch (Exception e) {
-      callback.onGeneralError(e);
+    public AuthService(
+            ApiClient apiClient,
+            SecureSession session,
+            PreferenceManager prefManager
+    ) {
+        this.apiClient = apiClient;
+        this.session = session;
+        this.prefManager = prefManager;
     }
-  }
 
-  public void signup(SignupRequest signupRequest, ApiCallback<Void> callback){
+    public void login(
+            LoginRequest loginRequest,
+            ApiCallback<LoginResponse> callback
+    ) {
+        ApiRequest request = new ApiRequest("auth/login");
+        request.setRequiresAuthentication(false);
+        request.setBody(loginRequest);
+        request.setMethodPost();
 
-  }
+        apiClient.execute(
+                request,
+                LoginResponse.class,
+                new ApiCallback<LoginResponse>() {
+
+                    @Override
+                    public void onSuccess(ApiResponse<LoginResponse> response) {
+                        try {
+                            LoginResponse loginResponse = response.getData();
+
+                            session.saveAccessToken(
+                                    loginResponse.getToken()
+                            );
+
+                            session.saveRefreshToken(
+                                    loginResponse.getRefreshToken()
+                            );
+
+                            session.setSessionExpiration(
+                                    loginResponse.getTokenExpiresAt()
+                            );
+
+                            session.setRefreshExpiration(
+                                    loginResponse.getRefreshTokenExpiresAt()
+                            );
+
+                            if (loginResponse.getUserRole() != null) {
+                                prefManager.setRole(
+                                        com.example.capstone.domainModels.UserRole.valueOf(
+                                                loginResponse.getUserRole()
+                                        )
+                                );
+                            }
+
+                            session.setLoggedIn(true);
+
+                            callback.onSuccess(response);
+
+                        } catch (Exception e) {
+                            callback.onGeneralError(e);
+                        }
+                    }
+
+                    @Override
+                    public void onGeneralError(Exception e) {
+                        callback.onGeneralError(e);
+                    }
+
+                    @Override
+                    public void onHttpError(
+                            ApiResponse<LoginResponse> response
+                    ) {
+                        callback.onHttpError(response);
+                    }
+                }
+        );
+    }
+
+    public void signup(
+            SignupRequest signupRequest,
+            ApiCallback<Void> callback
+    ) {
+        ApiRequest request = new ApiRequest("auth/signup");
+        request.setRequiresAuthentication(false);
+        request.setBody(signupRequest);
+        request.setMethodPost();
+
+        apiClient.execute(
+                request,
+                Void.class,
+                new ApiCallback<Void>() {
+
+                    @Override
+                    public void onSuccess(ApiResponse<Void> response) {
+                        callback.onSuccess(response);
+                    }
+
+
+                    @Override
+                    public void onGeneralError(Exception e) {
+                        callback.onGeneralError(e);
+                    }
+
+                    @Override
+                    public void onHttpError(ApiResponse<Void> response) {
+                        callback.onHttpError(response);
+                    }
+                }
+        );
+    }
+
+
+    public void logout(ApiCallback<Void> callback) {
+
+        String accessToken = session.getAccessToken();
+
+        ApiRequest request = new ApiRequest("auth/logout");
+        request.setRequiresAuthentication(false);
+        request.addAuthHeader(accessToken);
+        request.setMethodPost();
+
+        apiClient.execute(
+                request,
+                Void.class,
+                new ApiCallback<Void>() {
+
+                    @Override
+                    public void onSuccess(ApiResponse<Void> response) {
+                        session.clear();
+                        prefManager.clear();
+                        session.setLoggedIn(false);
+
+                        callback.onSuccess(response);
+                    }
+
+                    @Override
+                    public void onGeneralError(Exception e) {
+                        callback.onGeneralError(e);
+                    }
+
+                    @Override
+                    public void onHttpError(ApiResponse<Void> response) {
+                        callback.onHttpError(response);
+                    }
+                }
+        );
+    }
+
+    public void logoutAllDevices(ApiCallback<Void> callback) {
+
+        String accessToken = session.getAccessToken();
+
+        ApiRequest request = new ApiRequest("auth/logoutAllDevices");
+        request.setRequiresAuthentication(false);
+        request.addAuthHeader(accessToken);
+        request.setMethodPost();
+
+        apiClient.execute(
+                request,
+                Void.class,
+                new ApiCallback<Void>() {
+
+                    @Override
+                    public void onSuccess(ApiResponse<Void> response) {
+                        session.clear();
+                        prefManager.clear();
+                        session.setLoggedIn(false);
+
+                        callback.onSuccess(response);
+                    }
+
+                    @Override
+                    public void onGeneralError(Exception e) {
+                        callback.onGeneralError(e);
+                    }
+
+                    @Override
+                    public void onHttpError(ApiResponse<Void> response) {
+                        callback.onHttpError(response);
+                    }
+                }
+        );
+    }
+
+    // Only exception to no callback being passed
+    public void refresh(RefreshCallback callback) {
+
+        String refreshToken = session.getRefreshToken();
+
+        RefreshRequest refreshRequest = new RefreshRequest();
+        refreshRequest.setRefreshToken(refreshToken);
+
+        System.out.println("Retrieved" +refreshToken);
+        ApiRequest request = new ApiRequest("auth/refresh");
+        request.setRequiresAuthentication(false);
+        request.setBody(refreshRequest);
+        request.setMethodPost();
+
+        System.out.println("requesting refresh token");
+
+        apiClient.execute(
+                request,
+                RefreshResponse.class,
+                new ApiCallback<RefreshResponse>() {
+
+                    @Override
+                    public void onSuccess(
+                            ApiResponse<RefreshResponse> response
+                    ) {
+                        try {
+                            RefreshResponse refreshResponse =
+                                    response.getData();
+
+                            session.saveAccessToken(
+                                    refreshResponse.getToken()
+                            );
+
+                            session.saveRefreshToken(
+                                    refreshResponse.getRefreshToken()
+                            );
+
+                            session.setSessionExpiration(
+                                    refreshResponse.getTokenExpiresAt()
+                            );
+
+                            session.setRefreshExpiration(
+                                    refreshResponse.getRefreshTokenExpiresAt()
+                            );
+
+                            if (refreshResponse.getUserRole() != null) {
+                                prefManager.setRole(
+                                        com.example.capstone.domainModels.UserRole.valueOf(
+                                                refreshResponse.getUserRole()
+                                        )
+                                );
+                            }
+                            callback.onSuccess();
+
+
+                        } catch (Exception e) {
+                            session.clear();
+                            prefManager.clear();
+                            session.setLoggedIn(false);
+                            callback.onError(RefreshError.NETWORK_ERROR);
+                        }
+                    }
+
+                    @Override
+                    public void onGeneralError(Exception e) {
+                        session.clear();
+                        prefManager.clear();
+                        session.setLoggedIn(false);
+                        callback.onError(RefreshError.NETWORK_ERROR);
+                    }
+
+                    @Override
+                    public void onHttpError(
+                            ApiResponse<RefreshResponse> response
+                    ) {
+                        session.clear();
+                        prefManager.clear();
+                        session.setLoggedIn(false);
+                        callback.onError(RefreshError.SERVER_ERROR);
+                    }
+                }
+        );
+    }
 }

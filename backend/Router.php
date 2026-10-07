@@ -4,10 +4,12 @@
         private static array $publicRoutes = [
             'Auth/login',
             'Auth/signup',
-            'Auth/logout'
+            'Auth/logout',
+            'Auth/refresh',
+            'Interview/getAllInterviewCategories',
         ];
 
-        public static function handle(){
+        public static function handle($container){
             try{
                 //trim the path
                 $path = trim(parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH),'/');
@@ -36,30 +38,30 @@
                 $action = $parts[1] ?? 'index';
 
                 //get the paramaters
-                $params = array_slice($parts,3);
+                $params = [$_GET];
 
                 //if controller doesnt exist throw error
                 if(!class_exists($controllerName)){
                     throw new NotFoundException("Controller not found");
                 }
-
+                $authMiddleware = $container->get(AuthMiddleware::class);
                 //if requires token
                 if(!in_array($path,self::$publicRoutes)){
                     //check if token valid (throws error and doesnt continue)
-                    AuthMiddleware::requireToken();
+                    $authMiddleware->requireToken();
 
                     //if admin check if admin
                     if($controllerName ==="AdminController"){
-                        AuthMiddleware::requireAdmin();
+                        $authMiddleware->requireAdmin();
                     }
 
                     //if user controller check if user
                     if($controllerName ==="UserController"){
-                        AuthMiddleware::requireUser();
+                        $authMiddleware->requireUser();
                     }
                 }
         
-                $controller = new $controllerName;
+                $controller = $container->get($controllerName);
 
                 //check if method and controller exists
                 if(!method_exists($controller,$action)){

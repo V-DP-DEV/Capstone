@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_auth"
+    app:startDestination="@id/authLoginFragment">
+
+    <!-- 1. LOGIN SCREEN -->
+    <fragment
+        android:id="@+id/authLoginFragment"
+        android:name="com.example.capstone.ui.auth.AuthLoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_auth_login">
+
+        <!-- Navigate to Sign Up -->
+        <action
+            android:id="@+id/action_authLoginFragment_to_authSignUpFragment"
+            app:destination="@id/signUpFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
+        <!-- Navigate to Reset Password -->
+        <action
+            android:id="@+id/action_authLoginFragment_to_resetPasswordFragment"
+            app:destination="@id/resetPasswordFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+
+    <!-- 2. SIGN UP / CREATE ACCOUNT SCREEN -->
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.capstone.ui.auth.AuthSignupFragment"
+        android:label="Sign Up"
+        tools:layout="@layout/fragment_auth_signup">
+
+        <!-- Return to Login -->
+        <action
+            android:id="@+id/action_signUpFragment_to_authLoginFragment"
+            app:destination="@id/authLoginFragment"
+            app:popUpTo="@id/authLoginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <!-- 3. RESET PASSWORD SCREEN -->
+    <fragment
+        android:id="@+id/resetPasswordFragment"
+        android:name="com.example.capstone.ui.auth.ResetPasswordFragment"
+        android:label="Reset Password"
+        tools:layout="@layout/fragment_auth_reset_password">
+
+        <!-- Navigate to Create New Password -->
+        <action
+            android:id="@+id/action_resetPasswordFragment_to_createNewPasswordFragment"
+            app:destination="@id/createNewPasswordFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+
+    <!-- 4. CREATE NEW PASSWORD SCREEN -->
+    <fragment
+        android:id="@+id/createNewPasswordFragment"
+        android:name="com.example.capstone.ui.auth.AuthCreateNewPasswordFragment"
+        android:label="Create New Password"
+        tools:layout="@layout/fragment_auth_create_new_password">
+
+        <!-- Navigate Back to Login after Password Reset -->
+        <action
+            android:id="@+id/action_createNewPasswordFragment_to_authLoginFragment"
+            app:destination="@id/authLoginFragment"
+            app:popUpTo="@id/authLoginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+</navigation>

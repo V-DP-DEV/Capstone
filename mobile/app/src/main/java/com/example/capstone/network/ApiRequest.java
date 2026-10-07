@@ -21,6 +21,7 @@ public class ApiRequest {
   private final Handler mainHandler = new Handler(Looper.getMainLooper());
   private String url;
   private Map<String,String> headers = new HashMap<>();
+  private Map<String, String> queryParams = new HashMap<>();
   private String method;
   private Object body;
   private boolean requiresAuthentication =true;
@@ -29,7 +30,12 @@ public class ApiRequest {
     this.url = url;
     headers.put("Accept","application/json");
   }
-
+  public void addParams(String key,String value){
+    queryParams.put(key,value);
+  }
+  public Map<String,String> getQueryParams(){
+    return queryParams;
+  }
   public boolean requiresAuthentication() {
     return requiresAuthentication;
   }
@@ -37,6 +43,7 @@ public class ApiRequest {
   public void setRequiresAuthentication(boolean requiresAuthentication) {
     this.requiresAuthentication = requiresAuthentication;
   }
+
 
   //getters
   public String getUrl() {
@@ -85,8 +92,7 @@ public class ApiRequest {
   }
 
   //used to add to auth header
-  /*public void addAuthHeader(String token){
+  public void addAuthHeader(String token){
     headers.put("Authorization","Bearer " + token);
   }
-  */
 }

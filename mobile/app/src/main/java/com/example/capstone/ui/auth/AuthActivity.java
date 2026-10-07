@@ -8,10 +8,12 @@ import androidx.activity.EdgeToEdge;
 import com.example.capstone.AppContainer;
 import com.example.capstone.MyApplication;
 import com.example.capstone.model.request.LoginRequest;
+import com.example.capstone.model.request.SignupRequest;
 import com.example.capstone.model.response.LoginResponse;
 import com.example.capstone.network.ApiCallback;
 import com.example.capstone.network.ApiResponse;
 import com.example.capstone.repository.AuthRepository;
+import com.example.capstone.repository.IAuthRepository;
 import com.example.capstone.service.AuthService;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -62,36 +64,6 @@ public class AuthActivity extends AppCompatActivity {
       MyApplication app = (MyApplication) getApplication();
       AppContainer container =
           app.getAppContainer();
-
-      AuthRepository repo = container.authRepository;
-      LoginRequest loginRequest = new LoginRequest();
-      loginRequest.setEmail("admin@example.com");
-      loginRequest.setPassword("Password123");
-      loginRequest.setDeviceId();
-      loginRequest.setDeviceName();
-
-      repo.login(
-          loginRequest,
-          new ApiCallback<LoginResponse>() {
-
-            @Override
-            public void onSuccess(ApiResponse<LoginResponse> response) {
-              // Login worked
-              // Move to the next Activity
-              LoginResponse loginResponse= response.getData();
-              System.out.println(loginResponse.getToken());
-            }
-
-            @Override
-            public void onGeneralError(Exception e) {
-            }
-
-            @Override
-            public void onHttpError(ApiResponse<LoginResponse> response) {
-
-            }
-          }
-      );
 
       NavController navController = navHostFragment.getNavController();
 

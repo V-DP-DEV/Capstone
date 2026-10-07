@@ -43,10 +43,6 @@
         android:exported="false"
         android:theme="@style/Theme.Capstone"
         android:windowSoftInputMode="adjustResize" />
-    <activity
-        android:name=".ui.user.AuthActivity"
-        android:exported="false"
-        android:windowSoftInputMode="adjustResize" />
   </application>
 
 </manifest>
