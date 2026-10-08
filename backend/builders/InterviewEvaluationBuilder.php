@@ -88,12 +88,13 @@
             $questions = [];
             foreach($interviewQuestionResponses as $row){
                 $questionId = $row['id'];
+                $questionAttemptId = $row['question_attempt_id'];
                 $questions[] = [
-                    'id'=>$questionId,
+                    'question_attempt_id'=>$questionAttemptId,
                     'question'=>$row['question'],
                     'answer'=>$row['answer'],
                     'expected_answer'=>$row['expected_answer'],
-                    'comptencies'=> $competenciesByQuestion[$questionId]?? [],
+                    'competencies'=> $competenciesByQuestion[$questionId]?? [],
                     'concepts'=> $conceptsByQuestion[$questionId] ?? []
                 ];
             }
@@ -154,7 +155,7 @@
                 "items" => [
                     "type" => "object",
                     "properties" => [
-                        "question_id" => [
+                        "question_attempt_id" => [
                             "type" => "integer"
                         ],
                         "competencies" => [
@@ -201,7 +202,7 @@
                         ]
                     ],
                     "required" => [
-                        "question_id",
+                        "question_attempt_id",
                         "competencies",
                         "concepts"
                     ],

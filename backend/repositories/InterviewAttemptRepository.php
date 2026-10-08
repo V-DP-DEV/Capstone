@@ -49,12 +49,58 @@
         }
 
         public function getQuestionsForAnalysis(int $attemptId): array{
-            $query = "SELECT iq.id,iq.answer as expected_answer,iq.text as question,iqa.answer 
+            $query = "SELECT iq.id,iq.answer as expected_answer,iq.text as question,iqa.answer,iqa.id as question_attempt_id
                 FROM interview_questions iq 
                 JOIN interview_question_attempts iqa ON iq.id = iqa.question_id 
                 WHERE interview_id =?";
             return $this->db->queryAll($query,[$attemptId]);
         }
 
+        public function addAnalyseQuestionConcepts($aiQuestionsConcepts){
+            $placeHolders = [];
+            $params = [];
+            //return $aiQuestionsConcepts;
+            foreach($aiQuestionsConcepts as $concepts){
+                $placeHolders[] = "(?,?,?)";
+                $params[] = $concepts['question_attempt_id'];
+                $params[] = $concepts['concept_id'];
+                $params[] = $concepts['score'];
+            }
+
+            $query = 'INSERT INTO question_feedbacks (question_attempt_id,concept_id,score) VALUES ' . implode(',',$placeHolders);
+            $this->db->execute($query,$params);
+        }
+
+        public function addAnalyseInterview($aiInterviewCompetencies){
+            $placeHolders = [];
+            $params = [];
+            //return $aiInterviewCompetencies;
+
+            foreach($aiInterviewCompetencies as $interviewCompetencies){
+                $placeHolders[] = "(?,?,?,?)";
+                $params[] = $interviewCompetencies['interview_attempt_id'];
+                $params[] = $interviewCompetencies['competency_breakdown_id'];
+                $params[] = $interviewCompetencies['strength'];
+                $params[] = $interviewCompetencies['improvement'];
+            }
+
+            $query = 'INSERT INTO competency_breakdown_scores (attempt_id,competency_breakdown_id,strength,improvements) VALUES ' . implode(',',$placeHolders);
+            $this->db->execute($query,$params);
+        }
+
+        public function addAnalyseQuestionCompetencies($aiQuestionCompetencies){
+            $placeHolders = [];
+            $params = [];
+            //return $aiQuestionCompetencies;
+            foreach($aiQuestionCompetencies as $competencies){
+                $placeHolders[] = "(?,?,?)";
+                $params[] = $competencies['question_attempt_id'];
+                $params[] = $competencies['competency_breakdown_id'];
+                $params[] = $competencies['score'];
+            }
+            
+            $query = 'INSERT INTO question_competency_breakdown_scores (question_attempt_id,competency_breakdown_id,score) VALUES ' . implode(',',$placeHolders);
+            $this->db->execute($query,$params);
+        }
     }
 ?>
