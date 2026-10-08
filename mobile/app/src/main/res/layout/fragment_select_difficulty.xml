@@ -50,21 +50,21 @@
         app:layout_constraintTop_toBottomOf="@id/tv_choose_difficulty">
 
         <com.example.capstone.ui.components.DifficultyOptionView
-            android:id="@+id/option_easy"
+            android:id="@+id/optionEasy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:indicatorColor="@color/progress_green"
             app:optionTitle="Easy" />
 
         <com.example.capstone.ui.components.DifficultyOptionView
-            android:id="@+id/option_medium"
+            android:id="@+id/optionMedium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:indicatorColor="@color/progress_orange"
             app:optionTitle="Medium" />
 
         <com.example.capstone.ui.components.DifficultyOptionView
-            android:id="@+id/option_hard"
+            android:id="@+id/optionHard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:indicatorColor="@color/red"
@@ -120,8 +120,8 @@
         layout="@layout/component_bottom_nav_bar"
         android:layout_width="0dp"
         android:layout_height="64dp"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginHorizontal="0dp"
+        android:layout_marginBottom="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
