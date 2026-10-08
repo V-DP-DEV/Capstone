@@ -2,573 +2,112 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F6F8FC">
+    android:background="#F6F8FC"
+    android:paddingHorizontal="24dp">
 
-    <ImageView
-        android:id="@+id/img_profile_avatar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/bg_circle_action"
-        android:padding="12dp"
-        android:src="@drawable/ic_person"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/primary_blue"/>
-    <!-- Screen Title -->
+    <!-- Screen Header -->
     <TextView
-        android:id="@+id/tv_title"
+        android:id="@+id/tv_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:fontFamily="sans-serif-medium"
-        android:text="@string/select_interview"
+        android:layout_marginTop="32dp"
+        android:fontFamily="sans-serif-bold"
+        android:text="@string/select_interviews"
         android:textColor="#1C1C28"
-        android:textSize="22sp"
-        android:textStyle="bold"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Search Input Bar -->
-    <EditText
-        android:id="@+id/et_search"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/search_bar_container"
         android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/bg_search_bar"
-        android:drawableEnd="@android:drawable/ic_menu_search"
-        android:drawableTint="#B7C0D2"
-        android:elevation="2dp"
-        android:hint="Search"
-        android:inputType="text"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        android:textColor="#1C1C28"
-        android:textColorHint="#B7C0D2"
-        android:textSize="15sp"
+        android:layout_height="52dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_search_input"
+        android:paddingHorizontal="18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+        app:layout_constraintTop_toBottomOf="@id/tv_header">
 
-    <!-- Scrollable Topics Container -->
-    <androidx.core.widget.NestedScrollView
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:hint="@string/search"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:textColor="#1C1C28"
+            android:textColorHint="#B7C0D2"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toStartOf="@id/iv_search_icon"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_search_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:contentDescription="@string/search_icon"
+            android:src="@android:drawable/ic_menu_search"
+            app:tint="#B7C0D2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Topics RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_interviews"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="16dp"
         android:clipToPadding="false"
-        android:paddingBottom="90dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/layout_bottom_buttons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/et_search">
+        app:layout_constraintTop_toBottomOf="@id/search_bar_container" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp">
-
-            <!-- Card 1: Java -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_java"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="0dp">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="20dp">
-
-                    <TextView
-                        android:id="@+id/tv_java_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Java"
-                        android:textColor="#1C1C28"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tv_java_difficulty"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="12dp"
-                        android:text="Hard"
-                        android:textColor="#E49596"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@id/tv_java_title"
-                        app:layout_constraintEnd_toStartOf="@id/iv_java_chevron"
-                        app:layout_constraintTop_toTopOf="@id/tv_java_title" />
-
-                    <ImageView
-                        android:id="@+id/iv_java_chevron"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:src="@android:drawable/ic_media_play"
-                        app:layout_constraintBottom_toBottomOf="@id/tv_java_title"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/tv_java_title"
-                        app:tint="#C9C6EF" />
-
-                    <TextView
-                        android:id="@+id/tv_java_focus_header"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:letterSpacing="0.05"
-                        android:text="FOCUS AREAS"
-                        android:textColor="#8A8A97"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tv_java_title" />
-
-                    <!-- Tags Row 1 -->
-                    <LinearLayout
-                        android:id="@+id/row_java_tags_1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:orientation="horizontal"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tv_java_focus_header">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:background="@drawable/bg_tag_chip"
-                            android:paddingStart="16dp"
-                            android:paddingTop="8dp"
-                            android:paddingEnd="16dp"
-                            android:paddingBottom="8dp"
-                            android:text="SQL"
-                            android:textColor="#6C63D6"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_tag_chip"
-                            android:paddingStart="16dp"
-                            android:paddingTop="8dp"
-                            android:paddingEnd="16dp"
-                            android:paddingBottom="8dp"
-                            android:text="Problem solving"
-                            android:textColor="#6C63D6"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <!-- Tags Row 2 -->
-                    <LinearLayout
-                        android:id="@+id/row_java_tags_2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/row_java_tags_1">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:background="@drawable/bg_tag_chip"
-                            android:paddingStart="16dp"
-                            android:paddingTop="8dp"
-                            android:paddingEnd="16dp"
-                            android:paddingBottom="8dp"
-                            android:text="Communication"
-                            android:textColor="#6C63D6"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_tag_chip"
-                            android:paddingStart="16dp"
-                            android:paddingTop="8dp"
-                            android:paddingEnd="16dp"
-                            android:paddingBottom="8dp"
-                            android:text="System design"
-                            android:textColor="#6C63D6"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Card 2: C# -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_csharp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="0dp">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="20dp">
-
-                    <TextView
-                        android:id="@+id/tv_csharp_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="C#"
-                        android:textColor="#1C1C28"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tv_csharp_difficulty"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="12dp"
-                        android:text="Hard"
-                        android:textColor="#E49596"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@id/tv_csharp_title"
-                        app:layout_constraintEnd_toStartOf="@id/iv_csharp_chevron"
-                        app:layout_constraintTop_toTopOf="@id/tv_csharp_title" />
-
-                    <ImageView
-                        android:id="@+id/iv_csharp_chevron"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:src="@android:drawable/ic_media_play"
-                        app:layout_constraintBottom_toBottomOf="@id/tv_csharp_title"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/tv_csharp_title"
-                        app:tint="#C9C6EF" />
-
-                    <TextView
-                        android:id="@+id/tv_csharp_focus_header"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:letterSpacing="0.05"
-                        android:text="FOCUS AREAS"
-                        android:textColor="#8A8A97"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tv_csharp_title" />
-
-                    <!-- Tags Row 1 -->
-                    <LinearLayout
-                        android:id="@+id/row_csharp_tags_1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:orientation="horizontal"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tv_csharp_focus_header">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:background="@drawable/bg_tag_chip"
-                            android:paddingStart="16dp"
-                            android:paddingTop="8dp"
-                            android:paddingEnd="16dp"
-                            android:paddingBottom="8dp"
-                            android:text="SQL"
-                            android:textColor="#6C63D6"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_tag_chip"
-                            android:paddingStart="16dp"
-                            android:paddingTop="8dp"
-                            android:paddingEnd="16dp"
-                            android:paddingBottom="8dp"
-                            android:text="Problem solving"
-                            android:textColor="#6C63D6"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <!-- Tags Row 2 -->
-                    <LinearLayout
-                        android:id="@+id/row_csharp_tags_2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/row_csharp_tags_1">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:background="@drawable/bg_tag_chip"
-                            android:paddingStart="16dp"
-                            android:paddingTop="8dp"
-                            android:paddingEnd="16dp"
-                            android:paddingBottom="8dp"
-                            android:text="Communication"
-                            android:textColor="#6C63D6"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_tag_chip"
-                            android:paddingStart="16dp"
-                            android:paddingTop="8dp"
-                            android:paddingEnd="16dp"
-                            android:paddingBottom="8dp"
-                            android:text="System design"
-                            android:textColor="#6C63D6"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Card 3: Python -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_python"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="0dp">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="20dp">
-
-                    <TextView
-                        android:id="@+id/tv_python_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Python"
-                        android:textColor="#1C1C28"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tv_python_difficulty"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="12dp"
-                        android:text="Hard"
-                        android:textColor="#E49596"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@id/tv_python_title"
-                        app:layout_constraintEnd_toStartOf="@id/iv_python_chevron"
-                        app:layout_constraintTop_toTopOf="@id/tv_python_title" />
-
-                    <ImageView
-                        android:id="@+id/iv_python_chevron"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:src="@android:drawable/ic_media_play"
-                        app:layout_constraintBottom_toBottomOf="@id/tv_python_title"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/tv_python_title"
-                        app:tint="#C9C6EF" />
-
-                    <TextView
-                        android:id="@+id/tv_python_focus_header"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:letterSpacing="0.05"
-                        android:text="FOCUS AREAS"
-                        android:textColor="#8A8A97"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tv_python_title" />
-
-                    <!-- Tags Row 1 -->
-                    <LinearLayout
-                        android:id="@+id/row_python_tags_1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:orientation="horizontal"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tv_python_focus_header">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:background="@drawable/bg_tag_chip"
-                            android:paddingStart="16dp"
-                            android:paddingTop="8dp"
-                            android:paddingEnd="16dp"
-                            android:paddingBottom="8dp"
-                            android:text="SQL"
-                            android:textColor="#6C63D6"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_tag_chip"
-                            android:paddingStart="16dp"
-                            android:paddingTop="8dp"
-                            android:paddingEnd="16dp"
-                            android:paddingBottom="8dp"
-                            android:text="Problem solving"
-                            android:textColor="#6C63D6"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <!-- Tags Row 2 -->
-                    <LinearLayout
-                        android:id="@+id/row_python_tags_2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/row_python_tags_1">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:background="@drawable/bg_tag_chip"
-                            android:paddingStart="16dp"
-                            android:paddingTop="8dp"
-                            android:paddingEnd="16dp"
-                            android:paddingBottom="8dp"
-                            android:text="Communication"
-                            android:textColor="#6C63D6"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_tag_chip"
-                            android:paddingStart="16dp"
-                            android:paddingTop="8dp"
-                            android:paddingEnd="16dp"
-                            android:paddingBottom="8dp"
-                            android:text="System design"
-                            android:textColor="#6C63D6"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
-
-    <!-- Bottom Navigation Bar Placeholder -->
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/bottom_nav_container"
+    <!-- Bottom Action Buttons Container -->
+    <LinearLayout
+        android:id="@+id/layout_bottom_buttons"
         android:layout_width="0dp"
-        android:layout_height="72dp"
-        android:background="@drawable/bg_bottom_nav"
-        android:elevation="8dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <LinearLayout
+        <android.widget.Button
+            android:id="@+id/btn_back"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="56dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_btn_back"
+            android:fontFamily="sans-serif-bold"
+            android:text="@string/Back"
+            android:textAllCaps="false"
+            android:textColor="#A1407A"
+            android:textSize="18sp" />
 
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:padding="22dp"
-                android:src="@drawable/ic_home"
-                app:tint="@color/primary_blue"/>
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:padding="22dp"
-                android:src="@drawable/ic_settings"
-                app:tint="#FF868DA6"/>
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:padding="22dp"
-                android:src="@drawable/ic_analytics"
-                app:tint="#FF868DA6"/>
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:padding="22dp"
-                android:src="@drawable/ic_presentation"
-                app:tint="#FF868DA6"/>
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:padding="22dp"
-                android:src="@drawable/ic_person"
-                app:tint="#FF868DA6"/>
-        </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <android.widget.Button
+            android:id="@+id/btn_next"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_btn_next"
+            android:fontFamily="sans-serif-bold"
+            android:text="@string/Next"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
