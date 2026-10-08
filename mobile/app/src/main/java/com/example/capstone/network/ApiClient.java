@@ -66,9 +66,25 @@ public class ApiClient {
 
   private <T> ApiResponse<T> performRequest(ApiRequest request,Type responseType) throws Exception{
     //create url
-    URL url = new URL(
-        baseurl+request.getUrl()
+    StringBuilder urlString = new StringBuilder(
+            baseurl + request.getUrl()
     );
+
+    if (!request.getParams().isEmpty()) {
+      urlString.append("?");
+
+      for (Map.Entry<String, String> param : request.getParams().entrySet()) {
+        urlString
+                .append(param.getKey())
+                .append("=")
+                .append(param.getValue())
+                .append("&");
+      }
+
+      urlString.deleteCharAt(urlString.length() - 1);
+    }
+
+    URL url = new URL(urlString.toString());
 
     //open connection
     HttpURLConnection connection =
