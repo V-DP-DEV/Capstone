@@ -46,7 +46,6 @@ public class SelectDifficultyFragment extends Fragment {
     private void selectDifficulty(Difficulty difficulty) {
         selectedDifficulty = difficulty;
 
-        // Toggle stroke outline on custom views
         binding.optionEasy.setSelectedState(difficulty == Difficulty.EASY);
         binding.optionMedium.setSelectedState(difficulty == Difficulty.MEDIUM);
         binding.optionHard.setSelectedState(difficulty == Difficulty.HARD);
@@ -68,13 +67,11 @@ public class SelectDifficultyFragment extends Fragment {
         binding.btnContinue.setOnClickListener(v -> {
             if (selectedDifficulty == null) return;
 
-
             String difficultyName = selectedDifficulty.name().substring(0, 1).toUpperCase()
                     + selectedDifficulty.name().substring(1).toLowerCase();
 
             Bundle bundle = new Bundle();
             bundle.putString(SelectInterviewFragment.ARG_DIFFICULTY, difficultyName);
-
 
             NavHostFragment.findNavController(this)
                     .navigate(R.id.action_selectDifficultyFragment_to_selectInterviewFragment, bundle);

@@ -15,6 +15,9 @@
     <action
         android:id="@+id/action_userDashboardFragment_to_selectDifficultyFragment"
         app:destination="@id/selectDifficultyFragment" />
+    <action
+        android:id="@+id/action_userDashboardFragment_self"
+        app:destination="@id/userDashboardFragment" />
   </fragment>
 
   <!-- Select Difficulty Screen -->
@@ -26,6 +29,9 @@
     <action
         android:id="@+id/action_selectDifficultyFragment_to_selectInterviewFragment"
         app:destination="@id/selectInterviewFragment" />
+    <action
+        android:id="@+id/action_selectDifficultyFragment_self"
+        app:destination="@id/selectDifficultyFragment" />
   </fragment>
 
   <!-- Select Interview Screen -->
@@ -33,7 +39,11 @@
       android:id="@+id/selectInterviewFragment"
       android:name="com.example.capstone.ui.mock.SelectInterviewFragment"
       android:label="Select Interview"
-      tools:layout="@layout/fragment_select_interview" />
+      tools:layout="@layout/fragment_select_interview" >
+    <action
+        android:id="@+id/action_selectInterviewFragment_self"
+        app:destination="@id/selectInterviewFragment" />
+  </fragment>
 
 
 </navigation>

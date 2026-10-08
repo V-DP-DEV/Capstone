@@ -9,6 +9,5 @@
     <declare-styleable name="DifficultyOptionView">
         <attr name="optionTitle" format="string" />
         <attr name="indicatorColor" format="color" />
-        <attr name="isSelected" format="boolean" />
     </declare-styleable>
 </resources>
