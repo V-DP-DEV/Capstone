@@ -141,7 +141,7 @@ public class SelectInterviewFragment extends Fragment {
         binding.btnContinue.setOnClickListener(v -> {
             if (selectedInterview == null) return;
 
-            // Bundle interview details for InterviewInstructionsFragment
+
             Bundle args = new Bundle();
             args.putString(MockInterviewInstructionsFragment.ARG_INTERVIEW_NAME, selectedInterview.getTitle());
             args.putString(MockInterviewInstructionsFragment.ARG_INTERVIEW_DIFFICULTY, selectedInterview.getDifficulty());
