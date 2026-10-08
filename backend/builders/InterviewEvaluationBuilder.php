@@ -35,32 +35,33 @@
 '-Partial evidence should receive credit only for what is demonstrated.. ' .
 '-When the expected answer contains multiple pieces of information, do not require all pieces unless they are relevant to the specific competency or concept being scored. ' .
 '-Incorrect or contradictory information should reduce the score when it directly relates to the competency or concept being evaluated. ' .
-'-When the evidence falls between two scores, assign the lower score. ' .
 
 '### SCORING RUBRIC ### ' .
 '-Use the following rubric consistently for every competency and concept. ' .
 
 '-0 = Not demonstrated. ' .
-'No relevant evidence is provided. ' .
+'No relevant evidence.' .
 
 '-1 = Minimally demonstrated. ' .
-'There is only weak, vague, incomplete, or indirect evidence of the competency or concept. ' .
+'Weak, vague, or very limited evidence' .
 
 '-2 = Partially demonstrated. ' .
-'The candidate demonstrates some relevant and correct evidence, but the core requirement is not fully demonstrated.' .
+'Some relevant evidence, but important gaps or errors remain.' .
 
 '-3 = Adequately demonstrated. ' .
-'The candidate demonstrates the core requirement with a generally correct and relevant response but with limited depth,precision,completeness,or supporting detail' .
+'Sufficient and generally correct evidence, but limited depth or completeness.' .
 
 '-4 = Strongly demonstrated. ' .
-'The candidate clearly and correctly demonstrates the core requirement with specific and relevant evidence with minor gaps' .
+'Clear and correct evidence with only minor gaps' .
 
 '-5 = Fully demonstrated. ' .
-'The candidate demonstrates the competency or concept comprehensively, accurately, and convincingly.' .
+' Comprehensive and accurate evidence covering the important aspects relevant to the question..' .
+"Before assigning a score, identify the evidence in the candidate's answer that is relevant to the specific competency or concept. Then assign the score based only on that evidence.".
 
 
 '### STRENGTHS + IMPROVEMENTS ### ' .
-'-Generate interview_competencies as a summary of the competency scores already assigned in the questions. ' .
+'-The interview_competencies section is a reporting layer, not an evaluation layer. ' .
+'-Its purpose is to describe the results of the question-level competency evaluation, not to perform a second evaluation. ' .
 '-Provide exactly one concise sentence describing the strongest demonstrated aspect of the competency. ' .
 '-Provide exactly one concise sentence describing the most important improvement for that competency. ' .
 '-The strength must be supported by evidence from the interview. ' .
