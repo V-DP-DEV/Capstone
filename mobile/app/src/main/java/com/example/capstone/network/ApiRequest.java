@@ -21,6 +21,7 @@ public class ApiRequest {
   private final Handler mainHandler = new Handler(Looper.getMainLooper());
   private String url;
   private Map<String,String> headers = new HashMap<>();
+  private Map<String, String> params = new HashMap<>();
   private String method;
   private Object body;
   private boolean requiresAuthentication =true;
@@ -56,6 +57,15 @@ public class ApiRequest {
 
   public Map<String, String> getHeaders() {
     return headers;
+  }
+  public Map<String, String> getParams() {
+    return params;
+  }
+
+  public void addParams(String key, Object value) {
+    if (value != null) {
+      params.put(key, String.valueOf(value));
+    }
   }
 
   //setters for method
