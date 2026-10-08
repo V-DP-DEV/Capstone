@@ -22,7 +22,18 @@
       android:id="@+id/selectDifficultyFragment"
       android:name="com.example.capstone.ui.mock.SelectDifficultyFragment"
       android:label="Select Difficulty"
-      tools:layout="@layout/fragment_select_difficulty" />
+      tools:layout="@layout/fragment_select_difficulty">
+    <action
+        android:id="@+id/action_selectDifficultyFragment_to_selectInterviewFragment"
+        app:destination="@id/selectInterviewFragment" />
+  </fragment>
+
+  <!-- Select Interview Screen -->
+  <fragment
+      android:id="@+id/selectInterviewFragment"
+      android:name="com.example.capstone.ui.mock.SelectInterviewFragment"
+      android:label="Select Interview"
+      tools:layout="@layout/fragment_select_interview" />
 
 
 </navigation>

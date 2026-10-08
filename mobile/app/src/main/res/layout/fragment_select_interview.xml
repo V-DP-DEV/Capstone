@@ -1,113 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F6F8FC"
-    android:paddingHorizontal="24dp">
+    android:background="#FFF6F8FC">
 
-    <!-- Screen Header -->
+    <!-- Header Title -->
     <TextView
-        android:id="@+id/tv_header"
+        android:id="@+id/tvHeaderTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:fontFamily="sans-serif-bold"
-        android:text="@string/select_interviews"
+        android:layout_marginTop="24dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Select Interview"
         android:textColor="#1C1C28"
-        android:textSize="24sp"
+        android:textSize="22sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Search Input Bar -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/search_bar_container"
-        android:layout_width="0dp"
-        android:layout_height="52dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/bg_search_input"
-        android:paddingHorizontal="18dp"
+    <!-- Subheader (Displays Selected Difficulty passed from previous screen) -->
+    <TextView
+        android:id="@+id/tvSubHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="#8A8A97"
+        android:textSize="14sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_header">
+        app:layout_constraintTop_toBottomOf="@+id/tvHeaderTitle"
+        tools:text="Difficulty: Hard" />
 
-        <EditText
-            android:id="@+id/et_search"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:background="@null"
-            android:hint="@string/search"
-            android:imeOptions="actionSearch"
-            android:inputType="text"
-            android:textColor="#1C1C28"
-            android:textColorHint="#B7C0D2"
-            android:textSize="15sp"
-            app:layout_constraintEnd_toStartOf="@id/iv_search_icon"
-            app:layout_constraintStart_toStartOf="parent" />
+    <!-- Reusable Search Input Component -->
+    <include
+        android:id="@+id/includeSearch"
+        layout="@layout/layout_search_bar"
+        android:layout_width="16dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvHeaderTitle" />
 
-        <ImageView
-            android:id="@+id/iv_search_icon"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:contentDescription="@string/search_icon"
-            android:src="@android:drawable/ic_menu_search"
-            app:tint="#B7C0D2"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!-- Topics RecyclerView -->
+    <!-- Interview Selection RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_interviews"
+        android:id="@+id/rvInterviews"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="16dp"
         android:clipToPadding="false"
-        app:layout_constraintBottom_toTopOf="@id/layout_bottom_buttons"
+        android:paddingBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/layoutBottomActions"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_bar_container" />
+        app:layout_constraintTop_toBottomOf="@+id/includeSearch"
+        tools:listitem="@layout/item_interview" />
 
-    <!-- Bottom Action Buttons Container -->
+    <!-- Bottom Action Buttons -->
     <LinearLayout
-        android:id="@+id/layout_bottom_buttons"
+        android:id="@+id/layoutBottomActions"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="16dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <android.widget.Button
-            android:id="@+id/btn_back"
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnBack"
             android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:layout_marginEnd="10dp"
+            android:layout_height="52dp"
+            android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:background="@drawable/bg_btn_back"
-            android:fontFamily="sans-serif-bold"
-            android:text="@string/Back"
+            android:background="@drawable/bg_secondary_pill_button"
+            android:text="Back"
             android:textAllCaps="false"
-            android:textColor="#A1407A"
-            android:textSize="18sp" />
+            android:textColor="#A14078"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-        <android.widget.Button
-            android:id="@+id/btn_next"
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnContinue"
             android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:layout_marginStart="10dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:background="@drawable/bg_btn_next"
-            android:fontFamily="sans-serif-bold"
-            android:text="@string/Next"
+            android:background="@drawable/bg_primary_pill_button"
+            android:text="Continue"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:textSize="16sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
