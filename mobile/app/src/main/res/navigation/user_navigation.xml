@@ -53,8 +53,28 @@
       android:id="@+id/mockInterviewInstructionsFragment"
       android:name="com.example.capstone.ui.mock.MockInterviewInstructionsFragment"
       android:label="Mock Interview Instructions"
-      tools:layout="@layout/fragment_mock_interview_instructions" />
+      tools:layout="@layout/fragment_mock_interview_instructions">
+    <action
+        android:id="@+id/action_mockInterviewInstructionsFragment_to_mockInterviewQuestionsFragment"
+        app:destination="@id/mockInterviewQuestionsFragment" />
+  </fragment>
 
+  <!-- Mock Interview Questions Screen -->
+  <fragment
+      android:id="@+id/mockInterviewQuestionsFragment"
+      android:name="com.example.capstone.ui.mock.MockInterviewQuestionsFragment"
+      android:label="Mock Interview Questions"
+      tools:layout="@layout/fragment_mock_interview_questions">
+    <action
+        android:id="@+id/action_mockInterviewQuestions_to_mockInterviewResult"
+        app:destination="@id/mockInterviewResult" />
+  </fragment>
+
+  <!-- Mock Interview Result Screen -->
+  <fragment
+      android:id="@+id/mockInterviewResult"
+      android:name="com.example.capstone.ui.mock.MockInterviewResult"
+      android:label="Mock Interview Result"
+      tools:layout="@layout/fragment_mock_interview_result" />
 
 </navigation>
-

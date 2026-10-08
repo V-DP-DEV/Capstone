@@ -12,6 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
+import androidx.navigation.fragment.NavHostFragment;
+
 import com.example.capstone.R;
 
 public class MockInterviewInstructionsFragment extends Fragment {
@@ -100,7 +102,16 @@ private void setupClickListeners() {
         }
     }
     private void startInterview() {
-
+        Bundle args = new Bundle();
+        if (getArguments() != null) {
+            args.putString(ARG_INTERVIEW_NAME, getArguments().getString(ARG_INTERVIEW_NAME));
+            args.putString(ARG_INTERVIEW_DIFFICULTY, getArguments().getString(ARG_INTERVIEW_DIFFICULTY));
+            args.putInt(ARG_QUESTION_COUNT, getArguments().getInt(ARG_QUESTION_COUNT, 8));
+            args.putString(ARG_DURATION, getArguments().getString(ARG_DURATION));
+            args.putString(ARG_INPUT_TYPE, getArguments().getString(ARG_INPUT_TYPE));
+        }
+        NavHostFragment.findNavController(this)
+                .navigate(R.id.action_mockInterviewInstructionsFragment_to_mockInterviewQuestionsFragment, args);
     }
 }
 
