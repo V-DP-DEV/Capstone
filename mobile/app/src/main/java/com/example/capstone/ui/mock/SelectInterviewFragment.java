@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.capstone.R;
 import com.example.capstone.adapter.InterviewAdapter;
 import com.example.capstone.databinding.FragmentSelectInterviewBinding;
 import com.example.capstone.model.Interview;
@@ -140,9 +141,17 @@ public class SelectInterviewFragment extends Fragment {
         binding.btnContinue.setOnClickListener(v -> {
             if (selectedInterview == null) return;
 
-            Toast.makeText(requireContext(),
-                    "Starting " + selectedInterview.getTitle() + " interview",
-                    Toast.LENGTH_SHORT).show();
+            // Bundle interview details for InterviewInstructionsFragment
+            Bundle args = new Bundle();
+            args.putString(MockInterviewInstructionsFragment.ARG_INTERVIEW_NAME, selectedInterview.getTitle());
+            args.putString(MockInterviewInstructionsFragment.ARG_INTERVIEW_DIFFICULTY, selectedInterview.getDifficulty());
+            args.putInt(MockInterviewInstructionsFragment.ARG_QUESTION_COUNT, 8); // Pass or adjust based on your model
+            args.putString(MockInterviewInstructionsFragment.ARG_DURATION, "~25m");
+            args.putString(MockInterviewInstructionsFragment.ARG_INPUT_TYPE, "Mic");
+
+
+            NavHostFragment.findNavController(this)
+                    .navigate(R.id.action_selectInterviewFragment_to_mockInterviewInstructionsFragment, args);
         });
     }
 

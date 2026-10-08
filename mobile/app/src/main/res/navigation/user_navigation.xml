@@ -43,7 +43,17 @@
     <action
         android:id="@+id/action_selectInterviewFragment_self"
         app:destination="@id/selectInterviewFragment" />
+    <action
+        android:id="@+id/action_selectInterviewFragment_to_mockInterviewInstructionsFragment"
+        app:destination="@id/mockInterviewInstructionsFragment" />
   </fragment>
+
+  <!-- Mock Interview Instructions Screen -->
+  <fragment
+      android:id="@+id/mockInterviewInstructionsFragment"
+      android:name="com.example.capstone.ui.mock.MockInterviewInstructionsFragment"
+      android:label="Mock Interview Instructions"
+      tools:layout="@layout/fragment_mock_interview_instructions" />
 
 
 </navigation>
