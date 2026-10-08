@@ -6,6 +6,7 @@
 
   <!-- Primary Brand & Accent Colors -->
   <color name="primary_purple">#FFA14078</color>
+  <color name="primary_berry">@color/primary_purple</color>
   <color name="color_purple_primary">@color/primary_purple</color>
 
   <color name="primary_blue">#FF312CAA</color>

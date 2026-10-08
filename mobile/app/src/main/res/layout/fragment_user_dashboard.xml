@@ -2,445 +2,187 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/screen_background">
-  <!--  Top Header: User Profile Avatar  -->
+
+  <!-- Header Avatar -->
   <ImageView
       android:id="@+id/img_profile_avatar"
-      android:layout_width="48dp"
-      android:layout_height="48dp"
+      android:layout_width="44dp"
+      android:layout_height="44dp"
       android:layout_marginStart="24dp"
       android:layout_marginTop="16dp"
       android:background="@drawable/bg_circle_action"
-      android:padding="12dp"
+      android:backgroundTint="@color/white"
+      android:padding="10dp"
       android:src="@drawable/ic_person"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      app:tint="@color/primary_blue"/>
-  <!--  Scrollable Main Content  -->
+      app:tint="@color/primary_blue" />
+
+  <!-- Main Content -->
   <androidx.core.widget.NestedScrollView
       android:id="@+id/scrollView"
       android:layout_width="0dp"
       android:layout_height="0dp"
       android:clipToPadding="false"
-      android:fillViewport="true"
       android:paddingBottom="16dp"
       app:layout_constraintBottom_toTopOf="@id/bottom_nav_container"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@id/img_profile_avatar">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:paddingHorizontal="24dp"
-        android:paddingTop="12dp">
-      <!--  HERO / PROMOTION CARD  -->
-      <FrameLayout
-          android:id="@+id/card_promotion"
-          android:layout_width="0dp"
+        android:paddingTop="16dp">
+
+      <!-- Hero Card -->
+      <com.google.android.material.card.MaterialCardView
+          android:layout_width="match_parent"
           android:layout_height="wrap_content"
           app:cardBackgroundColor="@color/card_background"
           app:cardCornerRadius="24dp"
           app:cardElevation="2dp"
-          android:background="@drawable/bg_card_shading"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toTopOf="parent">
-        <androidx.constraintlayout.widget.ConstraintLayout
+          app:strokeWidth="0dp">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:padding="24dp">
+
           <TextView
-              android:id="@+id/tv_promotion_title"
-              android:layout_width="0dp"
+              android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:fontFamily="sans-serif-medium"
               android:text="Improve your skills\nToday!!"
               android:textColor="@color/text_primary"
-              android:textSize="26sp"
-              android:textStyle="bold"
-              app:layout_constraintEnd_toEndOf="parent"
-              app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toTopOf="parent"/>
+              android:textSize="22sp"
+              android:textStyle="bold" />
+
           <TextView
-              android:id="@+id/tv_promotion_subtitle"
-              android:layout_width="0dp"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="12dp"
-              android:text="Build interview confidence"
-              android:textColor="#FF666666"
-              android:textSize="14sp"
-              app:layout_constraintEnd_toEndOf="parent"
-              app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toBottomOf="@id/tv_promotion_title"/>
-          <Button
-              android:id="@+id/btn_start_interview"
               android:layout_width="wrap_content"
-              android:layout_height="50dp"
-              android:layout_marginTop="20dp"
-              android:background="@drawable/bg_pill_button"
-              android:gravity="center"
-              android:includeFontPadding="false"
-              android:minWidth="0dp"
-              android:minHeight="0dp"
-              android:paddingHorizontal="24dp"
-              android:paddingVertical="0dp"
-              android:text="@string/start_mock_interview2"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="8dp"
+              android:text="Build interview confidence"
+              android:textColor="@color/text_secondary"
+              android:textSize="13sp" />
+
+          <Button
+              android:id="@+id/btn_start_mock_interview"
+              android:layout_width="wrap_content"
+              android:layout_height="44dp"
+              android:layout_marginTop="16dp"
+              android:background="@drawable/bg_berry_pill_button"
+              android:paddingHorizontal="20dp"
+              android:text="Start Mock Interview"
               android:textAllCaps="false"
-              android:textColor="@color/white"
-              android:textSize="15sp"
-              app:backgroundTint="@null"
-              app:layout_constraintBottom_toBottomOf="parent"
-              app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toBottomOf="@id/tv_promotion_subtitle"/>
+              android:textColor="@color/card_background"
+              android:textSize="14sp"
+              app:backgroundTint="@null" />
+        </LinearLayout>
+      </com.google.android.material.card.MaterialCardView>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-      </FrameLayout>
-      <!--  SECTION: MONTHLY PROGRESS  -->
+      <!-- Monthly Progress Section -->
       <TextView
-          android:id="@+id/tv_title_progress"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="24dp"
+          android:layout_marginTop="20dp"
           android:text="Monthly Progress"
           android:textColor="@color/text_primary"
-          android:textSize="18sp"
-          android:textStyle="bold"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@id/card_promotion"/>
-      <!--  Progress Cards Container  -->
+          android:textSize="16sp"
+          android:textStyle="bold" />
+
       <LinearLayout
-          android:id="@+id/container_progress_cards"
-          android:layout_width="0dp"
+          android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginTop="16dp"
-          android:orientation="horizontal"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@id/tv_title_progress">
+          android:layout_marginTop="12dp"
+          android:orientation="horizontal">
 
-        <!--  Progress Card 1  -->
-        <FrameLayout
+        <com.example.capstone.ui.components.ProgressCardView
+            android:id="@+id/progress_card_interviews"
             android:layout_width="0dp"
-            android:layout_height="180dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_card_shading"
-            app:cardBackgroundColor="@color/card_background"
-            app:cardCornerRadius="24dp"
-            app:cardElevation="0dp">
+            android:layout_weight="1" />
 
-          <androidx.constraintlayout.widget.ConstraintLayout
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-
-            <ProgressBar
-                android:id="@+id/progress_chart_1" style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="130dp"
-                android:layout_height="130dp"
-                android:max="100"
-                android:progress="67"
-                android:progressDrawable="@drawable/circle_progress_green"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="@id/progress_chart_1"
-                app:layout_constraintEnd_toEndOf="@id/progress_chart_1"
-                app:layout_constraintStart_toStartOf="@id/progress_chart_1"
-                app:layout_constraintTop_toTopOf="@id/progress_chart_1">
-
-              <TextView
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="67%"
-                  android:textColor="@color/text_primary"
-                  android:textSize="16sp"
-                  android:textStyle="bold"/>
-
-              <TextView
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:gravity="center"
-                  android:text="Interviews\ntaken"
-                  android:textColor="#FF666666"
-                  android:textSize="12sp"/>
-            </LinearLayout>
-
-          </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </FrameLayout>
-        <!--  Progress Card 2  -->
-        <androidx.cardview.widget.CardView
+        <com.example.capstone.ui.components.ProgressCardView
+            android:id="@+id/progress_card_target"
             android:layout_width="0dp"
-            android:layout_height="180dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_weight="1"
-            app:cardBackgroundColor="@color/card_background"
-            app:cardCornerRadius="24dp"
-            app:cardElevation="0dp">
-
-          <androidx.constraintlayout.widget.ConstraintLayout
-              android:layout_width="match_parent"
-              android:background="@drawable/bg_card_shading"
-              android:layout_height="match_parent">
-
-            <ProgressBar
-                android:id="@+id/progress_chart_2" style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="130dp"
-                android:layout_height="130dp"
-                android:max="100"
-                android:progress="89"
-                android:progressDrawable="@drawable/circle_progress_orange"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="@id/progress_chart_2"
-                app:layout_constraintEnd_toEndOf="@id/progress_chart_2"
-                app:layout_constraintStart_toStartOf="@id/progress_chart_2"
-                app:layout_constraintTop_toTopOf="@id/progress_chart_2">
-
-              <TextView
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="89%"
-                  android:textColor="@color/text_primary"
-                  android:textSize="16sp"
-                  android:textStyle="bold"/>
-
-              <TextView
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:gravity="center"
-                  android:text="weekly\ntarget"
-                  android:textColor="#FF666666"
-                  android:textSize="12sp"/>
-
-            </LinearLayout>
-
-          </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.cardview.widget.CardView>
+            android:layout_weight="1" />
       </LinearLayout>
-      <!--  SECTION: QUICK ACTIONS  -->
-      <!-- SECTION: QUICK ACTIONS -->
+
+      <!-- Quick Actions Section -->
       <TextView
-          android:id="@+id/tv_title_quick_actions"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="24dp"
+          android:layout_marginTop="20dp"
           android:text="Quick actions"
           android:textColor="@color/text_primary"
-          android:textSize="18sp"
-          android:textStyle="bold"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@id/container_progress_cards"/>
-
-      <androidx.recyclerview.widget.RecyclerView
-          android:id="@+id/rv_quick_actions"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="12dp"
-          android:orientation="horizontal"
-          app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@id/tv_title_quick_actions"
-          tools:listitem="@layout/item_quick_action" />
+          android:textSize="16sp"
+          android:textStyle="bold" />
 
       <LinearLayout
-          android:id="@+id/container_quick_actions"
-          android:layout_width="0dp"
+          android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="12dp"
-          android:baselineAligned="false"
-          android:orientation="horizontal"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintHorizontal_bias="1.0"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@id/tv_title_quick_actions">
-        <!--  Action 1  -->
-        <LinearLayout
+          android:orientation="horizontal">
+
+        <com.example.capstone.ui.components.QuickActionView
             android:id="@+id/action_start_interview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+            app:actionIcon="@drawable/ic_start_interview"
+            app:actionTint="@color/primary_blue"
+            app:actionTitle="Start\ninterview" />
 
-          <ImageView
-              android:layout_width="60dp"
-              android:layout_height="60dp"
-              android:background="@drawable/bg_circle_action"
-              android:padding="16dp"
-              android:src="@drawable/ic_start_interview"
-              app:tint="@color/primary_blue" />
-
-          <TextView
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="8dp"
-              android:gravity="center"
-              android:text="Start\interview"
-              android:textColor="@color/text_primary"
-              android:textSize="12sp" />
-        </LinearLayout>
-
-        <!--  Action 2  -->
-        <LinearLayout
+        <com.example.capstone.ui.components.QuickActionView
+            android:id="@+id/action_view_interviews"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+            app:actionIcon="@drawable/ic_bar_chart"
+            app:actionTint="@color/progress_green"
+            app:actionTitle="View\nprevious\ninterviews" />
 
-          <ImageView
-              android:layout_width="60dp"
-              android:layout_height="60dp"
-              android:background="@drawable/bg_circle_action"
-              android:padding="16dp"
-              android:src="@drawable/ic_bar_chart"
-              app:tint="@color/progress_green" />
-
-          <TextView
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="8dp"
-              android:gravity="center"
-              android:text="View\nprevious\ninterviews"
-              android:textColor="@color/text_primary"
-              android:textSize="12sp" />
-        </LinearLayout>
-        <!--  Action 3  -->
-        <LinearLayout
+        <com.example.capstone.ui.components.QuickActionView
+            android:id="@+id/action_tips_library"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+            app:actionIcon="@drawable/ic_school"
+            app:actionTint="@color/primary_berry"
+            app:actionTitle="Tips &amp;\nLibrary" />
 
-          <ImageView
-              android:layout_width="60dp"
-              android:layout_height="60dp"
-              android:background="@drawable/bg_circle_action"
-              android:padding="16dp"
-              android:src="@drawable/ic_school"
-              app:tint="@color/primary_purple" />
-
-          <TextView
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="8dp"
-              android:gravity="center"
-              android:text="@string/tips_nlibrary"
-              android:textColor="@color/text_primary"
-              android:textSize="12sp" />
-        </LinearLayout>
-        <!--  Action 4  -->
-        <LinearLayout
+        <com.example.capstone.ui.components.QuickActionView
+            android:id="@+id/action_disabled_slot"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-
-          <ImageView
-              android:layout_width="60dp"
-              android:layout_height="60dp"
-              android:background="@drawable/bg_circle_action"
-              android:padding="16dp"
-              android:src="@drawable/ic_circle_outline"
-              app:tint="@color/text_disabled" />
-
-          <TextView
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="8dp"
-              android:gravity="center"
-              android:text="View\nprevious\ninterviews"
-              android:textColor="@color/text_disabled"
-              android:textSize="12sp" />
-        </LinearLayout>
+            app:actionIcon="@drawable/ic_circle_outline"
+            app:actionTint="@color/text_disabled"
+            app:actionTitle="View\nprevious\ninterviews" />
       </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
   </androidx.core.widget.NestedScrollView>
-  <!--  FIXED BOTTOM NAVIGATION BAR  -->
-  <androidx.constraintlayout.widget.ConstraintLayout
+
+  <!-- Floating Rounded Bottom Bar -->
+  <include
       android:id="@+id/bottom_nav_container"
+      layout="@layout/component_bottom_nav_bar"
       android:layout_width="0dp"
-      android:layout_height="72dp"
-      android:background="@drawable/bg_bottom_nav"
-      android:elevation="8dp"
+      android:layout_height="64dp"
+      android:layout_marginHorizontal="0dp"
+      android:layout_marginBottom="0dp"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent">
+      app:layout_constraintStart_toStartOf="parent" />
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-      <ImageView
-          android:layout_width="0dp"
-          android:layout_height="match_parent"
-          android:layout_weight="1"
-          android:padding="22dp"
-          android:src="@drawable/ic_home"
-          app:tint="@color/primary_blue"/>
-
-      <ImageView
-          android:layout_width="0dp"
-          android:layout_height="match_parent"
-          android:layout_weight="1"
-          android:padding="22dp"
-          android:src="@drawable/ic_settings"
-          app:tint="#FF868DA6"/>
-
-      <ImageView
-          android:layout_width="0dp"
-          android:layout_height="match_parent"
-          android:layout_weight="1"
-          android:padding="22dp"
-          android:src="@drawable/ic_analytics"
-          app:tint="#FF868DA6"/>
-      <ImageView
-          android:layout_width="0dp"
-          android:layout_height="match_parent"
-          android:layout_weight="1"
-          android:padding="22dp"
-          android:src="@drawable/ic_presentation"
-          app:tint="#FF868DA6"/>
-
-      <ImageView
-          android:layout_width="0dp"
-          android:layout_height="match_parent"
-          android:layout_weight="1"
-          android:padding="22dp"
-          android:src="@drawable/ic_person"
-          app:tint="#FF868DA6"/>
-    </LinearLayout>
-  </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

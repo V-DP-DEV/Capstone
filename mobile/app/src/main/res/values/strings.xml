@@ -49,4 +49,14 @@
   <string name="Name">Name</string>
   <string name="Create_Profile">Create Profile</string>
     <string name="start_mock_interview2">Start Mock Interview</string>
+    <string name="select_interview">Select Interview</string>
+    <string name="Next">Next</string>
+  <string name="Back">Back</string>
+  <string name="search_icon">Search Icon</string>
+  <string name="search">Search</string>
+  <string name="select_interviews">Select Interview</string>
+  <string name="please_select_topic">Please select a topic</string>
+    <string name="action">Action</string>
+  <string name="quick_actions">Quick actions</string>
+  <string name="monthly_progress">Monthly Progress</string>
 </resources>
