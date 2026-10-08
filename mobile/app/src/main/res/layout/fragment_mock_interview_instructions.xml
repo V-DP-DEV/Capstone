@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF6F8FC">
+
+    <!-- Scrollable Main Content -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@+id/layoutBottomActions"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="16dp">
+
+            <!-- Toolbar / Header Area -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layoutHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <TextView
+                    android:id="@+id/tvHeaderTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Instructions"
+                    android:textColor="#1C1C28"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Interview Details Card -->
+            <LinearLayout
+                android:id="@+id/cardInterviewDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_rounded_card"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:id="@+id/tvInterviewName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:textColor="#1C1C28"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    tools:text="Java" />
+
+                <TextView
+                    android:id="@+id/tvInterviewDifficulty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="#1C1C28"
+                    android:textSize="18sp"
+                    tools:text="Hard" />
+            </LinearLayout>
+
+            <!-- Statistics Summary Row -->
+            <LinearLayout
+                android:id="@+id/layoutStatsRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <!-- Questions Stat -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_rounded_card"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="16dp">
+
+                    <TextView
+                        android:id="@+id/tvStatQuestionsVal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#1C1C28"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        tools:text="8" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Questions"
+                        android:textColor="#8A8A97"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <!-- Duration Stat -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="3dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_rounded_card"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="16dp">
+
+                    <TextView
+                        android:id="@+id/tvStatDurationVal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#1C1C28"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        tools:text="~25m" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Duration"
+                        android:textColor="#8A8A97"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <!-- Input Type Stat -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_rounded_card"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="16dp">
+
+                    <TextView
+                        android:id="@+id/tvStatInputVal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#1C1C28"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        tools:text="Mic" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Input"
+                        android:textColor="#8A8A97"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- "How It Works" Card -->
+            <LinearLayout
+                android:id="@+id/cardHowItWorks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_rounded_card"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:letterSpacing="0.05"
+                    android:text="HOW IT WORKS"
+                    android:textColor="#8A8A97"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <!-- Step 1 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:gravity="top"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/bg_circle_badge"
+                        android:gravity="center"
+                        android:text="1"
+                        android:textColor="#6C63D6"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
+                        android:lineSpacingExtra="2dp"
+                        android:text="Each question is timed. You can skip and return to it later."
+                        android:textColor="#1C1C28"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <!-- Step 2 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:gravity="top"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/bg_circle_badge"
+                        android:gravity="center"
+                        android:text="2"
+                        android:textColor="#6C63D6"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
+                        android:lineSpacingExtra="2dp"
+                        android:text="Answer by speaking or typing — code questions open an editor."
+                        android:textColor="#1C1C28"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <!-- Step 3 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/bg_circle_badge"
+                        android:gravity="center"
+                        android:text="3"
+                        android:textColor="#6C63D6"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
+                        android:lineSpacingExtra="2dp"
+                        android:text="You'll get a skills breakdown and areas to improve at the end."
+                        android:textColor="#1C1C28"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Sticky Bottom Action Buttons -->
+    <LinearLayout
+        android:id="@+id/layoutBottomActions"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="12dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_nav_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnBack"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_secondary_pill_button"
+            android:text="Back"
+            android:textAllCaps="false"
+            android:textColor="#A14078"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnStart"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_primary_pill_button"
+            android:text="Start"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Bottom Navigation Bar -->
+    <include
+        android:id="@+id/bottom_nav_container"
+        layout="@layout/component_bottom_nav_bar"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
