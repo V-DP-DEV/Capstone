@@ -6,71 +6,80 @@
     android:layout_height="match_parent"
     android:background="#FFF6F8FC">
 
-    <!-- Header Title -->
-    <TextView
-        android:id="@+id/tvHeaderTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:fontFamily="sans-serif-medium"
-        android:text="Select Interview"
-        android:textColor="#1C1C28"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- Subheader (Displays Selected Difficulty passed from previous screen) -->
-    <TextView
-        android:id="@+id/tvSubHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textColor="#8A8A97"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvHeaderTitle"
-        tools:text="Difficulty: Hard" />
-
-    <!-- Reusable Search Input Component -->
-    <include
-        android:id="@+id/includeSearch"
-        layout="@layout/layout_search_bar"
-        android:layout_width="16dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvHeaderTitle" />
-
-    <!-- Interview Selection RecyclerView -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvInterviews"
+    <!-- Scrollable Body Content -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="16dp"
-        android:clipToPadding="false"
-        android:paddingBottom="16dp"
+        android:fillViewport="true"
         app:layout_constraintBottom_toTopOf="@+id/layoutBottomActions"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/includeSearch"
-        tools:listitem="@layout/item_interview" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <!-- Bottom Action Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Header Title -->
+            <TextView
+                android:id="@+id/tvHeaderTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="24dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Select Interview"
+                android:textColor="#1C1C28"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <!-- Subheader -->
+            <TextView
+                android:id="@+id/tvSubHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="4dp"
+                android:textColor="#8A8A97"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:text="Difficulty: Hard" />
+
+            <!-- Reusable Search Input Component -->
+            <include
+                android:id="@+id/includeSearch"
+                layout="@layout/layout_search_bar"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="16dp" />
+
+            <!-- Interview Selection RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvInterviews"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="16dp"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
+                android:paddingBottom="16dp"
+                tools:listitem="@layout/item_interview" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Sticky Action Buttons -->
     <LinearLayout
         android:id="@+id/layoutBottomActions"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="12dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_nav_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -100,5 +109,15 @@
             android:textSize="16sp"
             android:textStyle="bold" />
     </LinearLayout>
+
+    <!-- Bottom Navigation Bar -->
+    <include
+        android:id="@+id/bottom_nav_container"
+        layout="@layout/component_bottom_nav_bar"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
