@@ -75,7 +75,7 @@
                 $this->interviewAttemptRepository->addAnalyseQuestionConcepts($dbToSaveQuestionConcepts);
             //});
             
-            return ['did it work?'=>"yay?"];
+            return $aiResponse;
             //return ["questions"=>$questionsRows]
         }
     }

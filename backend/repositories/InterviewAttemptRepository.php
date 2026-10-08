@@ -67,7 +67,7 @@
                 $params[] = $concepts['score'];
             }
 
-            $query = 'INSERT INTO question_feedbacks (question_attempt_id,concept_id,score) VALUES ' . implode(',',$placeHolders);
+            $query = 'INSERT INTO question_concept_scores (question_attempt_id,concept_id,score) VALUES ' . implode(',',$placeHolders);
             $this->db->execute($query,$params);
         }
 
@@ -84,7 +84,7 @@
                 $params[] = $interviewCompetencies['improvement'];
             }
 
-            $query = 'INSERT INTO competency_breakdown_scores (attempt_id,competency_breakdown_id,strength,improvements) VALUES ' . implode(',',$placeHolders);
+            $query = 'INSERT INTO interview_competency_breakdown_feedbacks (interview_attempt_id,competency_breakdown_id,strength,improvement) VALUES ' . implode(',',$placeHolders);
             $this->db->execute($query,$params);
         }
 

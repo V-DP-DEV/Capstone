@@ -159,7 +159,7 @@ class ApiTest extends TestCase
         $this->assertSame(200, $response['status']);
     }
     */
-    /*
+    
     public function testSubmitInterview():void{
         $response = $this->http->request(
             'POST',
@@ -225,7 +225,7 @@ class ApiTest extends TestCase
 
         print_r($response);
     }
-    */
+    
         
 
     public function testAnalyse(){
