@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="QuickActionView">
+        <attr name="actionTitle" format="string" />
+        <attr name="actionIcon" format="reference" />
+        <attr name="actionTint" format="color|reference" />
+    </declare-styleable>
+
+    <declare-styleable name="DifficultyOptionView">
+        <attr name="optionTitle" format="string" />
+        <attr name="indicatorColor" format="color" />
+    </declare-styleable>
+</resources>

@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.Navigation;
 
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentUserDashboardBinding;
@@ -27,10 +27,16 @@ public class UserDashboardFragment extends Fragment {
 
   }
 
+  @Override
   public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    binding.btnStartMockInterview.setOnClickListener(v ->
+            Navigation.findNavController(v).navigate(R.id.action_userDashboardFragment_to_selectDifficultyFragment)
+    );
 
-
+    binding.actionStartInterview.setOnClickListener(v ->
+            Navigation.findNavController(v).navigate(R.id.action_userDashboardFragment_to_selectDifficultyFragment)
+    );
   }
 
   @Override

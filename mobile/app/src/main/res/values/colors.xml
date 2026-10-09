@@ -6,6 +6,7 @@
 
   <!-- Primary Brand & Accent Colors -->
   <color name="primary_purple">#FFA14078</color>
+  <color name="primary_berry">@color/primary_purple</color>
   <color name="color_purple_primary">@color/primary_purple</color>
 
   <color name="primary_blue">#FF312CAA</color>
@@ -55,4 +56,6 @@
   <color name="progress_track">#FFEBEFF6</color>
   <color name="color_track_progress">@color/progress_track</color>
   <color name="red">#FF0000</color>
+  <color name="tag_bg">#FFF0F2F6</color>
+  <color name="tag_text">#FF353E5C</color>
 </resources>
