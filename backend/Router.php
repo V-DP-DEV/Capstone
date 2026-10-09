@@ -5,6 +5,7 @@
             'Auth/login',
             'Auth/signup',
             'Auth/logout',
+            'Auth/logoutAllDevices',
             'Auth/refresh',
             'Interview/getAllInterviewCategories',
         ];
