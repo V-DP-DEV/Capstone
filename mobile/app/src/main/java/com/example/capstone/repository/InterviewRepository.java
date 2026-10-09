@@ -6,6 +6,8 @@ import com.example.capstone.domainModels.UserInterviewSummary;
 import com.example.capstone.network.ApiCallback;
 import com.example.capstone.service.InterviewService;
 
+import java.util.List;
+
 public class InterviewRepository implements IInterviewRepository{
   private final InterviewService interviewService;
   public InterviewRepository(InterviewService interviewService){
@@ -32,9 +34,7 @@ public class InterviewRepository implements IInterviewRepository{
   }
 
   @Override
-  public void getCategories(ApiCallback<InterviewCategory> callback) {
+  public void getCategories(ApiCallback<List<InterviewCategory>> callback) {
     interviewService.getCategories(callback);
   }
-
-
 }

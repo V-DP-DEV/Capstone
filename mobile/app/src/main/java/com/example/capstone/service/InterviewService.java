@@ -6,6 +6,10 @@ import com.example.capstone.domainModels.UserInterviewSummary;
 import com.example.capstone.network.ApiCallback;
 import com.example.capstone.network.ApiClient;
 import com.example.capstone.network.ApiRequest;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 public class InterviewService {
   private final ApiClient apiClient;
@@ -69,14 +73,16 @@ public class InterviewService {
     );
   }
 
-  public void getCategories(ApiCallback<InterviewCategory> callback) {
+  public void getCategories(ApiCallback<List<InterviewCategory>> callback) {
     ApiRequest request = new ApiRequest("interview/getAllInterviewCategories");
     request.setMethodGET();
     request.setRequiresAuthentication(false);
 
-    apiClient.execute(request, InterviewCategory.class, callback);
+    Type type = new TypeToken<List<InterviewCategory>>() {}.getType();
+    apiClient.execute(request, type, callback);
   }
 
   public void getUserInterview(long interviewId, ApiCallback<UserInterview> callback) {
+    getInterview(interviewId,UserInterview.class,callback);
   }
 }

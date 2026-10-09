@@ -5,6 +5,8 @@ import com.example.capstone.domainModels.UserInterview;
 import com.example.capstone.domainModels.UserInterviewSummary;
 import com.example.capstone.network.ApiCallback;
 
+import java.util.List;
+
 public interface IInterviewRepository {
   void getUserInterview(
       long interviewId,
@@ -16,7 +18,7 @@ public interface IInterviewRepository {
   );
 
   void getCategories(
-      ApiCallback<InterviewCategory> callback
+      ApiCallback<List<InterviewCategory>> callback
   );
 }
 
