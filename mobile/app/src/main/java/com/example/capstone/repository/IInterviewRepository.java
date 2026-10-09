@@ -14,7 +14,7 @@ public interface IInterviewRepository {
   );
 
   void getUserInterviews(
-      long categoryId,String name,String difficulty,ApiCallback<UserInterviewSummary> callback
+      long categoryId,String name,String difficulty,ApiCallback<List<UserInterviewSummary>> callback
   );
 
   void getCategories(

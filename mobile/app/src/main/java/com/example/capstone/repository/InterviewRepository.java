@@ -23,7 +23,7 @@ public class InterviewRepository implements IInterviewRepository{
           long categoryId,
           String name,
           String difficulty,
-          ApiCallback<UserInterviewSummary> callback
+          ApiCallback<List<UserInterviewSummary>> callback
   ) {
     interviewService.getUserInterviews(
             categoryId,

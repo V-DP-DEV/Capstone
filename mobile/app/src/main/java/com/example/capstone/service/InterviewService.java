@@ -19,7 +19,7 @@ public class InterviewService {
 
   private <T> void getInterview(
           long interviewId,
-          Class<T> responseType,
+          Type responseType,
           ApiCallback<T> callback
   ) {
     ApiRequest request = new ApiRequest("interview/getInterview");
@@ -36,7 +36,7 @@ public class InterviewService {
           long categoryId,
           String name,
           String difficulty,
-          Class<T> responseType,
+          Type responseType,
           ApiCallback<T> callback
   ) {
     ApiRequest request = new ApiRequest("interview/getInterviews");
@@ -62,13 +62,14 @@ public class InterviewService {
           long categoryId,
           String name,
           String difficulty,
-          ApiCallback<UserInterviewSummary> callback
+          ApiCallback<List<UserInterviewSummary>> callback
   ) {
+    Type type = new TypeToken<List<UserInterviewSummary>>() {}.getType();
     getInterviews(
             categoryId,
             name,
             difficulty,
-            UserInterviewSummary.class,
+            type,
             callback
     );
   }
