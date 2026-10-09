@@ -3,7 +3,7 @@
         public function __construct(private Db $db){}
         
         public function getAllInterviewCategories(){
-            $query = "SELECT * FROM interview_categories";
+            $query = "SELECT * FROM interview_categories ORDER BY id";
             return $this->db->queryAll($query);
         }
 
@@ -14,7 +14,7 @@
             $interview = $this->db->queryOne($query,[$id]);
             
             //get the questions
-            $query = "SELECT iq.id,iq.difficulty,iq.text,qt.name FROM interview_questions iq JOIN question_types qt ON iq.type_id = qt.id WHERE iq.active =1 AND iq.interview_id=?";
+            $query = "SELECT iq.id,iq.difficulty,iq.text,qt.name FROM interview_questions iq JOIN question_types qt ON iq.type_id = qt.id WHERE iq.active =1 AND iq.interview_id=? ORDER BY iq.id";
             $interviewQuestions = $this->db->queryAll($query,[$id]);
             //add questions to the response
             $interview['questions'] = $interviewQuestions;

@@ -6,16 +6,25 @@ import android.os.Bundle;
 
 import com.example.capstone.AppContainer;
 import com.example.capstone.MyApplication;
+import com.example.capstone.domainModels.InterviewCategory;
+import com.example.capstone.domainModels.UserInterview;
+import com.example.capstone.domainModels.UserInterviewSummary;
 import com.example.capstone.domainModels.UserRole;
+import com.example.capstone.network.ApiCallback;
+import com.example.capstone.network.ApiResponse;
 import com.example.capstone.network.RefreshCallback;
 import com.example.capstone.network.RefreshError;
 import com.example.capstone.repository.AuthRepository;
 import com.example.capstone.repository.IAuthRepository;
+import com.example.capstone.repository.IInterviewRepository;
 import com.example.capstone.ui.admin.AdminActivity;
 import com.example.capstone.ui.auth.AuthActivity;
 import com.example.capstone.ui.user.UserActivity;
 import com.example.capstone.util.PreferenceManager;
 import com.example.capstone.util.SecureSession;
+import com.google.gson.Gson;
+
+import java.util.List;
 
 public class SplashActivity extends Activity {
   MyApplication app;
@@ -24,6 +33,7 @@ public class SplashActivity extends Activity {
   PreferenceManager manager;
   SecureSession session;
   IAuthRepository authRepository;
+  IInterviewRepository interviewRepository;
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -34,6 +44,24 @@ public class SplashActivity extends Activity {
     manager = container.preferenceManager;
     session = container.secureSession;
     authRepository = container.authRepository;
+    interviewRepository = container.interviewRepository;
+
+    interviewRepository.getCategories(new ApiCallback<List<InterviewCategory>>() {
+      @Override
+      public void onSuccess(ApiResponse<List<InterviewCategory>> response) {
+        System.out.println(new Gson().toJson(response));
+      }
+
+      @Override
+      public void onGeneralError(Exception e) {
+
+      }
+
+      @Override
+      public void onHttpError(ApiResponse<List<InterviewCategory>> response) {
+
+      }
+    });
 
     long sessionExpiration = session.getSessionExpiration();
     long refreshExpiration = session.getRefreshExpiration();

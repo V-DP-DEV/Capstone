@@ -14,8 +14,8 @@
             $answers = $data["answers"];
 
             //passes it to the submit attempt service
-            $result = $this->interviewAttemptService->submitAttempt($interviewId,$answers);
-            JsonResponse::success();
+            $attemptId = $this->interviewAttemptService->submitAttempt($interviewId,$answers);
+            JsonResponse::success(['interviewAttemptId'=>$attemptId]);
         }
 
         public function analyse(){
@@ -24,9 +24,9 @@
             $data = Request::json();
             $attemptId = $data["attemptId"];
             
-            $response = $this->interviewAnalysisService->analysis($attemptId);
+            $interviewId = $this->interviewAnalysisService->analysis($attemptId);
             //returns result, and other errors will be thrown to error exception handler
-            JsonResponse::success($response);
+            JsonResponse::success(['attemptId'=>$interviewId]);
         }
     }
 ?>

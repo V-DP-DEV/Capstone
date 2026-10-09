@@ -1,6 +1,7 @@
 package com.example.capstone.repository;
 
 import com.example.capstone.model.request.SubmitInterviewAttemptRequest;
+import com.example.capstone.model.response.SubmitAttemptResponse;
 import com.example.capstone.network.ApiCallback;
 import com.example.capstone.service.InterviewAttemptsService;
 
@@ -15,7 +16,7 @@ public class InterviewAttemptsRepository implements IInterviewAttemptsRepository
   }
 
   @Override
-  public void submitInterviewAttempt(SubmitInterviewAttemptRequest attemptRequest,ApiCallback<Void> callback) {
+  public void submitInterviewAttempt(SubmitInterviewAttemptRequest attemptRequest,ApiCallback<SubmitAttemptResponse> callback) {
     interviewAttemptsService.submitInterviewAttempt(attemptRequest,callback);
   }
 }

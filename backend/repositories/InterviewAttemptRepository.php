@@ -29,6 +29,7 @@
                 //create the user interview attempt
                 $query = "INSERT INTO interview_user_attempts (user_id,interview_id) VALUES (?,?)";
                 $this->db->execute($query,[$userId,$interviewId]);
+                $attemptId = $this->db->lastInsertId();
 
                 //add the question responses
                 $user_attempt_id = $this->db->lastInsertId();
@@ -44,15 +45,16 @@
                     $params[] = $answer['secondsSpent'];
                 }
                 //insert into the db
-                $query = "INSERT INTO interview_question_attempts (user_attempt_id,question_id,answer,seconds_spent) VALUES " . implode(',',$placeHolders);
+                $query = "INSERT INTO interview_question_attempts (interview_attempt_id,question_id,answer,seconds_spent) VALUES " . implode(',',$placeHolders);
                 $this->db->execute($query,$params);
+                return $attemptId;
             });
             
         }
 
         //gets the users attempt and returns all information, without questions
         public function getAttempt(int $attemptId):array{
-            return $this->db->queryOne("SELECT * FROM interview_user_attempts WHERE interview_id=?",[$attemptId]);
+            return $this->db->queryOne("SELECT * FROM interview_user_attempts WHERE id=?",[$attemptId]);
         }
 
         //get the question answer, expected answer and question for analysis
@@ -60,7 +62,7 @@
             $query = "SELECT iq.id,iq.answer as expected_answer,iq.text as question,iqa.answer,iqa.id as question_attempt_id
                 FROM interview_questions iq 
                 JOIN interview_question_attempts iqa ON iq.id = iqa.question_id 
-                WHERE interview_id =? AND iq.active = 1";
+                WHERE iqa.interview_attempt_id =? AND iq.active = 1";
             return $this->db->queryAll($query,[$attemptId]);
         }
 
