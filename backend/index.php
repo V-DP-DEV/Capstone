@@ -9,7 +9,10 @@
     $container->bind(IAuthTokenRepository::class, AuthTokenRepository::class);
     $container->bind(IRefreshTokenRepository::class, RefreshTokenRepository::class);
     $container->bind(ILogRepository::class, LogRepository::class);
+    $container->bind(IInterviewRepository::class, InterviewRepository::class);
     $container->bind(IInterviewAttemptRepository::class, InterviewAttemptRepository::class);
+    $container->bind(InterviewEvaluationBuilder::class,InterviewEvaluationBuilder::class);
+    $container->bind(OpenAIService::class, OpenAIService::class);
     
 
     //load config values into the class

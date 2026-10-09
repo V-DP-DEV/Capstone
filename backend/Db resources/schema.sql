@@ -189,6 +189,7 @@ CREATE TABLE interview_user_attempts (
     user_id BIGINT UNSIGNED NOT NULL,
     interview_id BIGINT UNSIGNED NOT NULL,
     completed_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    analysed BOOLEAN NOT NULL DEFAULT FALSE,
     score DECIMAL(5,2),
     status ENUM('NOT_REQUESTED', 'PROCESSING', 'COMPLETED', 'FAILED') NOT NULL DEFAULT 'NOT_REQUESTED',
 
@@ -233,7 +234,7 @@ CREATE TABLE interview_question_attempts (
 -- QUESTION FEEDBACKS
 -- =========================================================
 
-CREATE TABLE question_feedbacks (
+CREATE TABLE question_concept_scores (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     question_attempt_id BIGINT UNSIGNED NOT NULL,
     concept_id BIGINT UNSIGNED NOT NULL,
@@ -256,15 +257,15 @@ CREATE TABLE question_feedbacks (
 -- COMPETENCY BREAKDOWN SCORES
 -- =========================================================
 
-CREATE TABLE competency_breakdown_scores (
+CREATE TABLE interview_competency_breakdown_feedbacks (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    attempt_id BIGINT UNSIGNED NOT NULL,
+    interview_attempt_id BIGINT UNSIGNED NOT NULL,
     competency_breakdown_id BIGINT UNSIGNED NOT NULL,
     strength TEXT NOT NULL,
-    improvements TEXT NOT NULL,
+    improvement TEXT NOT NULL,
 
     CONSTRAINT fk_competency_breakdown_scores_attempt
-        FOREIGN KEY (attempt_id)
+        FOREIGN KEY (interview_attempt_id)
         REFERENCES interview_user_attempts(id),
 
     CONSTRAINT fk_competency_breakdown_scores_competency_breakdown
@@ -272,7 +273,7 @@ CREATE TABLE competency_breakdown_scores (
         REFERENCES competency_breakdowns(id),
 
     CONSTRAINT uk_competency_breakdown_scores_attempt_breakdown
-        UNIQUE (attempt_id, competency_breakdown_id)
+        UNIQUE (interview_attempt_id, competency_breakdown_id)
 );
 
 

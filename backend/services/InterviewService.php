@@ -7,10 +7,13 @@
         ){}
 
     public function getAllInterviewCategories(){
+        //returns the result. No checks needed
         return $this->interviewRepository->getAllInterviewCategories();
     }
 
     public function getInterview(int $id){
+        //checks what role user is to retrieve the right data
+        //no further checks needed
         if($this->requestContext->getRole() === 'USER'){
             return $this->interviewRepository->getUserInterview($id);
         }
@@ -20,7 +23,8 @@
     }
 
     public function getInterviews(?int $categoryId = null, ?string $name = null, ?string $difficulty = null){
-
+        //checks what role user is to retrieve the right data
+        //no further checks needed
         if($this->requestContext->getRole() === 'USER'){
             return $this->interviewRepository->getUserInterviews($categoryId, $name, $difficulty);
         }
