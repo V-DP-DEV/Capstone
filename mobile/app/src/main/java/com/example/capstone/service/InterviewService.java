@@ -58,15 +58,17 @@ public class InterviewService {
           long categoryId,
           String name,
           String difficulty,
-          ApiCallback<UserInterviewSummary> callback)
-   {
+          ApiCallback<UserInterviewSummary> callback
+  ) {
     getInterviews(
             categoryId,
-            name, difficulty,
+            name,
+            difficulty,
             UserInterviewSummary.class,
             callback
     );
   }
+
   public void getCategories(ApiCallback<InterviewCategory> callback) {
     ApiRequest request = new ApiRequest("interview/getAllInterviewCategories");
     request.setMethodGET();
