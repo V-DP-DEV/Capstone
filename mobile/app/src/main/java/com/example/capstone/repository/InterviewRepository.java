@@ -14,12 +14,21 @@ public class InterviewRepository implements IInterviewRepository{
 
   @Override
   public void getUserInterview(long interviewId, ApiCallback<UserInterview> callback) {
-    interviewService.getUserInterview(interviewId,callback);
+    interviewService.getUserInterview(interviewId, callback);
   }
-
   @Override
-  public void getUserInterviews(long categoryId, String name,String difficulty,ApiCallback<UserInterviewSummary> callback) {
-    interviewService.getUserInterviews(categoryId,name,callback);
+  public void getUserInterviews(
+          long categoryId,
+          String name,
+          String difficulty,
+          ApiCallback<UserInterviewSummary> callback
+  ) {
+    interviewService.getUserInterviews(
+            categoryId,
+            name,
+            difficulty,
+            callback
+    );
   }
 
   @Override
