@@ -212,13 +212,13 @@ CREATE TABLE interview_user_attempts (
 
 CREATE TABLE interview_question_attempts (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    user_attempt_id BIGINT UNSIGNED NOT NULL,
+    interview_attempt_id BIGINT UNSIGNED NOT NULL,
     question_id BIGINT UNSIGNED NOT NULL,
     answer TEXT NOT NULL,
     seconds_spent INT UNSIGNED NOT NULL,
 
     CONSTRAINT fk_interview_question_attempts_user_attempt
-        FOREIGN KEY (user_attempt_id)
+        FOREIGN KEY (interview_attempt_id)
         REFERENCES interview_user_attempts(id),
 
     CONSTRAINT fk_interview_question_attempts_question
@@ -226,7 +226,7 @@ CREATE TABLE interview_question_attempts (
         REFERENCES interview_questions(id),
 
     CONSTRAINT uk_interview_question_attempts_attempt_question
-        UNIQUE (user_attempt_id, question_id)
+        UNIQUE (interview_attempt_id, question_id)
 );
 
 
