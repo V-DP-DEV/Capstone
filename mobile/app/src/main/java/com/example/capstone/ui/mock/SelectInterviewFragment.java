@@ -6,7 +6,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -16,10 +15,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.capstone.R;
 import com.example.capstone.adapter.InterviewAdapter;
 import com.example.capstone.databinding.FragmentSelectInterviewBinding;
-import com.example.capstone.model.Interview;
+import com.example.capstone.domainModels.UserInterview;
+import com.example.capstone.domainModels.UserQuestion;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class SelectInterviewFragment extends Fragment {
@@ -28,8 +27,8 @@ public class SelectInterviewFragment extends Fragment {
 
     private FragmentSelectInterviewBinding binding;
     private InterviewAdapter adapter;
-    private List<Interview> difficultyFilteredList;
-    private Interview selectedInterview = null;
+    private List<UserInterview> difficultyFilteredList;
+    private UserInterview selectedInterview = null;
 
     private String selectedDifficulty = "All";
 
@@ -64,7 +63,9 @@ public class SelectInterviewFragment extends Fragment {
     }
 
     private void setupHeader() {
-        binding.tvSubHeader.setText("Difficulty: " + selectedDifficulty);
+        if (binding.tvSubHeader != null) {
+            binding.tvSubHeader.setText("Difficulty: " + selectedDifficulty);
+        }
     }
 
     private void setupRecyclerView() {
@@ -80,7 +81,7 @@ public class SelectInterviewFragment extends Fragment {
     }
 
     private void setupSearchFilter() {
-        if (binding.includeSearch == null) return;
+        if (binding.includeSearch == null || binding.includeSearch.etSearch == null) return;
 
         binding.includeSearch.etSearch.setHint("Search topic or focus area...");
         binding.includeSearch.etSearch.addTextChangedListener(new TextWatcher() {
@@ -98,24 +99,33 @@ public class SelectInterviewFragment extends Fragment {
     }
 
     private void filterInterviews(String query) {
-        List<Interview> searchResults = new ArrayList<>();
+        List<UserInterview> searchResults = new ArrayList<>();
         String lowerCaseQuery = query.toLowerCase().trim();
 
-        for (Interview item : difficultyFilteredList) {
-            boolean matchesTitle = item.getTitle() != null &&
-                    item.getTitle().toLowerCase().contains(lowerCaseQuery);
+        for (UserInterview item : difficultyFilteredList) {
+            boolean matchesName = item.getName() != null &&
+                    item.getName().toLowerCase().contains(lowerCaseQuery);
 
-            boolean matchesFocusArea = false;
-            if (item.getFocusAreas() != null) {
-                for (String area : item.getFocusAreas()) {
-                    if (area.toLowerCase().contains(lowerCaseQuery)) {
-                        matchesFocusArea = true;
-                        break;
+            boolean matchesCategory = item.getCategory() != null && item.getCategory().getName() != null &&
+                    item.getCategory().getName().toLowerCase().contains(lowerCaseQuery);
+
+            boolean matchesTypeOrQuestion = false;
+            if (item.getQuestions() != null) {
+                for (UserQuestion q : item.getQuestions()) {
+                    if (q != null) {
+                        if (q.getType() != null && q.getType().toLowerCase().contains(lowerCaseQuery)) {
+                            matchesTypeOrQuestion = true;
+                            break;
+                        }
+                        if (q.getText() != null && q.getText().toLowerCase().contains(lowerCaseQuery)) {
+                            matchesTypeOrQuestion = true;
+                            break;
+                        }
                     }
                 }
             }
 
-            if (matchesTitle || matchesFocusArea) {
+            if (matchesName || matchesCategory || matchesTypeOrQuestion) {
                 searchResults.add(item);
             }
         }
@@ -131,59 +141,51 @@ public class SelectInterviewFragment extends Fragment {
 
     private void setupActionButtons() {
         binding.btnBack.setOnClickListener(v -> {
-            if (getParentFragmentManager() != null) {
+            if (isAdded()) {
                 NavHostFragment.findNavController(this).navigateUp();
-            } else {
-                requireActivity().getOnBackPressedDispatcher().onBackPressed();
             }
         });
 
         binding.btnContinue.setOnClickListener(v -> {
             if (selectedInterview == null) return;
 
+            int questionCount = selectedInterview.getQuestions() != null
+                    ? selectedInterview.getQuestions().size()
+                    : selectedInterview.getTotalQuestions();
+
+            String durationText = "~" + (selectedInterview.getDuration() > 0 ? selectedInterview.getDuration() : 25) + "m";
 
             Bundle args = new Bundle();
-            args.putString(MockInterviewInstructionsFragment.ARG_INTERVIEW_NAME, selectedInterview.getTitle());
+            args.putString(MockInterviewInstructionsFragment.ARG_INTERVIEW_NAME, selectedInterview.getName());
             args.putString(MockInterviewInstructionsFragment.ARG_INTERVIEW_DIFFICULTY, selectedInterview.getDifficulty());
-            args.putInt(MockInterviewInstructionsFragment.ARG_QUESTION_COUNT, 8); // Pass or adjust based on your model
-            args.putString(MockInterviewInstructionsFragment.ARG_DURATION, "~25m");
-            args.putString(MockInterviewInstructionsFragment.ARG_INPUT_TYPE, "Mic");
+            args.putInt(MockInterviewInstructionsFragment.ARG_QUESTION_COUNT, questionCount);
+            args.putString(MockInterviewInstructionsFragment.ARG_DURATION, durationText);
+            args.putString(MockInterviewInstructionsFragment.ARG_INPUT_TYPE, "Mic / Text");
 
-
-            NavHostFragment.findNavController(this)
-                    .navigate(R.id.action_selectInterviewFragment_to_mockInterviewInstructionsFragment, args);
+            if (isAdded()) {
+                NavHostFragment.findNavController(this)
+                        .navigate(R.id.action_selectInterviewFragment_to_mockInterviewInstructionsFragment, args);
+            }
         });
     }
 
-    private List<Interview> getInterviewsByDifficulty(String difficulty) {
-        List<Interview> allInterviews = getAllSampleData();
+    private List<UserInterview> getInterviewsByDifficulty(String difficulty) {
+        List<UserInterview> allInterviews = getAllSampleData();
         if (difficulty == null || difficulty.equalsIgnoreCase("All")) {
             return allInterviews;
         }
 
-        List<Interview> filtered = new ArrayList<>();
-        for (Interview item : allInterviews) {
-            if (item.getDifficulty().equalsIgnoreCase(difficulty)) {
+        List<UserInterview> filtered = new ArrayList<>();
+        for (UserInterview item : allInterviews) {
+            if (item.getDifficulty() != null && item.getDifficulty().equalsIgnoreCase(difficulty)) {
                 filtered.add(item);
             }
         }
         return filtered;
     }
 
-    private List<Interview> getAllSampleData() {
-        List<Interview> list = new ArrayList<>();
-        // Hard
-        list.add(new Interview("1", "Java", "Hard", Arrays.asList("SQL", "Problem solving", "Communication", "System design")));
-        list.add(new Interview("2", "C#", "Hard", Arrays.asList("SQL", "Problem solving", "Communication", "System design")));
-        list.add(new Interview("3", "Python", "Hard", Arrays.asList("SQL", "Problem solving", "Communication", "System design")));
-
-        // Medium
-        list.add(new Interview("4", "Spring Boot", "Medium", Arrays.asList("REST API", "JPA", "Dependency Injection")));
-        list.add(new Interview("5", "React Native", "Medium", Arrays.asList("State Management", "Hooks", "UI Components")));
-
-        // Easy
-        list.add(new Interview("6", "HTML / CSS", "Easy", Arrays.asList("Flexbox", "Responsive Layouts", "Grid")));
-        list.add(new Interview("7", "Git Basics", "Easy", Arrays.asList("Branching", "Merging", "Commits")));
+    private List<UserInterview> getAllSampleData() {
+        List<UserInterview> list = new ArrayList<>();
         return list;
     }
 

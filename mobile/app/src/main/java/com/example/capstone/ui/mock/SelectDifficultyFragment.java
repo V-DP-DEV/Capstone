@@ -1,6 +1,7 @@
 package com.example.capstone.ui.mock;
 
 import android.os.Bundle;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,19 @@ import com.example.capstone.databinding.FragmentSelectDifficultyBinding;
 public class SelectDifficultyFragment extends Fragment {
 
     public enum Difficulty {
-        EASY, MEDIUM, HARD
+        EASY("Easy"),
+        MEDIUM("Medium"),
+        HARD("Hard");
+
+        private final String displayName;
+
+        Difficulty(String displayName) {
+            this.displayName = displayName;
+        }
+
+        public String getDisplayName() {
+            return displayName;
+        }
     }
 
     private FragmentSelectDifficultyBinding binding;
@@ -46,9 +59,10 @@ public class SelectDifficultyFragment extends Fragment {
     private void selectDifficulty(Difficulty difficulty) {
         selectedDifficulty = difficulty;
 
-        binding.optionEasy.setSelectedState(difficulty == Difficulty.EASY);
-        binding.optionMedium.setSelectedState(difficulty == Difficulty.MEDIUM);
-        binding.optionHard.setSelectedState(difficulty == Difficulty.HARD);
+        // Highlight selection using standard View setSelected state
+        binding.optionEasy.setSelected(difficulty == Difficulty.EASY);
+        binding.optionMedium.setSelected(difficulty == Difficulty.MEDIUM);
+        binding.optionHard.setSelected(difficulty == Difficulty.HARD);
 
         updateContinueButtonState();
     }
@@ -60,21 +74,22 @@ public class SelectDifficultyFragment extends Fragment {
     }
 
     private void setupActionButtons() {
-        binding.btnBack.setOnClickListener(v ->
-                NavHostFragment.findNavController(this).navigateUp()
-        );
+        binding.btnBack.setOnClickListener(v -> {
+            if (isAdded()) {
+                NavHostFragment.findNavController(this).navigateUp();
+            }
+        });
 
         binding.btnContinue.setOnClickListener(v -> {
             if (selectedDifficulty == null) return;
 
-            String difficultyName = selectedDifficulty.name().substring(0, 1).toUpperCase()
-                    + selectedDifficulty.name().substring(1).toLowerCase();
-
             Bundle bundle = new Bundle();
-            bundle.putString(SelectInterviewFragment.ARG_DIFFICULTY, difficultyName);
+            bundle.putString(SelectInterviewFragment.ARG_DIFFICULTY, selectedDifficulty.getDisplayName());
 
-            NavHostFragment.findNavController(this)
-                    .navigate(R.id.action_selectDifficultyFragment_to_selectInterviewFragment, bundle);
+            if (isAdded()) {
+                NavHostFragment.findNavController(this)
+                        .navigate(R.id.action_selectDifficultyFragment_to_selectInterviewFragment, bundle);
+            }
         });
     }
 

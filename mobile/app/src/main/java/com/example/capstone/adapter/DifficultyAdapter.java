@@ -10,23 +10,26 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.capstone.R;
-import com.example.capstone.ui.mock.Difficulty;
+import com.example.capstone.domainModels.UserInterview;
+import com.example.capstone.domainModels.UserQuestion;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class DifficultyAdapter extends RecyclerView.Adapter<DifficultyAdapter.DifficultyViewHolder> {
 
     public interface OnDifficultySelectedListener {
-        void onDifficultySelected(Difficulty difficulty);
+        void onDifficultySelected(UserInterview userInterview);
     }
 
-    private List<Difficulty> difficulties;
+    private List<UserInterview> userInterviews;
     private final OnDifficultySelectedListener listener;
     private int selectedPosition = -1;
 
-    public DifficultyAdapter(List<Difficulty> difficulties, OnDifficultySelectedListener listener) {
-        this.difficulties = difficulties;
+    public DifficultyAdapter(List<UserInterview> userInterviews, OnDifficultySelectedListener listener) {
+        this.userInterviews = userInterviews;
         this.listener = listener;
     }
 
@@ -40,16 +43,16 @@ public class DifficultyAdapter extends RecyclerView.Adapter<DifficultyAdapter.Di
 
     @Override
     public void onBindViewHolder(@NonNull DifficultyViewHolder holder, int position) {
-        holder.bind(difficulties.get(position), position == selectedPosition);
+        holder.bind(userInterviews.get(position), position == selectedPosition);
     }
 
     @Override
     public int getItemCount() {
-        return difficulties != null ? difficulties.size() : 0;
+        return userInterviews != null ? userInterviews.size() : 0;
     }
 
-    public void updateData(List<Difficulty> newList) {
-        this.difficulties = newList;
+    public void updateData(List<UserInterview> newList) {
+        this.userInterviews = newList;
         notifyDataSetChanged();
     }
 
@@ -65,15 +68,21 @@ public class DifficultyAdapter extends RecyclerView.Adapter<DifficultyAdapter.Di
             chipGroup = itemView.findViewById(R.id.chipGroupTags);
         }
 
-        public void bind(final Difficulty difficulty, boolean isSelected) {
-            tvName.setText(difficulty.getName());
-            tvDescription.setText(difficulty.getDescription());
+        public void bind(final UserInterview userInterview, boolean isSelected) {
+            if (tvName != null && userInterview.getName() != null) {
+                tvName.setText(userInterview.getName());
+            }
+
+            if (tvDescription != null && userInterview.getDifficulty() != null) {
+                tvDescription.setText(userInterview.getDifficulty());
+            }
 
             chipGroup.removeAllViews();
             Context context = itemView.getContext();
 
-            if (difficulty.getTags() != null) {
-                for (String tag : difficulty.getTags()) {
+            List<String> tags = getTagsList(userInterview);
+            if (tags != null) {
+                for (String tag : tags) {
                     Chip chip = new Chip(context);
                     chip.setText(tag);
                     chip.setChipBackgroundColor(ContextCompat.getColorStateList(context, R.color.tag_bg));
@@ -98,9 +107,33 @@ public class DifficultyAdapter extends RecyclerView.Adapter<DifficultyAdapter.Di
                 }
 
                 if (listener != null && selectedPosition != RecyclerView.NO_POSITION) {
-                    listener.onDifficultySelected(difficulty);
+                    listener.onDifficultySelected(userInterview);
                 }
             });
+        }
+
+        private List<String> getTagsList(UserInterview interview) {
+            if (interview == null) return null;
+
+            List<String> tags = new ArrayList<>();
+
+            // 1. Add Category name if present
+            if (interview.getCategory() != null && interview.getCategory().getName() != null) {
+                tags.add(interview.getCategory().getName());
+            }
+
+            // 2. Extract unique question types from nested UserQuestion objects
+            if (interview.getQuestions() != null) {
+                for (UserQuestion q : interview.getQuestions()) {
+                    if (q != null && q.getType() != null && !q.getType().trim().isEmpty()) {
+                        if (!tags.contains(q.getType())) {
+                            tags.add(q.getType());
+                        }
+                    }
+                }
+            }
+
+            return tags;
         }
     }
 }

@@ -15,20 +15,23 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentMockInterviewQuestionsBinding;
-import com.example.capstone.model.Question;
+import com.example.capstone.domainModels.UserQuestion;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class MockInterviewQuestionsFragment extends Fragment {
+
     private FragmentMockInterviewQuestionsBinding binding;
-    private List<Question> questionsList;
+    private List<UserQuestion> questionsList = new ArrayList<>();
     private int currentQuestionIndex = 0;
 
     private CountDownTimer countDownTimer;
     private boolean isRecording = false;
     private String interviewTitle = "Java";
+
+    private static final int DEFAULT_QUESTION_DURATION_SECONDS = 180; // 3 minutes per question
 
     @Nullable
     @Override
@@ -40,28 +43,40 @@ public class MockInterviewQuestionsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (getArguments() != null) {
-            if (getArguments().containsKey(MockInterviewInstructionsFragment.ARG_INTERVIEW_NAME)) {
-                interviewTitle = getArguments().getString(MockInterviewInstructionsFragment.ARG_INTERVIEW_NAME);
-            }
+
+        if (getArguments() != null && getArguments().containsKey(MockInterviewInstructionsFragment.ARG_INTERVIEW_NAME)) {
+            interviewTitle = getArguments().getString(MockInterviewInstructionsFragment.ARG_INTERVIEW_NAME, "Java");
         }
+
         binding.tvHeaderTitle.setText(interviewTitle);
-        loadSampleQuestions();
+
         setupClickListeners();
-        displayQuestionAtIndex(currentQuestionIndex);
+
+        // If questions weren't passed in, load initial sample set matching UserQuestion model
+        if (questionsList.isEmpty()) {
+            loadSampleQuestions();
+        }
+
+        if (!questionsList.isEmpty()) {
+            displayQuestionAtIndex(currentQuestionIndex);
+        }
+    }
+
+    /**
+     * Set questions dynamically from a ViewModel, Repository, or Bundle argument.
+     */
+    public void setQuestions(List<UserQuestion> questions) {
+        this.questionsList = questions != null ? questions : new ArrayList<>();
+        this.currentQuestionIndex = 0;
+        if (binding != null && !questionsList.isEmpty()) {
+            displayQuestionAtIndex(currentQuestionIndex);
+        }
     }
 
     private void loadSampleQuestions() {
+        // Mock fallback list using your domain model structure
+        // Note: Replace this with database/ViewModel data when connected
         questionsList = new ArrayList<>();
-        questionsList.add(new Question("1", "TECHNICAL",
-                "How would you optimise a SQL query that joins three large tables and runs slowly in production?", null, 167));
-        questionsList.add(new Question("2", "CODING",
-                "What is the output of the following C# code block and how would you rewrite it safely?",
-                "string name = null;\nint length = name.Length;", 180));
-        questionsList.add(new Question("3", "SYSTEM DESIGN",
-                "Explain the difference between synchronous and asynchronous processing in backend API endpoints.", null, 200));
-        questionsList.add(new Question("4", "BEHAVIORAL",
-                "Describe a situation where you had to refactor legacy code under tight deadlines.", null, 120));
     }
 
     private void displayQuestionAtIndex(int index) {
@@ -70,35 +85,51 @@ public class MockInterviewQuestionsFragment extends Fragment {
             return;
         }
 
-        Question currentQuestion = questionsList.get(index);
+        UserQuestion currentQuestion = questionsList.get(index);
 
-
+        // Update question counter & progress bar
         int totalQuestions = questionsList.size();
         binding.tvQuestionProgress.setText(String.format(Locale.getDefault(), "Question %d / %d", index + 1, totalQuestions));
 
         int progressPercentage = (int) (((float) (index + 1) / totalQuestions) * 100);
         binding.progressBar.setProgress(progressPercentage);
 
+        // Category / Type display
+        String category = currentQuestion.getType() != null ? currentQuestion.getType() : currentQuestion.getDifficulty();
+        binding.tvCategory.setText(category != null ? category.toUpperCase(Locale.getDefault()) : "TECHNICAL");
 
-        binding.tvCategory.setText(currentQuestion.getCategory().toUpperCase(Locale.getDefault()));
-
-
-        if (currentQuestion.hasCodeSnippet()) {
+        // Code snippet check based on UserQuestion properties
+        if (isCodeQuestion(currentQuestion)) {
             binding.tvQuestionText.setVisibility(View.GONE);
             binding.scrollCodeSnippet.setVisibility(View.VISIBLE);
-            binding.tvCodeSnippet.setText(currentQuestion.getCodeSnippet());
+            binding.tvCodeSnippet.setText(currentQuestion.getText());
         } else {
             binding.tvQuestionText.setVisibility(View.VISIBLE);
             binding.scrollCodeSnippet.setVisibility(View.GONE);
-            binding.tvQuestionText.setText(currentQuestion.getQuestionText());
+            binding.tvQuestionText.setText(currentQuestion.getText());
         }
 
-
+        // Reset inputs and recording state
         binding.etAnswer.setText("");
         stopRecordingState();
 
+        // Start per-question timer
+        startTimer(DEFAULT_QUESTION_DURATION_SECONDS);
+    }
 
-        startTimer(currentQuestion.getDurationInSeconds());
+    /**
+     * Determines whether a question contains code based on its type or text formatting.
+     */
+    private boolean isCodeQuestion(UserQuestion question) {
+        if (question == null) return false;
+
+        boolean matchesCodeType = question.getType() != null &&
+                (question.getType().equalsIgnoreCase("CODING") || question.getType().equalsIgnoreCase("CODE"));
+
+        boolean hasCodeFormatting = question.getText() != null &&
+                (question.getText().contains(";\n") || question.getText().contains("{\n"));
+
+        return matchesCodeType || hasCodeFormatting;
     }
 
     private void startTimer(int seconds) {
@@ -111,13 +142,19 @@ public class MockInterviewQuestionsFragment extends Fragment {
             public void onTick(long millisUntilFinished) {
                 long minutes = (millisUntilFinished / 1000) / 60;
                 long secs = (millisUntilFinished / 1000) % 60;
-                binding.tvTimer.setText(String.format(Locale.getDefault(), "%02d:%02d", minutes, secs));
+                if (binding != null) {
+                    binding.tvTimer.setText(String.format(Locale.getDefault(), "%02d:%02d", minutes, secs));
+                }
             }
 
             @Override
             public void onFinish() {
-                binding.tvTimer.setText("00:00");
-                Toast.makeText(requireContext(), "Time's up for this question!", Toast.LENGTH_SHORT).show();
+                if (binding != null) {
+                    binding.tvTimer.setText("00:00");
+                }
+                if (getContext() != null) {
+                    Toast.makeText(requireContext(), "Time's up for this question!", Toast.LENGTH_SHORT).show();
+                }
                 nextQuestion();
             }
         }.start();
@@ -126,19 +163,16 @@ public class MockInterviewQuestionsFragment extends Fragment {
     private void setupClickListeners() {
         binding.btnMic.setOnClickListener(v -> toggleRecording());
         binding.btnSkip.setOnClickListener(v -> nextQuestion());
-        binding.btnContinue.setOnClickListener(v -> {
-            String answer = binding.etAnswer.getText().toString().trim();
-            // Perform answer saving logic here if needed
-            nextQuestion();
-        });
+        binding.btnContinue.setOnClickListener(v -> nextQuestion());
     }
 
     private void toggleRecording() {
         isRecording = !isRecording;
         if (isRecording) {
             binding.tvMicStatus.setText("Recording... (Tap to stop)");
-            binding.tvMicStatus.setTextColor(Color.parseColor("#E53935")); // Red for recording
+            binding.tvMicStatus.setTextColor(Color.parseColor("#E53935")); // Red
             binding.btnMic.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#E53935")));
+            startMicPulseAnimation();
         } else {
             stopRecordingState();
         }
@@ -146,14 +180,39 @@ public class MockInterviewQuestionsFragment extends Fragment {
 
     private void stopRecordingStatus() {
         isRecording = false;
-        binding.tvMicStatus.setText("Tap to record");
-        binding.tvMicStatus.setTextColor(Color.parseColor("#B3B3C0"));
-        binding.btnMic.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#A14078")));
+        if (binding != null) {
+            binding.tvMicStatus.setText("Tap to record");
+            binding.tvMicStatus.setTextColor(Color.parseColor("#B3B3C0"));
+            binding.btnMic.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#A14078")));
+            binding.btnMic.setScaleX(1.0f);
+            binding.btnMic.setScaleY(1.0f);
+        }
     }
 
-    // alias method for compatibility if called elsewhere as stopRecordingState
     private void stopRecordingState() {
         stopRecordingStatus();
+    }
+
+    private void startMicPulseAnimation() {
+        if (!isRecording || binding == null) return;
+
+        binding.btnMic.animate()
+                .scaleX(1.15f)
+                .scaleY(1.15f)
+                .setDuration(600)
+                .withEndAction(() -> {
+                    if (isRecording && binding != null) {
+                        binding.btnMic.animate()
+                                .scaleX(1.0f)
+                                .scaleY(1.0f)
+                                .setDuration(600)
+                                .withEndAction(this::startMicPulseAnimation)
+                                .start();
+                    } else if (binding != null) {
+                        binding.btnMic.setScaleX(1.0f);
+                        binding.btnMic.setScaleY(1.0f);
+                    }
+                }).start();
     }
 
     private void nextQuestion() {
@@ -170,38 +229,16 @@ public class MockInterviewQuestionsFragment extends Fragment {
             countDownTimer.cancel();
         }
 
-
         Bundle args = new Bundle();
-        args.putString("INTERVIEW_TITLE", interviewTitle);
-        args.putInt("TOTAL_QUESTIONS", questionsList.size());
+        args.putString(MockInterviewResult.ARG_INTERVIEW_TITLE, interviewTitle);
+        args.putInt(MockInterviewResult.ARG_ANSWERED_COUNT, currentQuestionIndex);
+        args.putInt(MockInterviewResult.ARG_TOTAL_QUESTIONS, questionsList.size());
 
-
-        // Navigate to the Completion / Result Fragment
         if (getParentFragmentManager() != null && isAdded()) {
             NavHostFragment.findNavController(this)
                     .navigate(R.id.action_mockInterviewQuestions_to_mockInterviewResult, args);
         }
     }
-    private void startMicPulseAnimation() {
-        binding.btnMic.animate()
-                .scaleX(1.15f)
-                .scaleY(1.15f)
-                .setDuration(600)
-                .withEndAction(() -> {
-                    if (isRecording) {
-                        binding.btnMic.animate()
-                                .scaleX(1.0f)
-                                .scaleY(1.0f)
-                                .setDuration(600)
-                                .withEndAction(this::startMicPulseAnimation)
-                                .start();
-                    } else {
-                        binding.btnMic.setScaleX(1.0f);
-                        binding.btnMic.setScaleY(1.0f);
-                    }
-                }).start();
-    }
-
 
     private void navigateBack() {
         if (getParentFragmentManager() != null && isAdded()) {

@@ -2,41 +2,43 @@ package com.example.capstone.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.capstone.R;
-import com.example.capstone.databinding.ItemInterviewBinding;
-import com.example.capstone.model.Interview;
+import com.example.capstone.domainModels.UserInterview;
+import com.example.capstone.domainModels.UserQuestion;
 import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class InterviewAdapter extends RecyclerView.Adapter<InterviewAdapter.InterviewViewHolder> {
 
-    public interface OnItemSelectedListener {
-        void onItemSelected(Interview interview);
+    public interface OnInterviewSelectedListener {
+        void onInterviewSelected(UserInterview interview);
     }
 
-    private List<Interview> interviews;
-    private final OnItemSelectedListener listener;
+    private List<UserInterview> interviews;
+    private final OnInterviewSelectedListener listener;
     private int selectedPosition = -1;
 
-    public InterviewAdapter(List<Interview> interviews, OnItemSelectedListener listener) {
+    public InterviewAdapter(List<UserInterview> interviews, OnInterviewSelectedListener listener) {
         this.interviews = interviews;
         this.listener = listener;
     }
+
     @NonNull
     @Override
     public InterviewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemInterviewBinding binding = ItemInterviewBinding.inflate(
-                LayoutInflater.from(parent.getContext()),
-                parent,
-                false
-        );
-        return new InterviewViewHolder(binding);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_difficulty, parent, false);
+        return new InterviewViewHolder(view);
     }
 
     @Override
@@ -49,45 +51,60 @@ public class InterviewAdapter extends RecyclerView.Adapter<InterviewAdapter.Inte
         return interviews != null ? interviews.size() : 0;
     }
 
-    public void updateData(List<Interview> newList) {
+    public void updateData(List<UserInterview> newList) {
         this.interviews = newList;
-        this.selectedPosition = -1; // Reset selection state when list filters
         notifyDataSetChanged();
     }
 
-    class InterviewViewHolder extends RecyclerView.ViewHolder {
-        private final ItemInterviewBinding binding;
+    public UserInterview getSelectedInterview() {
+        if (selectedPosition != -1 && selectedPosition < getItemCount()) {
+            return interviews.get(selectedPosition);
+        }
+        return null;
+    }
 
-        public InterviewViewHolder(@NonNull ItemInterviewBinding binding) {
-            super(binding.getRoot());
-            this.binding = binding;
+    class InterviewViewHolder extends RecyclerView.ViewHolder {
+        private final TextView tvName;
+        private final TextView tvDescription;
+        private final ChipGroup chipGroup;
+
+        public InterviewViewHolder(@NonNull View itemView) {
+            super(itemView);
+            tvName = itemView.findViewById(R.id.tvDifficultyName);
+            tvDescription = itemView.findViewById(R.id.tvDifficultyDesc);
+            chipGroup = itemView.findViewById(R.id.chipGroupTags);
         }
 
-        public void bind(final Interview interview, boolean isSelected) {
-            binding.tvTitle.setText(interview.getTitle());
-            binding.tvDifficulty.setText(interview.getDifficulty());
+        public void bind(final UserInterview interview, boolean isSelected) {
+            // Bind Title Name
+            if (tvName != null && interview.getName() != null) {
+                tvName.setText(interview.getName());
+            }
 
-            // Render tag chips dynamically
-            binding.chipGroupFocusAreas.removeAllViews();
+            // Bind Difficulty
+            if (tvDescription != null && interview.getDifficulty() != null) {
+                tvDescription.setText(interview.getDifficulty());
+            }
+
+            // Extract Tags & Category Chips
+            chipGroup.removeAllViews();
             Context context = itemView.getContext();
 
-            if (interview.getFocusAreas() != null) {
-                for (String area : interview.getFocusAreas()) {
+            List<String> tags = getTagsList(interview);
+            if (tags != null) {
+                for (String tag : tags) {
                     Chip chip = new Chip(context);
-                    chip.setText(area);
+                    chip.setText(tag);
                     chip.setChipBackgroundColor(ContextCompat.getColorStateList(context, R.color.tag_bg));
                     chip.setTextColor(ContextCompat.getColor(context, R.color.tag_text));
                     chip.setCheckable(false);
                     chip.setClickable(false);
                     chip.setChipCornerRadius(16f);
-                    binding.chipGroupFocusAreas.addView(chip);
+                    chipGroup.addView(chip);
                 }
             }
 
-
             itemView.setSelected(isSelected);
-
-
             itemView.setOnClickListener(v -> {
                 int previousSelected = selectedPosition;
                 selectedPosition = getBindingAdapterPosition();
@@ -100,9 +117,33 @@ public class InterviewAdapter extends RecyclerView.Adapter<InterviewAdapter.Inte
                 }
 
                 if (listener != null && selectedPosition != RecyclerView.NO_POSITION) {
-                    listener.onItemSelected(interview);
+                    listener.onInterviewSelected(interview);
                 }
             });
+        }
+
+        private List<String> getTagsList(UserInterview interview) {
+            if (interview == null) return null;
+
+            List<String> tags = new ArrayList<>();
+
+            // 1. Add Category Name if present
+            if (interview.getCategory() != null && interview.getCategory().getName() != null) {
+                tags.add(interview.getCategory().getName());
+            }
+
+            // 2. Add Question Types from questions list
+            if (interview.getQuestions() != null) {
+                for (UserQuestion question : interview.getQuestions()) {
+                    if (question != null && question.getType() != null && !question.getType().trim().isEmpty()) {
+                        if (!tags.contains(question.getType())) {
+                            tags.add(question.getType());
+                        }
+                    }
+                }
+            }
+
+            return tags;
         }
     }
 }
