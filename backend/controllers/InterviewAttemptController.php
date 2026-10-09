@@ -14,8 +14,8 @@
             $answers = $data["answers"];
 
             //passes it to the submit attempt service
-            $result = $this->interviewAttemptService->submitAttempt($interviewId,$answers);
-            JsonResponse::success();
+            $attemptId = $this->interviewAttemptService->submitAttempt($interviewId,$answers);
+            JsonResponse::success(['interviewAttemptId'=>$attemptId]);
         }
 
         public function analyse(){

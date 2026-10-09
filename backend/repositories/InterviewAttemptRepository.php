@@ -29,6 +29,7 @@
                 //create the user interview attempt
                 $query = "INSERT INTO interview_user_attempts (user_id,interview_id) VALUES (?,?)";
                 $this->db->execute($query,[$userId,$interviewId]);
+                $attemptId = $this->db->lastInsertId();
 
                 //add the question responses
                 $user_attempt_id = $this->db->lastInsertId();
@@ -46,7 +47,7 @@
                 //insert into the db
                 $query = "INSERT INTO interview_question_attempts (interview_attempt_id,question_id,answer,seconds_spent) VALUES " . implode(',',$placeHolders);
                 $this->db->execute($query,$params);
-                return $this->db->lastInsertId();
+                return $attemptId;
             });
             
         }

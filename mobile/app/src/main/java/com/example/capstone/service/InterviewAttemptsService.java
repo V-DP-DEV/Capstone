@@ -1,6 +1,7 @@
 package com.example.capstone.service;
 
 import com.example.capstone.model.request.SubmitInterviewAttemptRequest;
+import com.example.capstone.model.response.SubmitAttemptResponse;
 import com.example.capstone.network.ApiCallback;
 import com.example.capstone.network.ApiClient;
 import com.example.capstone.network.ApiRequest;
@@ -18,7 +19,7 @@ public class InterviewAttemptsService {
 
   public void submitInterviewAttempt(
           SubmitInterviewAttemptRequest attemptRequest,
-          ApiCallback<Void> callback
+          ApiCallback<SubmitAttemptResponse> callback
   ) {
     ApiRequest request =
             new ApiRequest("interviewAttempt/submitAttempt");
@@ -27,6 +28,6 @@ public class InterviewAttemptsService {
     request.setRequiresAuthentication(true);
     request.setBody(attemptRequest);
 
-    apiClient.execute(request, Void.class, callback);
+    apiClient.execute(request, SubmitAttemptResponse.class, callback);
   }
 }
