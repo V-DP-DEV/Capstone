@@ -7,5 +7,5 @@
     android:fontFamily="sans-serif-medium"
     android:paddingHorizontal="14dp"
     android:paddingVertical="6dp"
-    android:textColor="#6C63D6"
+    android:textColor="@color/primary_blue"
     android:textSize="13sp" />

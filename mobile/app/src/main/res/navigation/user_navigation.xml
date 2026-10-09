@@ -15,6 +15,9 @@
     <action
         android:id="@+id/action_userDashboardFragment_to_selectDifficultyFragment"
         app:destination="@id/selectDifficultyFragment" />
+    <action
+        android:id="@+id/action_userDashboardFragment_self"
+        app:destination="@id/userDashboardFragment" />
   </fragment>
 
   <!-- Select Difficulty Screen -->
@@ -22,8 +25,56 @@
       android:id="@+id/selectDifficultyFragment"
       android:name="com.example.capstone.ui.mock.SelectDifficultyFragment"
       android:label="Select Difficulty"
-      tools:layout="@layout/fragment_select_difficulty" />
+      tools:layout="@layout/fragment_select_difficulty">
+    <action
+        android:id="@+id/action_selectDifficultyFragment_to_selectInterviewFragment"
+        app:destination="@id/selectInterviewFragment" />
+    <action
+        android:id="@+id/action_selectDifficultyFragment_self"
+        app:destination="@id/selectDifficultyFragment" />
+  </fragment>
 
+  <!-- Select Interview Screen -->
+  <fragment
+      android:id="@+id/selectInterviewFragment"
+      android:name="com.example.capstone.ui.mock.SelectInterviewFragment"
+      android:label="Select Interview"
+      tools:layout="@layout/fragment_select_interview" >
+    <action
+        android:id="@+id/action_selectInterviewFragment_self"
+        app:destination="@id/selectInterviewFragment" />
+    <action
+        android:id="@+id/action_selectInterviewFragment_to_mockInterviewInstructionsFragment"
+        app:destination="@id/mockInterviewInstructionsFragment" />
+  </fragment>
+
+  <!-- Mock Interview Instructions Screen -->
+  <fragment
+      android:id="@+id/mockInterviewInstructionsFragment"
+      android:name="com.example.capstone.ui.mock.MockInterviewInstructionsFragment"
+      android:label="Mock Interview Instructions"
+      tools:layout="@layout/fragment_mock_interview_instructions">
+    <action
+        android:id="@+id/action_mockInterviewInstructionsFragment_to_mockInterviewQuestionsFragment"
+        app:destination="@id/mockInterviewQuestionsFragment" />
+  </fragment>
+
+  <!-- Mock Interview Questions Screen -->
+  <fragment
+      android:id="@+id/mockInterviewQuestionsFragment"
+      android:name="com.example.capstone.ui.mock.MockInterviewQuestionsFragment"
+      android:label="Mock Interview Questions"
+      tools:layout="@layout/fragment_mock_interview_questions">
+    <action
+        android:id="@+id/action_mockInterviewQuestions_to_mockInterviewResult"
+        app:destination="@id/mockInterviewResult" />
+  </fragment>
+
+  <!-- Mock Interview Result Screen -->
+  <fragment
+      android:id="@+id/mockInterviewResult"
+      android:name="com.example.capstone.ui.mock.MockInterviewResult"
+      android:label="Mock Interview Result"
+      tools:layout="@layout/fragment_mock_interview_result" />
 
 </navigation>
-
