@@ -6,4 +6,5 @@
         public function addAnalyseQuestionConcepts($aiQuestionsConcepts);
         public function addAnalyseInterview($aiInterviewCompetencies);
         public function addAnalyseQuestionCompetencies($aiQuestionCompetencies);
+        public function updateAttemptToAnalysed($interviewAttemptId);
     }

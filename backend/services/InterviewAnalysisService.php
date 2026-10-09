@@ -9,6 +9,9 @@
             if(!$attempt){
                 throw new ValidationException("No attempt provided");
             }
+            if($attempt['analysed'] == 1){
+                throw new ValidationException("Analysis has already been requested");
+            }
             $interviewId = $attempt['interview_id'];
             $questionsRows= $this->interviewAttemptRepository->getQuestionsForAnalysis($attemptId);
             $interviewCompetenciesRows = $this->interviewRepository->getInterviewCompetencies($interviewId);
@@ -67,10 +70,11 @@
             }
             
             //rolls back
-            $this->db->transaction(function() use ($dbToSaveInterviewCompetencies,$dbToSaveQuestionCompetencies,$dbToSaveQuestionConcepts){
+            $this->db->transaction(function() use ($dbToSaveInterviewCompetencies,$dbToSaveQuestionCompetencies,$dbToSaveQuestionConcepts,$attemptId){
                 $this->interviewAttemptRepository->addAnalyseInterview($dbToSaveInterviewCompetencies);
                 $this->interviewAttemptRepository->addAnalyseQuestionCompetencies($dbToSaveQuestionCompetencies);
                 $this->interviewAttemptRepository->addAnalyseQuestionConcepts($dbToSaveQuestionConcepts);
+                $this->interviewAttemptRepository->updateAttemptToAnalysed($attemptId);
             });
             
             return $aiResponse;

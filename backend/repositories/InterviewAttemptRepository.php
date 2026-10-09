@@ -116,5 +116,10 @@
             $query = 'INSERT INTO question_competency_breakdown_scores (question_attempt_id,competency_breakdown_id,score) VALUES ' . implode(',',$placeHolders);
             $this->db->execute($query,$params);
         }
+
+        public function updateAttemptToAnalysed($interviewAttemptId){
+            $query = 'UPDATE interview_user_attempts SET analysed = 1 WHERE id=?';
+            return $this->db->execute($query,[$interviewAttemptId]);
+        }
     }
 ?>
