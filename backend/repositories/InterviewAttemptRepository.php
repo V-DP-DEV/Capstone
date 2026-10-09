@@ -121,5 +121,10 @@
             $query = 'UPDATE interview_user_attempts SET analysed = 1 WHERE id=?';
             return $this->db->execute($query,[$interviewAttemptId]);
         }
+
+        public function updateAnalyseStatus($interviewAttemptId,$status){
+            $query = 'UPDATE interview_user_attempts SET status = ? WHERE id=?';
+            return $this->db->execute($query,[$status,$interviewAttemptId]);
+        }
     }
 ?>

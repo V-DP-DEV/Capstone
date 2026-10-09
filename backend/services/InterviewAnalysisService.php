@@ -13,6 +13,9 @@
                 throw new ValidationException("Analysis has already been requested");
             }
             $interviewId = $attempt['interview_id'];
+
+            $this->interviewAttemptRepository->updateAnalyseStatus($attemptId,'PROCESSING');
+
             $questionsRows= $this->interviewAttemptRepository->getQuestionsForAnalysis($attemptId);
             $interviewCompetenciesRows = $this->interviewRepository->getInterviewCompetencies($interviewId);
             $questionCompetenciesRows = $this->interviewRepository->getQuestionCompetencies($interviewId);
@@ -70,12 +73,24 @@
             }
             
             //rolls back
-            $this->db->transaction(function() use ($dbToSaveInterviewCompetencies,$dbToSaveQuestionCompetencies,$dbToSaveQuestionConcepts,$attemptId){
+            try{
+                //begin a transaction
+                $this->db->beginTransaction();
                 $this->interviewAttemptRepository->addAnalyseInterview($dbToSaveInterviewCompetencies);
                 $this->interviewAttemptRepository->addAnalyseQuestionCompetencies($dbToSaveQuestionCompetencies);
                 $this->interviewAttemptRepository->addAnalyseQuestionConcepts($dbToSaveQuestionConcepts);
                 $this->interviewAttemptRepository->updateAttemptToAnalysed($attemptId);
-            });
+                $this->interviewAttemptRepository->updateAnalyseStatus($attemptId,'COMPLETED');
+                $this->db->commit();
+            }
+            //if errors
+            catch(Exception $e){
+                //rollback
+                $this->db->rollBack();
+                $this->interviewAttemptRepository->updateAnalyseStatus($attemptId,'FAILED');
+                //re throw to global handler to handle
+                throw $e;
+            }
             
             return $aiResponse;
         }
