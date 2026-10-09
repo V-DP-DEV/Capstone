@@ -1,7 +1,9 @@
 <?php
+    //responsible for creating the payload that will be send to the ai
     class InterviewEvaluationBuilder{
+        //retrieves the relevant data rows from db
         public function build($interviewQuestionResponse, $questionCompetencies,$questionConcepts,$interviewCompetency){
-
+            //returns payload with 4o mini, buildInstructions, buildInput and buildOutput defined by respective methods
             return [
                 'model'=>'gpt-4o-mini',
                 'instructions'=>$this->buildInstructions(),
@@ -14,6 +16,7 @@
 
         private function buildInstructions(): string
         {
+            //creates the general reusable instruction structure, outlining role, scoring principle, scoring rubric and strenght + feedback
             return
                 'Follow the instructions directly! ' .
 '### ROLE ### ' .
@@ -72,19 +75,21 @@
 '-Do not invent evidence, requirements, competencies, or concepts. ';
         }
 
+        //builds the input using the respective methods
         private function buildInput($interviewQuestionResponse, $questionCompetencies,$questionConcepts,$interviewCompetency):string
         {
             $questions = $this->buildInputQuestionResponse($interviewQuestionResponse,$questionCompetencies,$questionConcepts);
             $interviewCompetencies = $this->buildInputInterviewCompetency($interviewCompetency);
-            //return ['interview_competencies'=>$interviewCompetencies];
             return json_encode(['questions'=>$questions,'interview_competencies'=>$interviewCompetencies]);
         }
 
+        //builds the questions and embeds the competencies + concepts
         private function buildInputQuestionResponse($interviewQuestionResponses,$questionCompetencies,$questionConcepts){
             //get competencies + concepts
             $competenciesByQuestion = $this->buildInputQuestionCompetency($questionCompetencies);
             $conceptsByQuestion = $this->buildInputQuestionConcept($questionConcepts);
-        
+
+            //create questions
             $questions = [];
             foreach($interviewQuestionResponses as $row){
                 $questionId = $row['id'];
@@ -98,9 +103,11 @@
                     'concepts'=> $conceptsByQuestion[$questionId] ?? []
                 ];
             }
+            //return new structure with embedded details
             return $questions;
         }
 
+        //build the question competencies to be used by buildInputQuestion
         private function buildInputQuestionCompetency($questionCompetencies){
             $competenciesByQuestion = [];
 
@@ -113,6 +120,7 @@
             return $competenciesByQuestion;
         }
 
+        //build the question concepts to be used by buildInputQuestion
         private function buildInputQuestionConcept($questionConcepts){
             $conceptsByQuestion =[];
             foreach ($questionConcepts as $row) {
@@ -124,25 +132,17 @@
             return $conceptsByQuestion;
         }
 
+        //returns the object as is, but allows for future customisation
         private function buildInputInterviewCompetency($interviewCompetencies){
             return $interviewCompetencies;
         }
 
-        private function buildSchema(): array
-        {
-            return [
-                'type' => 'object',
-                'properties' => [
-                    'feedback' => [
-                        'type' => 'string'
-                    ]
-                ],
-                'required' => ['feedback'],
-                'additionalProperties' => false
-                ];
-            // JSON schema here
-        }
-
+        //builds output schema. This will ensure per question it gives competencies scores, and concepts scores
+        //and interview level competencies strenght + improvement
+        //this ensures its more closely typed and not open text/
+        //min and max was given for score ranges
+        //types were provided
+        //and schema was set to strict
         private function buildOutput(){
             return ["format" => [
     "type" => "json_schema",

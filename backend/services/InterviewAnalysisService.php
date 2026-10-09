@@ -66,16 +66,13 @@
                 ];
             }
             
-
-            //$this->db->beginTransaction(function() use ($dbToSaveInterviewCompetencies,$dbToSaveQuestionCompetencies,$dbToSaveQuestionConcepts){
-                //works
+            //rolls back
+            $this->db->transaction(function() use ($dbToSaveInterviewCompetencies,$dbToSaveQuestionCompetencies,$dbToSaveQuestionConcepts){
                 $this->interviewAttemptRepository->addAnalyseInterview($dbToSaveInterviewCompetencies);
-                //broken
                 $this->interviewAttemptRepository->addAnalyseQuestionCompetencies($dbToSaveQuestionCompetencies);
                 $this->interviewAttemptRepository->addAnalyseQuestionConcepts($dbToSaveQuestionConcepts);
-            //});
+            });
             
             return $aiResponse;
-            //return ["questions"=>$questionsRows]
         }
     }

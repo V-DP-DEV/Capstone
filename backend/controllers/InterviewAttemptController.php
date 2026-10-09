@@ -4,23 +4,28 @@
 
         public function submitAttempt(){
             
-            
+            //requries POST
             Request::requireMethod("POST");
+            //gets the data from the body
             $data = Request::json();
+            //gets the id
             $interviewId = $data["id"];
+            //gets the answer
             $answers = $data["answers"];
 
-
+            //passes it to the submit attempt service
             $result = $this->interviewAttemptService->submitAttempt($interviewId,$answers);
             JsonResponse::success();
         }
 
         public function analyse(){
+            //requires post
             Request::requireMethod("POST");
             $data = Request::json();
-            //$attemptId = $data["attemptId"];
-
-            $response = $this->interviewAnalysisService->analysis(1);
+            $attemptId = $data["attemptId"];
+            
+            $response = $this->interviewAnalysisService->analysis($attemptId);
+            //returns result, and other errors will be thrown to error exception handler
             JsonResponse::success($response);
         }
     }
