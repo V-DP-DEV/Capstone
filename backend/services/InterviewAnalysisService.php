@@ -12,6 +12,9 @@
             if($attempt['analysed'] == 1){
                 throw new ValidationException("Analysis has already been requested");
             }
+            if($attempt['user_id']!== $this->request_context->getUserId()){
+                throw new UnauthorizedException("Not authorized to preform this action!");
+            }
             $interviewId = $attempt['interview_id'];
 
             $this->interviewAttemptRepository->updateAnalyseStatus($attemptId,'PROCESSING');
