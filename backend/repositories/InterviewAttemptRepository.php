@@ -88,7 +88,7 @@
             //creates the params and placeholders to do one bulk query
             $placeHolders = [];
             $params = [];
-
+           
             foreach($aiInterviewCompetencies as $interviewCompetencies){
                 $placeHolders[] = "(?,?,?,?)";
                 $params[] = $interviewCompetencies['interview_attempt_id'];
@@ -127,6 +127,10 @@
         public function updateAnalyseStatus($interviewAttemptId,$status){
             $query = 'UPDATE interview_user_attempts SET status = ? WHERE id=?';
             return $this->db->execute($query,[$status,$interviewAttemptId]);
+        }
+        public function updateScorePercentage($interviewAttemptId,$percentage){
+            $query = 'UPDATE interview_user_attempts SET score_percentage = ? WHERE id=?';
+            return $this->db->execute($query,[$percentage,$interviewAttemptId]);
         }
     }
 ?>

@@ -8,4 +8,5 @@
         public function addAnalyseQuestionCompetencies($aiQuestionCompetencies);
         public function updateAttemptToAnalysed($interviewAttemptId);
         public function updateAnalyseStatus($interviewAttemptId,$status);
+        public function updateScorePercentage($interviewAttemptId,$percentage);
     }
