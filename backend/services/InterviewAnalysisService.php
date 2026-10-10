@@ -10,7 +10,10 @@
                 throw new ValidationException("No attempt provided");
             }
             if($attempt['analysed'] == 1){
-                throw new ValidationException("Analysis has already been requested");
+                throw new ValidationException("Analysis has already been performed");
+            }
+            if($attempt['status']=== 'PROCESSING'){
+                throw new ValidationException('Analysis is still being processed!');
             }
             if($attempt['user_id']!== $this->request_context->getUserId()){
                 throw new UnauthorizedException("Not authorized to preform this action!");
@@ -74,7 +77,6 @@
                     'improvement'=>$improvement
                 ];
             }
-            
             //rolls back
             try{
                 //begin a transaction
