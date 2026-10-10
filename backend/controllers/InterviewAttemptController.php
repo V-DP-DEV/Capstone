@@ -26,7 +26,7 @@
             
             $interviewId = $this->interviewAnalysisService->analysis($attemptId);
             //returns result, and other errors will be thrown to error exception handler
-            JsonResponse::success(['attemptId'=>$interviewId]);
+            JsonResponse::success();
         }
     }
 ?>
