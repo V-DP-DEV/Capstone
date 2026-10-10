@@ -25,7 +25,7 @@
             }
 
             //if passed start transaction 
-            $this->db->transaction(function() use ($userId,$interviewId,$answers){
+            $attemptId = $this->db->transaction(function() use ($userId,$interviewId,$answers){
                 //create the user interview attempt
                 $query = "INSERT INTO interview_user_attempts (user_id,interview_id) VALUES (?,?)";
                 $this->db->execute($query,[$userId,$interviewId]);
@@ -49,7 +49,7 @@
                 $this->db->execute($query,$params);
                 return $attemptId;
             });
-            
+            return $attemptId;
         }
 
         //gets the users attempt and returns all information, without questions
