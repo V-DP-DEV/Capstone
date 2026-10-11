@@ -1,3 +1,4 @@
+
 package com.example.capstone;
 
 import android.content.Context;
@@ -17,18 +18,11 @@ import com.example.capstone.service.InterviewService;
 import com.example.capstone.service.UserService;
 import com.example.capstone.util.PreferenceManager;
 import com.example.capstone.util.SecureSession;
+import com.example.capstone.viewmodel.SetupViewModel;
+import com.example.capstone.viewmodel.SubmitViewModel;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 public class AppContainer {
-
-  public SecureSession getSecureSession() {
-    return secureSession;
-  }
-
-  public Gson getGson() {
-    return gson;
-  }
 
   public final IAuthRepository authRepository;
   public final AuthService authService;
@@ -43,25 +37,48 @@ public class AppContainer {
   public final InterviewService interviewService;
   public final Gson gson;
 
-  public AppContainer(Context context){
+  public AppContainer(Context context) {
     secureSession = new SecureSession(context);
     preferenceManager = new PreferenceManager(context);
     gson = new Gson();
 
-    apiClient = new ApiClient(secureSession,gson);
-    authService = new AuthService(apiClient,secureSession,preferenceManager);
+    apiClient = new ApiClient(secureSession, gson);
+    authService = new AuthService(
+            apiClient,
+            secureSession,
+            preferenceManager
+    );
     authRepository = new AuthRepository(authService);
 
-    apiClient.setRefreshCaller((refreshCallback)->authRepository.refreshToken(refreshCallback));
+    apiClient.setRefreshCaller(
+            refreshCallback ->
+                    authRepository.refreshToken(refreshCallback)
+    );
 
     userService = new UserService(apiClient);
     userRepository = new UserRepository(userService);
 
     interviewAttemptsService = new InterviewAttemptsService(apiClient);
-    interviewAttemptsRepository = new InterviewAttemptsRepository(interviewAttemptsService);
+    interviewAttemptsRepository =
+            new InterviewAttemptsRepository(interviewAttemptsService);
 
     interviewService = new InterviewService(apiClient);
     interviewRepository = new InterviewRepository(interviewService);
+  }
 
+  public SecureSession getSecureSession() {
+    return secureSession;
+  }
+
+  public Gson getGson() {
+    return gson;
+  }
+
+  public SetupViewModel createSetupViewModel() {
+    return new SetupViewModel(interviewRepository);
+  }
+
+  public SubmitViewModel createSubmitViewModel() {
+    return new SubmitViewModel(interviewAttemptsRepository);
   }
 }
