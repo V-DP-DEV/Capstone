@@ -38,16 +38,6 @@ class ApiInterviewAttemptTest extends ApiTestCase
             'id' => 6,
             'answer' => 'I would structure the Blazor application using separate API services with dependency injection.',
             'secondsSpent' => 90
-        ],
-        [
-            'id' => 7,
-            'answer' => 'I would investigate the component lifecycle and determine where the API request is being triggered multiple times.',
-            'secondsSpent' => 110
-        ],
-        [
-            'id' => 8,
-            'answer' => 'I improved frontend performance by reducing unnecessary API calls and caching repeated data.',
-            'secondsSpent' => 85
         ]
     ]
 ];

@@ -10,7 +10,10 @@
                 throw new ValidationException("No attempt provided");
             }
             if($attempt['analysed'] == 1){
-                throw new ValidationException("Analysis has already been requested");
+                throw new ValidationException("Analysis has already been performed");
+            }
+            if($attempt['status']=== 'PROCESSING'){
+                throw new ValidationException('Analysis is still being processed!');
             }
             if($attempt['user_id']!== $this->request_context->getUserId()){
                 throw new UnauthorizedException("Not authorized to preform this action!");
@@ -36,6 +39,11 @@
             $dbToSaveQuestionCompetencies = [];
             $dbToSaveInterviewCompetencies = [];
 
+            $totalQuestionCompetencyScore = 0;
+            $totalQuestionConceptScore = 0;
+            $maxQuestionCompetencyScore = 0;
+            $maxQuestionConceptScore = 0;
+
             //extract question and format for repository consumption
             foreach ($aiQuestions as $question) {
 
@@ -46,6 +54,8 @@
 
                     $competencyId = $competency['competency_id'];
                     $score = $competency['score'];
+                    $totalQuestionCompetencyScore+=$score;
+                    $maxQuestionCompetencyScore+=5;
 
                     $dbToSaveQuestionCompetencies[] = ['competency_breakdown_id'=>$competencyId,'score'=>$score,'question_attempt_id'=>$questionAttemptId];
                 }
@@ -55,6 +65,8 @@
 
                     $conceptId = $concept['concept_id'];
                     $score = $concept['score'];
+                    $totalQuestionConceptScore+=5;
+                    $maxQuestionConceptScore+=5;
 
                     $dbToSaveQuestionConcepts[] = ['concept_id'=>$conceptId,'score'=>$score,'question_attempt_id'=>$questionAttemptId];
                 }
@@ -74,14 +86,15 @@
                     'improvement'=>$improvement
                 ];
             }
-            
             //rolls back
+            $percentage = ($totalQuestionCompetencyScore + $totalQuestionConceptScore) / ($maxQuestionCompetencyScore + $maxQuestionConceptScore);
             try{
                 //begin a transaction
                 $this->db->beginTransaction();
                 $this->interviewAttemptRepository->addAnalyseInterview($dbToSaveInterviewCompetencies);
                 $this->interviewAttemptRepository->addAnalyseQuestionCompetencies($dbToSaveQuestionCompetencies);
                 $this->interviewAttemptRepository->addAnalyseQuestionConcepts($dbToSaveQuestionConcepts);
+                $this->interviewAttemptRepository->updateScorePercentage($attemptId,$percentage);
                 $this->interviewAttemptRepository->updateAttemptToAnalysed($attemptId);
                 $this->interviewAttemptRepository->updateAnalyseStatus($attemptId,'COMPLETED');
                 $this->db->commit();

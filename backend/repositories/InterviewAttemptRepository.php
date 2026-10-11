@@ -25,7 +25,7 @@
             }
 
             //if passed start transaction 
-            $this->db->transaction(function() use ($userId,$interviewId,$answers){
+            $attemptId = $this->db->transaction(function() use ($userId,$interviewId,$answers){
                 //create the user interview attempt
                 $query = "INSERT INTO interview_user_attempts (user_id,interview_id) VALUES (?,?)";
                 $this->db->execute($query,[$userId,$interviewId]);
@@ -49,7 +49,7 @@
                 $this->db->execute($query,$params);
                 return $attemptId;
             });
-            
+            return $attemptId;
         }
 
         //gets the users attempt and returns all information, without questions
@@ -88,7 +88,7 @@
             //creates the params and placeholders to do one bulk query
             $placeHolders = [];
             $params = [];
-
+           
             foreach($aiInterviewCompetencies as $interviewCompetencies){
                 $placeHolders[] = "(?,?,?,?)";
                 $params[] = $interviewCompetencies['interview_attempt_id'];
@@ -127,6 +127,10 @@
         public function updateAnalyseStatus($interviewAttemptId,$status){
             $query = 'UPDATE interview_user_attempts SET status = ? WHERE id=?';
             return $this->db->execute($query,[$status,$interviewAttemptId]);
+        }
+        public function updateScorePercentage($interviewAttemptId,$percentage){
+            $query = 'UPDATE interview_user_attempts SET score_percentage = ? WHERE id=?';
+            return $this->db->execute($query,[$percentage,$interviewAttemptId]);
         }
     }
 ?>

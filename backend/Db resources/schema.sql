@@ -190,7 +190,7 @@ CREATE TABLE interview_user_attempts (
     interview_id BIGINT UNSIGNED NOT NULL,
     completed_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     analysed BOOLEAN NOT NULL DEFAULT FALSE,
-    score DECIMAL(5,2),
+    score_percentage DECIMAL(5,2),
     status ENUM('NOT_REQUESTED', 'PROCESSING', 'COMPLETED', 'FAILED') NOT NULL DEFAULT 'NOT_REQUESTED',
 
     CONSTRAINT fk_interview_user_attempts_user
