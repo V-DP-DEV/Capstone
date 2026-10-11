@@ -3,13 +3,16 @@ package com.example.capstone.network;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/*defines general response for GSON to return
+with error object if attached
+and data which is generic for specific class responses
+*/
+
 public class ApiResponse<T>{
   private int statusCode;
   private boolean success;
   private T data;
   private ApiError error;
-  
-  //tries to get response, but throws json exception if not valid
 
   //getters setters
   public int getStatusCode(){
