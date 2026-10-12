@@ -24,5 +24,20 @@
             });
         }
         
+        public function getAttempts($sortBy,$sortOrder){
+
+        }
+
+        public function getAttempt($id){
+
+        }
+
+        public function deleteAttempt($id){
+
+        }
+
+        public function deleteAttempts(){
+
+        }
     }
 ?>
