@@ -195,7 +195,8 @@ CREATE TABLE interview_user_attempts (
 
     CONSTRAINT fk_interview_user_attempts_user
         FOREIGN KEY (user_id)
-        REFERENCES users(id),
+        REFERENCES users(id)
+        ON DELETE CASCADE,
 
     CONSTRAINT fk_interview_user_attempts_interview
         FOREIGN KEY (interview_id)
@@ -219,7 +220,8 @@ CREATE TABLE interview_question_attempts (
 
     CONSTRAINT fk_interview_question_attempts_user_attempt
         FOREIGN KEY (interview_attempt_id)
-        REFERENCES interview_user_attempts(id),
+        REFERENCES interview_user_attempts(id)
+        ON DELETE CASCADE,
 
     CONSTRAINT fk_interview_question_attempts_question
         FOREIGN KEY (question_id)
@@ -242,7 +244,8 @@ CREATE TABLE question_concept_scores (
 
     CONSTRAINT fk_question_feedbacks_question_attempt
         FOREIGN KEY (question_attempt_id)
-        REFERENCES interview_question_attempts(id),
+        REFERENCES interview_question_attempts(id)
+        ON DELETE CASCADE,
 
     CONSTRAINT fk_question_feedbacks_concept
         FOREIGN KEY (concept_id)
@@ -266,7 +269,8 @@ CREATE TABLE interview_competency_breakdown_feedbacks (
 
     CONSTRAINT fk_competency_breakdown_scores_attempt
         FOREIGN KEY (interview_attempt_id)
-        REFERENCES interview_user_attempts(id),
+        REFERENCES interview_user_attempts(id)
+        ON DELETE CASCADE,
 
     CONSTRAINT fk_competency_breakdown_scores_competency_breakdown
         FOREIGN KEY (competency_breakdown_id)
@@ -289,7 +293,8 @@ CREATE TABLE question_competency_breakdown_scores (
 
     CONSTRAINT fk_question_competency_breakdown_scores_question_attempt
         FOREIGN KEY (question_attempt_id)
-        REFERENCES interview_question_attempts(id),
+        REFERENCES interview_question_attempts(id)
+        ON DELETE CASCADE,
 
     CONSTRAINT fk_question_competency_breakdown_scores_competency_breakdown
         FOREIGN KEY (competency_breakdown_id)
