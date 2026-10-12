@@ -58,8 +58,22 @@
             $sortColumn = $sortOptions->mapField($sort_collumns);
 
             $query = "SELECT
-                        iua.*,
-                        COALESCE(iqa.totalSecondsSpent, 0) AS totalSecondsSpent
+                        iua.id as id,
+                        i.interview_name as name,
+                        i.difficulty as difficulty,
+                        i.id as interview_id,
+                        iua.completed_at as completedAt,
+                        iua.analysed as analysed,
+                        iua.status as analysedStatus,
+                        i.estimated_time_in_minutes as estimatedMinutes,
+                        
+                        
+                        COALESCE(iqa.totalSecondsSpent, 0) AS totalSecondsSpent,
+                        CASE
+                            WHEN COALESCE(iqa.totalSecondsSpent, 0) < (i.estimated_time_in_minutes*60)
+                            THEN 1
+                            ELSE 0
+                        END AS completedInTime
                     FROM interview_user_attempts iua
                     LEFT JOIN (
                         SELECT
@@ -69,13 +83,11 @@
                         GROUP BY interview_attempt_id
                     ) iqa
                     ON iqa.interview_attempt_id = iua.id
+                    LEFT JOIN interviews i
+                    ON iua.interview_id = i.id
                     WHERE iua.user_id = ?
-                    ORDER BY {$sortColumn} {$sortOptions->direction};";
+                    ORDER BY iua.completed_at DESC;";
             return $this->db->queryAll($query,[$userId]);
-        }
-
-        public function getTotalTimeSpent(){
-
         }
 
         //get the question answer, expected answer and question for analysis
