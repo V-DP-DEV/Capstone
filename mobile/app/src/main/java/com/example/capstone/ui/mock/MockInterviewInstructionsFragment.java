@@ -12,8 +12,14 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentMockInterviewInstructionsBinding;
 
+/**
+ * MockInterviewInstructionsFragment displays the pre-interview briefing screen,
+ * showing details like interview title, difficulty, question count, duration,
+ * and input type before the user officially starts the session.
+ */
 public class MockInterviewInstructionsFragment extends Fragment {
 
+    // Bundle argument keys for receiving interview metadata from the selection screen
     public static final String ARG_INTERVIEW_NAME = "arg_interview_name";
     public static final String ARG_INTERVIEW_DIFFICULTY = "arg_interview_difficulty";
     public static final String ARG_QUESTION_COUNT = "arg_question_count";
@@ -22,6 +28,9 @@ public class MockInterviewInstructionsFragment extends Fragment {
 
     private FragmentMockInterviewInstructionsBinding binding;
 
+    /**
+     * Factory method to create a new instance of this fragment packed with the required interview details.
+     */
     public static MockInterviewInstructionsFragment newInstance(
             String name, String difficulty, int questionCount, String duration, String inputType) {
         MockInterviewInstructionsFragment fragment = new MockInterviewInstructionsFragment();
@@ -38,6 +47,7 @@ public class MockInterviewInstructionsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // Inflate layout using ViewBinding
         binding = FragmentMockInterviewInstructionsBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -50,6 +60,9 @@ public class MockInterviewInstructionsFragment extends Fragment {
         setupClickListeners();
     }
 
+    /**
+     * Extracts bundle arguments and binds the interview metadata to the corresponding instruction TextViews.
+     */
     private void displayInstructionsDetails() {
         if (getArguments() == null || binding == null) return;
 
@@ -71,7 +84,7 @@ public class MockInterviewInstructionsFragment extends Fragment {
             binding.tvStatQuestionsVal.setText(String.valueOf(questionCount));
         }
 
-        if (binding.tvStatDurationVal.length() > 0 || binding.tvStatDurationVal != null) {
+        if (binding.tvStatDurationVal != null) {
             binding.tvStatDurationVal.setText(duration);
         }
 
@@ -80,12 +93,17 @@ public class MockInterviewInstructionsFragment extends Fragment {
         }
     }
 
+    /**
+     * Sets up click listeners for back navigation and starting the interview session.
+     */
     private void setupClickListeners() {
         binding.btnBack.setOnClickListener(v -> navigateBack());
-
         binding.btnStart.setOnClickListener(v -> startInterviewSession());
     }
 
+    /**
+     * Forwards the current argument bundle forward to the MockInterviewQuestionsFragment via Jetpack Navigation.
+     */
     private void startInterviewSession() {
         if (isAdded()) {
             Bundle args = getArguments() != null ? new Bundle(getArguments()) : new Bundle();
@@ -95,6 +113,9 @@ public class MockInterviewInstructionsFragment extends Fragment {
         }
     }
 
+    /**
+     * Navigates back to the previous screen.
+     */
     private void navigateBack() {
         if (isAdded()) {
             NavHostFragment.findNavController(this).navigateUp();
@@ -104,6 +125,7 @@ public class MockInterviewInstructionsFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        // Clear binding reference to prevent memory leaks
         binding = null;
     }
 }

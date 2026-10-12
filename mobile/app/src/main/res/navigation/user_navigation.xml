@@ -75,6 +75,17 @@
       android:id="@+id/mockInterviewResult"
       android:name="com.example.capstone.ui.mock.MockInterviewResult"
       android:label="Mock Interview Result"
-      tools:layout="@layout/fragment_mock_interview_result" />
+      tools:layout="@layout/fragment_mock_interview_result" >
+    <action
+        android:id="@+id/action_mockInterviewResult_to_reviewInterviewFragment"
+        app:destination="@id/reviewInterviewFragment" />
+  </fragment>
+
+  <!-- Review Interview Screen -->
+  <fragment
+      android:id="@+id/reviewInterviewFragment"
+      android:name="com.example.capstone.ui.review.ReviewInterviewFragment"
+      android:label="Review Interview"
+      tools:layout="@layout/fragment_review_interview" />
 
 </navigation>
