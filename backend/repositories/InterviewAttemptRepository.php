@@ -49,6 +49,35 @@
             return $this->db->queryOne("SELECT * FROM interview_user_attempts WHERE id=?",[$attemptId]);
         }
 
+        public function getAttempts(int $userId, SortOptions $sortOptions){
+            $sort_collumns = [
+                'completedAt' => 'iua.completed_at',
+                'scorePercentage' => 'iua.score_percentage'
+            ];
+
+            $sortColumn = $sortOptions->mapField($sort_collumns);
+
+            $query = "SELECT
+                        iua.*,
+                        COALESCE(iqa.totalSecondsSpent, 0) AS totalSecondsSpent
+                    FROM interview_user_attempts iua
+                    LEFT JOIN (
+                        SELECT
+                            interview_attempt_id,
+                            SUM(seconds_spent) AS totalSecondsSpent
+                        FROM interview_question_attempts
+                        GROUP BY interview_attempt_id
+                    ) iqa
+                    ON iqa.interview_attempt_id = iua.id
+                    WHERE iua.user_id = ?
+                    ORDER BY {$sortColumn} {$sortOptions->direction};";
+            return $this->db->queryAll($query,[$userId]);
+        }
+
+        public function getTotalTimeSpent(){
+
+        }
+
         //get the question answer, expected answer and question for analysis
         public function getQuestionsForAnalysis(int $attemptId): array{
             $query = "SELECT iq.id,iq.answer as expected_answer,iq.text as question,iqa.answer,iqa.id as question_attempt_id
