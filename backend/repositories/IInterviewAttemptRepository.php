@@ -9,4 +9,5 @@
         public function updateAttemptToAnalysed($interviewAttemptId);
         public function updateAnalyseStatus($interviewAttemptId,$status);
         public function updateScorePercentage($interviewAttemptId,$percentage);
+        public function getQuestionsMatching($questionIds,$interviewId);
     }

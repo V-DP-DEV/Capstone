@@ -6,9 +6,11 @@ import android.os.Looper;
 import com.example.capstone.repository.AuthRepository;
 import com.example.capstone.util.SecureSession;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -26,6 +28,8 @@ public class ApiClient {
   private final Handler mainHandler = new Handler(Looper.getMainLooper());
   private final SecureSession secureSession;
   private final Gson gson;
+  private final int CONNECT_TIMEOUT_MS =10000;
+  private final int READ_TIMEOUT_MS = 30000;
   private Consumer<RefreshCallback> refreshCaller;
 
   public ApiClient(SecureSession secureSession, Gson gson){
@@ -37,6 +41,7 @@ public class ApiClient {
     this.refreshCaller = refreshCallback;
   }
 
+  //builds url with any pararms/filters and the baseUrl being added
   private String buildUrl(ApiRequest request) throws UnsupportedEncodingException {
 
     String urlString = baseurl + request.getUrl();
@@ -54,6 +59,7 @@ public class ApiClient {
           query.append("&");
         }
 
+        //encoding done to reserve special characters
         query.append(
             URLEncoder.encode(param.getKey(), "UTF-8")
         );
@@ -73,6 +79,7 @@ public class ApiClient {
     return urlString;
   }
 
+//acts as passer to executeRequest or refreshing first
   public <T> void execute(ApiRequest request, Type responseType, ApiCallback<T> callback){
     if(request.requiresAuthentication()){
       if (secureSession.isAccessTokenExpired()) {
@@ -95,6 +102,7 @@ public class ApiClient {
     executeRequest(request, responseType, callback);
   }
 
+//does the request on a seperate thread, gets response, and returns to main thread
   public <T> void executeRequest(ApiRequest request, Type responseType, ApiCallback<T> callback){
     //run off main thread
     new Thread(() -> {
@@ -125,98 +133,76 @@ public class ApiClient {
     }).start();
   }
 
-  private <T> ApiResponse<T> performRequest(ApiRequest request,Type responseType) throws Exception{
-    //create url
-    URL url = new URL(buildUrl(request));
+  /**
+   * Sends the request and maps the JSON envelope into an ApiResponse.
+   * Steps: open connection -> write body -> read response -> parse.
+   */
+  private <T> ApiResponse<T> performRequest(ApiRequest request, Type responseType) throws Exception {
+    HttpURLConnection connection = openConnection(request);
+    try {
+      writeBody(connection, request.getBody());
+      int statusCode = connection.getResponseCode();
+      String body = readResponse(connection, statusCode);
+      return parseResponse(body, statusCode, responseType);
+    } finally {
+      connection.disconnect();
+    }
+  }
 
-    //open connection
-    HttpURLConnection connection =
-        (HttpURLConnection) url.openConnection();
-
-
-    //set request method
+  // Creates the connection with method, headers, auth token and timeouts.
+  private HttpURLConnection openConnection(ApiRequest request) throws IOException {
+    HttpURLConnection connection = (HttpURLConnection) new URL(buildUrl(request)).openConnection();
     connection.setRequestMethod(request.getMethod());
 
-    if(request.requiresAuthentication()){
+    if (request.requiresAuthentication()) {
       request.addAuthHeader(secureSession.getAccessToken());
     }
-
-    //add all the headers to the request header with key pair value
     for (Map.Entry<String, String> header : request.getHeaders().entrySet()) {
-      connection.setRequestProperty(
-          header.getKey(),
-          header.getValue()
-      );
+      connection.setRequestProperty(header.getKey(), header.getValue());
     }
 
+    connection.setConnectTimeout(CONNECT_TIMEOUT_MS);
+    connection.setReadTimeout(READ_TIMEOUT_MS);
+    return connection;
+  }
 
-
-    //set time out
-    connection.setConnectTimeout(5000);
-    connection.setReadTimeout(5000);
-
-    //if body is not null
-    if (request.getBody() != null) {
-
-      String jsonBody = gson.toJson(request.getBody());
-
-      connection.setRequestProperty(
-          "Content-Type",
-          "application/json"
-      );
-
-      connection.setDoOutput(true);
-
-      try (OutputStream output = connection.getOutputStream()) {
-        output.write(
-            jsonBody.getBytes(StandardCharsets.UTF_8)
-        );
-      }
+  // Serialises the body to JSON and writes it, if there is one.
+  private void writeBody(HttpURLConnection connection, Object body) throws IOException {
+    if (body == null) return;
+    connection.setRequestProperty("Content-Type", "application/json");
+    connection.setDoOutput(true);
+    try (OutputStream output = connection.getOutputStream()) {
+      output.write(gson.toJson(body).getBytes(StandardCharsets.UTF_8));
     }
+  }
 
-    //get response code from connection
-    int responseCode = connection.getResponseCode();
+  //Reads the success or error stream into a String.
+  private String readResponse(HttpURLConnection connection, int statusCode) throws IOException {
+    InputStream stream = (statusCode >= 200 && statusCode < 300)
+        ? connection.getInputStream()
+        : connection.getErrorStream();
+    if (stream == null) return "";   // some errors have no body
 
-    InputStream inputStream;
-
-    //if response get valid stream
-    if (responseCode >= 200 && responseCode < 300) {
-      inputStream = connection.getInputStream();
+    StringBuilder body = new StringBuilder();
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
+      String line;
+      while ((line = reader.readLine()) != null) body.append(line);
     }
-    //if response error get error stream
-    else {
-      inputStream = connection.getErrorStream();
+    return body.toString();
+  }
+
+  // Maps the JSON envelope into ApiResponse<T>; rejects non-JSON (e.g. a PHP error page).
+  private <T> ApiResponse<T> parseResponse(String body, int statusCode, Type responseType) throws IOException {
+    ApiResponse<T> response;
+    try {
+      response = gson.fromJson(body, TypeToken.getParameterized(ApiResponse.class, responseType).getType());
+    } catch (JsonSyntaxException e) {
+      throw new IOException("Unexpected response from server (HTTP " + statusCode + ")", e);
     }
-
-    //read from the stream
-    BufferedReader reader =
-        new BufferedReader(
-            new InputStreamReader(
-                inputStream
-            )
-        );
-
-    //build output
-    StringBuilder responseBody = new StringBuilder();
-    String line;
-
-    while ((line = reader.readLine()) != null) {
-      responseBody.append(line);
+    if (response == null) {
+      throw new IOException("Empty response from server (HTTP " + statusCode + ")");
     }
-
-    //close reader and close connection
-    reader.close();
-    connection.disconnect();
-
-    //log the response
-    System.out.println("Status: " + responseCode);
-    System.out.println("Response: " + responseBody);
-
-
-    ApiResponse<T> response = gson.fromJson(responseBody.toString(),TypeToken.getParameterized(ApiResponse.class,responseType).getType());
-    response.setStatusCode(responseCode);
+    response.setStatusCode(statusCode);
     return response;
-
-    //return api response for execute to handle and call correct event
   }
 }
