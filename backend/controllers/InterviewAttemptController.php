@@ -40,7 +40,7 @@
         }
 
         public function getAttempts(array $filters){
-            Request::requireMethod("POST");
+            Request::requireMethod("GET");
             $sortBy = $filters['sortBy'] ?? null;
             $sortOrder = $filters['sortOrder'] ?? null;
             JsonResponse::success($this->interviewAttemptService->getAttempts($sortBy,$sortOrder));
