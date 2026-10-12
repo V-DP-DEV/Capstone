@@ -17,7 +17,10 @@ import com.example.capstone.adapter.InterviewAdapter;
 import com.example.capstone.databinding.FragmentSelectInterviewBinding;
 import com.example.capstone.domainModels.UserInterview;
 import com.example.capstone.domainModels.UserQuestion;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -185,8 +188,50 @@ public class SelectInterviewFragment extends Fragment {
     }
 
     private List<UserInterview> getAllSampleData() {
-        List<UserInterview> list = new ArrayList<>();
-        return list;
+        String jsonMockData = "[\n" +
+                "  {\n" +
+                "    \"id\": 1,\n" +
+                "    \"name\": \"Java Core & OOP Fundamentals\",\n" +
+                "    \"difficulty\": \"Easy\",\n" +
+                "    \"totalQuestions\": 4,\n" +
+                "    \"duration\": 15,\n" +
+                "    \"questions\": [\n" +
+                "      {\"id\": \"q1\", \"text\": \"What is the difference between final, finally, and finalize in Java?\", \"difficulty\": \"Easy\", \"type\": \"Core Java\"},\n" +
+                "      {\"id\": \"q2\", \"text\": \"Explain OOP concepts in Java with real-world examples.\", \"difficulty\": \"Easy\", \"type\": \"OOP\"}\n" +
+                "    ]\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"id\": 2,\n" +
+                "    \"name\": \"Android Jetpack & Architecture\",\n" +
+                "    \"difficulty\": \"Medium\",\n" +
+                "    \"totalQuestions\": 5,\n" +
+                "    \"duration\": 20,\n" +
+                "    \"questions\": [\n" +
+                "      {\"id\": \"q3\", \"text\": \"How does LiveData prevent memory leaks during lifecycle changes?\", \"difficulty\": \"Medium\", \"type\": \"Architecture\"},\n" +
+                "      {\"id\": \"q4\", \"text\": \"What is the purpose of ViewModel and how does it survive rotation?\", \"difficulty\": \"Medium\", \"type\": \"Jetpack\"}\n" +
+                "    ]\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"id\": 3,\n" +
+                "    \"name\": \"SQL & Database Optimization\",\n" +
+                "    \"difficulty\": \"Hard\",\n" +
+                "    \"totalQuestions\": 6,\n" +
+                "    \"duration\": 25,\n" +
+                "    \"questions\": [\n" +
+                "      {\"id\": \"q5\", \"text\": \"How do you optimize a query joining three large database tables?\", \"difficulty\": \"Hard\", \"type\": \"SQL\"}\n" +
+                "    ]\n" +
+                "  }\n" +
+                "]";
+
+        try {
+            Gson gson = new Gson();
+            Type listType = new TypeToken<List<UserInterview>>(){}.getType();
+            List<UserInterview> sampleList = gson.fromJson(jsonMockData, listType);
+            return sampleList != null ? sampleList : new ArrayList<>();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
     }
 
     @Override

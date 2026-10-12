@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentMockInterviewResultBinding;
 
 import java.util.Locale;
@@ -81,15 +82,19 @@ public class MockInterviewResult extends Fragment {
         if (binding == null) return;
 
         if (binding.btnViewReview != null) {
-            binding.btnViewReview.setOnClickListener(v -> navigateBack());
+            binding.btnViewReview.setOnClickListener(v -> navigateToReview());
+        }
+    }
+    private void navigateToReview() {
+        if (isAdded()) {
+            // Pass forward the current arguments bundle so ReviewInterviewFragment can read the metadata
+            Bundle args = getArguments() != null ? new Bundle(getArguments()) : new Bundle();
+
+            NavHostFragment.findNavController(this)
+                    .navigate(R.id.action_mockInterviewResult_to_reviewInterviewFragment, args);
         }
     }
 
-    private void navigateBack() {
-        if (isAdded()) {
-            NavHostFragment.findNavController(this).navigateUp();
-        }
-    }
 
     @Override
     public void onDestroyView() {
