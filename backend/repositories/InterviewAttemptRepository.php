@@ -124,5 +124,15 @@
             $query = 'UPDATE interview_user_attempts SET score_percentage = ? WHERE id=?';
             return $this->db->execute($query,[$percentage,$interviewAttemptId]);
         }
+
+        public function deleteAttempt($interviewAttemptId){
+            $query = "DELETE FROM interview_user_attempts WHERE id = ?";
+            return $this->db->execute($query,[$interviewAttemptId]);
+        }
+
+        public function deleteAttempts($userId){
+            $query = "DELETE FROM interview_user_attempts WHERE user_id = ?";
+            return $this->db->execute($query,[$userId]);
+        }
     }
 ?>
