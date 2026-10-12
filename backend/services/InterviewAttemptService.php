@@ -47,11 +47,13 @@
             if($attempt['user_id']!== $this->request_context->getUserId()){
                 throw new ForbiddenException();
             }
+            return $this->deleteAttempt($id);
             //call the delete function
         }
 
         public function deleteAttempts(){
             $userId= $this->request_context->getUserId();
+            return $this->deleteAttempts();
             //call the delete all function
         }
     }
