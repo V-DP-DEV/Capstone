@@ -25,19 +25,34 @@
         }
         
         public function getAttempts($sortBy,$sortOrder){
-
+            //calls the repository 
         }
 
         public function getAttempt($id){
-
+            $attempt = $this->interviewAttemptRepository->getAttempt($id);
+            if(!$attempt){
+                throw new ValidationException("No interview exists with that id");
+            }
+            if($attempt['user_id']!== $this->request_context->getUserId()){
+                throw new ForbiddenException();
+            }
+            //get / construct attempt to return
         }
 
         public function deleteAttempt($id){
-
+            $attempt = $this->interviewAttemptRepository->getAttempt($id);
+            if(!$attempt){
+                throw new ValidationException("No interview exists with that id");
+            }
+            if($attempt['user_id']!== $this->request_context->getUserId()){
+                throw new ForbiddenException();
+            }
+            //call the delete function
         }
 
         public function deleteAttempts(){
-
+            $userId= $this->request_context->getUserId();
+            //call the delete all function
         }
     }
 ?>
