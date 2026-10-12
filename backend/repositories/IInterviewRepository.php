@@ -9,4 +9,5 @@
         public function getQuestionCompetencies(int $interviewId): array;
 
         public function getQuestionConcepts(int $interviewId): array;
+        public function getInterviewsQuestionTypes($interviewIds);
     }

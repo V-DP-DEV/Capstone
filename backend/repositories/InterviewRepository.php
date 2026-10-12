@@ -73,6 +73,17 @@
             }
             return $generalInterview;
         }
+
+        public function getInterviewsQuestionTypes($interviewIds){
+            //create place holder for sql
+            $placeHolders = implode(',', array_fill(0, count($interviewIds), '?'));
+
+            //retrieve the question types related
+            $query = "SELECT DISTINCT qt.name,iq.interview_id FROM interview_questions iq JOIN question_types qt ON iq.type_id = qt.id WHERE iq.active=1 AND iq.interview_id IN ($placeHolders)";
+
+            return $this->db->queryAll($query, $interviewIds);
+        }
+
         //gets the interview competencies related to the interviewId
         //used for ai analysis
         public function getInterviewCompetencies(int $interviewId): array{
