@@ -17,15 +17,18 @@ import com.example.capstone.adapter.InterviewAdapter;
 import com.example.capstone.databinding.FragmentSelectInterviewBinding;
 import com.example.capstone.domainModels.UserInterview;
 import com.example.capstone.domainModels.UserQuestion;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * SelectInterviewFragment displays a filtered list of available mock interviews
+ * based on the difficulty chosen in the previous screen. It includes real-time
+ * search filtering and handles user selection for downstream navigation.
+ */
 public class SelectInterviewFragment extends Fragment {
 
+    // Bundle argument key for receiving the selected difficulty level
     public static final String ARG_DIFFICULTY = "selected_difficulty";
 
     private FragmentSelectInterviewBinding binding;
@@ -35,6 +38,9 @@ public class SelectInterviewFragment extends Fragment {
 
     private String selectedDifficulty = "All";
 
+    /**
+     * Factory method to create a new instance of this fragment with a specified difficulty.
+     */
     public static SelectInterviewFragment newInstance(String difficulty) {
         SelectInterviewFragment fragment = new SelectInterviewFragment();
         Bundle args = new Bundle();
@@ -46,6 +52,7 @@ public class SelectInterviewFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // Inflate the layout using ViewBinding
         binding = FragmentSelectInterviewBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -54,6 +61,7 @@ public class SelectInterviewFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Retrieve difficulty argument passed from SelectDifficultyFragment
         if (getArguments() != null && getArguments().containsKey(ARG_DIFFICULTY)) {
             selectedDifficulty = getArguments().getString(ARG_DIFFICULTY, "All");
         }
@@ -65,12 +73,18 @@ public class SelectInterviewFragment extends Fragment {
         updateContinueButtonState();
     }
 
+    /**
+     * Updates the header title to reflect the active difficulty filter.
+     */
     private void setupHeader() {
         if (binding.tvSubHeader != null) {
             binding.tvSubHeader.setText("Difficulty: " + selectedDifficulty);
         }
     }
 
+    /**
+     * Initializes the RecyclerView with filtered interview data and sets up the item selection listener.
+     */
     private void setupRecyclerView() {
         difficultyFilteredList = getInterviewsByDifficulty(selectedDifficulty);
 
@@ -83,6 +97,9 @@ public class SelectInterviewFragment extends Fragment {
         binding.rvInterviews.setAdapter(adapter);
     }
 
+    /**
+     * Attaches a text watcher to the search input to filter interviews in real-time.
+     */
     private void setupSearchFilter() {
         if (binding.includeSearch == null || binding.includeSearch.etSearch == null) return;
 
@@ -101,6 +118,9 @@ public class SelectInterviewFragment extends Fragment {
         });
     }
 
+    /**
+     * Filters the interview list dynamically against the user's search query (matching name, category, or questions).
+     */
     private void filterInterviews(String query) {
         List<UserInterview> searchResults = new ArrayList<>();
         String lowerCaseQuery = query.toLowerCase().trim();
@@ -136,12 +156,18 @@ public class SelectInterviewFragment extends Fragment {
         adapter.updateData(searchResults);
     }
 
+    /**
+     * Toggles the Continue button enabled state and visual opacity based on whether an interview is selected.
+     */
     private void updateContinueButtonState() {
         boolean isSelected = (selectedInterview != null);
         binding.btnContinue.setEnabled(isSelected);
         binding.btnContinue.setAlpha(isSelected ? 1.0f : 0.5f);
     }
 
+    /**
+     * Configures back navigation and forward navigation with bundled interview metadata.
+     */
     private void setupActionButtons() {
         binding.btnBack.setOnClickListener(v -> {
             if (isAdded()) {
@@ -158,6 +184,7 @@ public class SelectInterviewFragment extends Fragment {
 
             String durationText = "~" + (selectedInterview.getDuration() > 0 ? selectedInterview.getDuration() : 25) + "m";
 
+            // Package selected interview details into a bundle for the instructions screen
             Bundle args = new Bundle();
             args.putString(MockInterviewInstructionsFragment.ARG_INTERVIEW_NAME, selectedInterview.getName());
             args.putString(MockInterviewInstructionsFragment.ARG_INTERVIEW_DIFFICULTY, selectedInterview.getDifficulty());
@@ -172,6 +199,9 @@ public class SelectInterviewFragment extends Fragment {
         });
     }
 
+    /**
+     * Filters sample or repository data by the specified difficulty level.
+     */
     private List<UserInterview> getInterviewsByDifficulty(String difficulty) {
         List<UserInterview> allInterviews = getAllSampleData();
         if (difficulty == null || difficulty.equalsIgnoreCase("All")) {
@@ -187,56 +217,18 @@ public class SelectInterviewFragment extends Fragment {
         return filtered;
     }
 
+    /**
+     * Placeholder method returning sample data. To be replaced or integrated with ViewModel/Repository data by Person 2.
+     */
     private List<UserInterview> getAllSampleData() {
-        String jsonMockData = "[\n" +
-                "  {\n" +
-                "    \"id\": 1,\n" +
-                "    \"name\": \"Java Core & OOP Fundamentals\",\n" +
-                "    \"difficulty\": \"Easy\",\n" +
-                "    \"totalQuestions\": 4,\n" +
-                "    \"duration\": 15,\n" +
-                "    \"questions\": [\n" +
-                "      {\"id\": \"q1\", \"text\": \"What is the difference between final, finally, and finalize in Java?\", \"difficulty\": \"Easy\", \"type\": \"Core Java\"},\n" +
-                "      {\"id\": \"q2\", \"text\": \"Explain OOP concepts in Java with real-world examples.\", \"difficulty\": \"Easy\", \"type\": \"OOP\"}\n" +
-                "    ]\n" +
-                "  },\n" +
-                "  {\n" +
-                "    \"id\": 2,\n" +
-                "    \"name\": \"Android Jetpack & Architecture\",\n" +
-                "    \"difficulty\": \"Medium\",\n" +
-                "    \"totalQuestions\": 5,\n" +
-                "    \"duration\": 20,\n" +
-                "    \"questions\": [\n" +
-                "      {\"id\": \"q3\", \"text\": \"How does LiveData prevent memory leaks during lifecycle changes?\", \"difficulty\": \"Medium\", \"type\": \"Architecture\"},\n" +
-                "      {\"id\": \"q4\", \"text\": \"What is the purpose of ViewModel and how does it survive rotation?\", \"difficulty\": \"Medium\", \"type\": \"Jetpack\"}\n" +
-                "    ]\n" +
-                "  },\n" +
-                "  {\n" +
-                "    \"id\": 3,\n" +
-                "    \"name\": \"SQL & Database Optimization\",\n" +
-                "    \"difficulty\": \"Hard\",\n" +
-                "    \"totalQuestions\": 6,\n" +
-                "    \"duration\": 25,\n" +
-                "    \"questions\": [\n" +
-                "      {\"id\": \"q5\", \"text\": \"How do you optimize a query joining three large database tables?\", \"difficulty\": \"Hard\", \"type\": \"SQL\"}\n" +
-                "    ]\n" +
-                "  }\n" +
-                "]";
-
-        try {
-            Gson gson = new Gson();
-            Type listType = new TypeToken<List<UserInterview>>(){}.getType();
-            List<UserInterview> sampleList = gson.fromJson(jsonMockData, listType);
-            return sampleList != null ? sampleList : new ArrayList<>();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
+        List<UserInterview> list = new ArrayList<>();
+        return list;
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        // Clear binding reference to prevent memory leaks in fragments
         binding = null;
     }
 }

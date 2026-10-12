@@ -21,6 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * MockInterviewQuestionsFragment manages the active interview session UI, including
+ * question stepping, per-question timers, audio recording animation triggers,
+ * and adaptive rendering for standard vs. code snippet questions.
+ */
 public class MockInterviewQuestionsFragment extends Fragment {
 
     private FragmentMockInterviewQuestionsBinding binding;
@@ -31,11 +36,13 @@ public class MockInterviewQuestionsFragment extends Fragment {
     private boolean isRecording = false;
     private String interviewTitle = "Java";
 
-    private static final int DEFAULT_QUESTION_DURATION_SECONDS = 180; // 3 minutes per question
+    // Standard 3-minute limit per question
+    private static final int DEFAULT_QUESTION_DURATION_SECONDS = 180;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // Inflate the layout using ViewBinding
         binding = FragmentMockInterviewQuestionsBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -44,6 +51,7 @@ public class MockInterviewQuestionsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Retrieve the interview title passed from the instructions fragment
         if (getArguments() != null && getArguments().containsKey(MockInterviewInstructionsFragment.ARG_INTERVIEW_NAME)) {
             interviewTitle = getArguments().getString(MockInterviewInstructionsFragment.ARG_INTERVIEW_NAME, "Java");
         }
@@ -52,7 +60,7 @@ public class MockInterviewQuestionsFragment extends Fragment {
 
         setupClickListeners();
 
-        // If questions weren't passed in, load initial sample set matching UserQuestion model
+        // Load fallback sample list if no questions were injected beforehand
         if (questionsList.isEmpty()) {
             loadSampleQuestions();
         }
@@ -63,7 +71,7 @@ public class MockInterviewQuestionsFragment extends Fragment {
     }
 
     /**
-     * Set questions dynamically from a ViewModel, Repository, or Bundle argument.
+     * Public injection hook used by Person 2 / ViewModel to pass dynamic question sets into this fragment.
      */
     public void setQuestions(List<UserQuestion> questions) {
         this.questionsList = questions != null ? questions : new ArrayList<>();
@@ -73,12 +81,17 @@ public class MockInterviewQuestionsFragment extends Fragment {
         }
     }
 
+    /**
+     * Fallback method to populate sample data until connected toViewModel/Repository data.
+     */
     private void loadSampleQuestions() {
-        // Mock fallback list using your domain model structure
-        // Note: Replace this with database/ViewModel data when connected
         questionsList = new ArrayList<>();
     }
 
+    /**
+     * Renders the question at the specified index, updates progress visuals,
+     * toggles code snippet visibility, resets input fields, and starts the timer.
+     */
     private void displayQuestionAtIndex(int index) {
         if (index < 0 || index >= questionsList.size()) {
             finishInterview();
@@ -87,18 +100,18 @@ public class MockInterviewQuestionsFragment extends Fragment {
 
         UserQuestion currentQuestion = questionsList.get(index);
 
-        // Update question counter & progress bar
+        // Update question counter & progress bar UI
         int totalQuestions = questionsList.size();
         binding.tvQuestionProgress.setText(String.format(Locale.getDefault(), "Question %d / %d", index + 1, totalQuestions));
 
         int progressPercentage = (int) (((float) (index + 1) / totalQuestions) * 100);
         binding.progressBar.setProgress(progressPercentage);
 
-        // Category / Type display
+        // Display category or difficulty tag
         String category = currentQuestion.getType() != null ? currentQuestion.getType() : currentQuestion.getDifficulty();
         binding.tvCategory.setText(category != null ? category.toUpperCase(Locale.getDefault()) : "TECHNICAL");
 
-        // Code snippet check based on UserQuestion properties
+        // Dynamically toggle between standard text view and scrollable code snippet view
         if (isCodeQuestion(currentQuestion)) {
             binding.tvQuestionText.setVisibility(View.GONE);
             binding.scrollCodeSnippet.setVisibility(View.VISIBLE);
@@ -109,16 +122,16 @@ public class MockInterviewQuestionsFragment extends Fragment {
             binding.tvQuestionText.setText(currentQuestion.getText());
         }
 
-        // Reset inputs and recording state
+        // Reset text answer input and recording visual state
         binding.etAnswer.setText("");
         stopRecordingState();
 
-        // Start per-question timer
+        // Start countdown timer for the current question
         startTimer(DEFAULT_QUESTION_DURATION_SECONDS);
     }
 
     /**
-     * Determines whether a question contains code based on its type or text formatting.
+     * Helper method to determine if a question should be formatted as code based on type or contents.
      */
     private boolean isCodeQuestion(UserQuestion question) {
         if (question == null) return false;
@@ -132,6 +145,9 @@ public class MockInterviewQuestionsFragment extends Fragment {
         return matchesCodeType || hasCodeFormatting;
     }
 
+    /**
+     * Starts or resets the CountDownTimer for the current question.
+     */
     private void startTimer(int seconds) {
         if (countDownTimer != null) {
             countDownTimer.cancel();
@@ -160,17 +176,23 @@ public class MockInterviewQuestionsFragment extends Fragment {
         }.start();
     }
 
+    /**
+     * Binds user click actions for mic recording toggles, question skipping, and continuing.
+     */
     private void setupClickListeners() {
         binding.btnMic.setOnClickListener(v -> toggleRecording());
         binding.btnSkip.setOnClickListener(v -> nextQuestion());
         binding.btnContinue.setOnClickListener(v -> nextQuestion());
     }
 
+    /**
+     * Toggles mic recording state and updates visual feedback (color, text, animation).
+     */
     private void toggleRecording() {
         isRecording = !isRecording;
         if (isRecording) {
             binding.tvMicStatus.setText("Recording... (Tap to stop)");
-            binding.tvMicStatus.setTextColor(Color.parseColor("#E53935")); // Red
+            binding.tvMicStatus.setTextColor(Color.parseColor("#E53935")); // Red accent
             binding.btnMic.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#E53935")));
             startMicPulseAnimation();
         } else {
@@ -178,6 +200,9 @@ public class MockInterviewQuestionsFragment extends Fragment {
         }
     }
 
+    /**
+     * Resets mic button and status text to their idle default states.
+     */
     private void stopRecordingStatus() {
         isRecording = false;
         if (binding != null) {
@@ -193,6 +218,9 @@ public class MockInterviewQuestionsFragment extends Fragment {
         stopRecordingStatus();
     }
 
+    /**
+     * Runs a repeating pulse scale animation on the microphone button while active.
+     */
     private void startMicPulseAnimation() {
         if (!isRecording || binding == null) return;
 
@@ -215,6 +243,9 @@ public class MockInterviewQuestionsFragment extends Fragment {
                 }).start();
     }
 
+    /**
+     * Advances to the next question or finishes the interview session if completed.
+     */
     private void nextQuestion() {
         currentQuestionIndex++;
         if (currentQuestionIndex < questionsList.size()) {
@@ -224,6 +255,9 @@ public class MockInterviewQuestionsFragment extends Fragment {
         }
     }
 
+    /**
+     * Cancels active timers, packages session result metadata, and navigates to the result screen.
+     */
     private void finishInterview() {
         if (countDownTimer != null) {
             countDownTimer.cancel();
@@ -240,6 +274,9 @@ public class MockInterviewQuestionsFragment extends Fragment {
         }
     }
 
+    /**
+     * Navigates back to the previous screen in the stack.
+     */
     private void navigateBack() {
         if (getParentFragmentManager() != null && isAdded()) {
             NavHostFragment.findNavController(this).navigateUp();
@@ -249,6 +286,7 @@ public class MockInterviewQuestionsFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        // Cancel active countdown timer and nullify binding to prevent memory leaks
         if (countDownTimer != null) {
             countDownTimer.cancel();
         }

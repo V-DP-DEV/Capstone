@@ -18,8 +18,16 @@ import com.google.android.material.chip.ChipGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * InterviewAdapter manages the RecyclerView list displaying mock interview options on the selection screen.
+ * It renders interview titles, difficulties, dynamically generates category and question type chips,
+ * and maintains single-item selection state.
+ */
 public class InterviewAdapter extends RecyclerView.Adapter<InterviewAdapter.InterviewViewHolder> {
 
+    /**
+     * Interface definition for a callback to be invoked when an interview item is selected.
+     */
     public interface OnInterviewSelectedListener {
         void onInterviewSelected(UserInterview interview);
     }
@@ -28,6 +36,12 @@ public class InterviewAdapter extends RecyclerView.Adapter<InterviewAdapter.Inte
     private final OnInterviewSelectedListener listener;
     private int selectedPosition = -1;
 
+    /**
+     * Constructs a new InterviewAdapter.
+     *
+     * @param interviews Initial list of interviews to display.
+     * @param listener   Callback listener for item selection events.
+     */
     public InterviewAdapter(List<UserInterview> interviews, OnInterviewSelectedListener listener) {
         this.interviews = interviews;
         this.listener = listener;
@@ -36,6 +50,7 @@ public class InterviewAdapter extends RecyclerView.Adapter<InterviewAdapter.Inte
     @NonNull
     @Override
     public InterviewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Inflate the layout for individual interview items
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_difficulty, parent, false);
         return new InterviewViewHolder(view);
@@ -43,6 +58,7 @@ public class InterviewAdapter extends RecyclerView.Adapter<InterviewAdapter.Inte
 
     @Override
     public void onBindViewHolder(@NonNull InterviewViewHolder holder, int position) {
+        // Bind data and pass whether this specific position is currently selected
         holder.bind(interviews.get(position), position == selectedPosition);
     }
 
@@ -51,11 +67,17 @@ public class InterviewAdapter extends RecyclerView.Adapter<InterviewAdapter.Inte
         return interviews != null ? interviews.size() : 0;
     }
 
+    /**
+     * Public data injection hook for Person 2 / ViewModel to push updated or filtered lists into the adapter.
+     */
     public void updateData(List<UserInterview> newList) {
         this.interviews = newList;
         notifyDataSetChanged();
     }
 
+    /**
+     * Retrieves the currently selected interview object, or null if no item is selected.
+     */
     public UserInterview getSelectedInterview() {
         if (selectedPosition != -1 && selectedPosition < getItemCount()) {
             return interviews.get(selectedPosition);
@@ -63,6 +85,9 @@ public class InterviewAdapter extends RecyclerView.Adapter<InterviewAdapter.Inte
         return null;
     }
 
+    /**
+     * ViewHolder class holding view references for individual interview list rows.
+     */
     class InterviewViewHolder extends RecyclerView.ViewHolder {
         private final TextView tvName;
         private final TextView tvDescription;
@@ -75,6 +100,10 @@ public class InterviewAdapter extends RecyclerView.Adapter<InterviewAdapter.Inte
             chipGroup = itemView.findViewById(R.id.chipGroupTags);
         }
 
+        /**
+         * Binds interview data to the UI views, generates Material Chips for tags,
+         * and configures selection and click behaviors.
+         */
         public void bind(final UserInterview interview, boolean isSelected) {
             // Bind Title Name
             if (tvName != null && interview.getName() != null) {
@@ -86,7 +115,7 @@ public class InterviewAdapter extends RecyclerView.Adapter<InterviewAdapter.Inte
                 tvDescription.setText(interview.getDifficulty());
             }
 
-            // Extract Tags & Category Chips
+            // Clear previous chips and dynamically populate tag chips
             chipGroup.removeAllViews();
             Context context = itemView.getContext();
 
@@ -104,11 +133,15 @@ public class InterviewAdapter extends RecyclerView.Adapter<InterviewAdapter.Inte
                 }
             }
 
+            // Apply selected background state to the root view
             itemView.setSelected(isSelected);
+
+            // Handle card click events, managing single-selection highlights
             itemView.setOnClickListener(v -> {
                 int previousSelected = selectedPosition;
                 selectedPosition = getBindingAdapterPosition();
 
+                // Refresh previously selected item and newly selected item visually
                 if (previousSelected != RecyclerView.NO_POSITION) {
                     notifyItemChanged(previousSelected);
                 }
@@ -116,12 +149,16 @@ public class InterviewAdapter extends RecyclerView.Adapter<InterviewAdapter.Inte
                     notifyItemChanged(selectedPosition);
                 }
 
+                // Trigger selection callback listener
                 if (listener != null && selectedPosition != RecyclerView.NO_POSITION) {
                     listener.onInterviewSelected(interview);
                 }
             });
         }
 
+        /**
+         * Extracts a deduplicated list of tags (Category name + unique question types) from the interview.
+         */
         private List<String> getTagsList(UserInterview interview) {
             if (interview == null) return null;
 
