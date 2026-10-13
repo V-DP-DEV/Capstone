@@ -49,6 +49,47 @@
             return $this->db->queryOne("SELECT * FROM interview_user_attempts WHERE id=?",[$attemptId]);
         }
 
+        public function getAttempts(int $userId, SortOptions $sortOptions){
+            $sort_collumns = [
+                'completedAt' => 'iua.completed_at',
+                'scorePercentage' => 'iua.score_percentage'
+            ];
+
+            $sortColumn = $sortOptions->mapField($sort_collumns);
+
+            $query = "SELECT
+                        iua.id as id,
+                        i.interview_name as name,
+                        i.difficulty as difficulty,
+                        i.id as interview_id,
+                        iua.completed_at as completedAt,
+                        iua.analysed as analysed,
+                        iua.status as analysedStatus,
+                        i.estimated_time_in_minutes as estimatedMinutes,
+                        
+                        
+                        COALESCE(iqa.totalSecondsSpent, 0) AS totalSecondsSpent,
+                        CASE
+                            WHEN COALESCE(iqa.totalSecondsSpent, 0) < (i.estimated_time_in_minutes*60)
+                            THEN 1
+                            ELSE 0
+                        END AS completedInTime
+                    FROM interview_user_attempts iua
+                    LEFT JOIN (
+                        SELECT
+                            interview_attempt_id,
+                            SUM(seconds_spent) AS totalSecondsSpent
+                        FROM interview_question_attempts
+                        GROUP BY interview_attempt_id
+                    ) iqa
+                    ON iqa.interview_attempt_id = iua.id
+                    LEFT JOIN interviews i
+                    ON iua.interview_id = i.id
+                    WHERE iua.user_id = ?
+                    ORDER BY iua.completed_at DESC;";
+            return $this->db->queryAll($query,[$userId]);
+        }
+
         //get the question answer, expected answer and question for analysis
         public function getQuestionsForAnalysis(int $attemptId): array{
             $query = "SELECT iq.id,iq.answer as expected_answer,iq.text as question,iqa.answer,iqa.id as question_attempt_id
@@ -123,6 +164,16 @@
         public function updateScorePercentage($interviewAttemptId,$percentage){
             $query = 'UPDATE interview_user_attempts SET score_percentage = ? WHERE id=?';
             return $this->db->execute($query,[$percentage,$interviewAttemptId]);
+        }
+
+        public function deleteAttempt($interviewAttemptId){
+            $query = "DELETE FROM interview_user_attempts WHERE id = ?";
+            return $this->db->execute($query,[$interviewAttemptId]);
+        }
+
+        public function deleteAttempts($userId){
+            $query = "DELETE FROM interview_user_attempts WHERE user_id = ?";
+            return $this->db->execute($query,[$userId]);
         }
     }
 ?>

@@ -22,11 +22,42 @@
             //requires post
             Request::requireMethod("POST");
             $data = Request::json();
-            $attemptId = $data["attemptId"];
+            $attemptId = $data["id"];
             
             $interviewId = $this->interviewAnalysisService->analysis($attemptId);
             //returns result, and other errors will be thrown to error exception handler
             JsonResponse::success();
+        }
+
+        public function getAttempt(array $filters){
+            Request::requireMethod("GET");
+            $id = $filters['id'] ?? null;
+            if($id === null){
+                throw new ValidationException("Missing required parameter: id");
+            }
+            JsonResponse::success($this->interviewAttemptService->getAttempt($id));
+            //return json
+        }
+
+        public function getAttempts(array $filters){
+            Request::requireMethod("GET");
+            $sortBy = $filters['sortBy'] ?? null;
+            $sortOrder = $filters['sortOrder'] ?? null;
+            JsonResponse::success($this->interviewAttemptService->getAttempts($sortBy,$sortOrder));
+        }
+
+        public function deleteAttempt(){
+            Request::requireMethod("DELETE");
+            $data = Request::json();
+            $attemptId =$data['id'];
+            $this->interviewAttemptService->deleteAttempt($attemptId);
+            //call service
+        }
+
+        public function deleteAttempts(){
+            Request::requireMethod("DELETE");
+            $this->interviewAttemptService->deleteAttempts();
+            //call service
         }
     }
 ?>

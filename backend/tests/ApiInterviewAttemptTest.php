@@ -60,7 +60,19 @@ class ApiInterviewAttemptTest extends ApiTestCase
         $response = $this->http->request(
             'POST',
             '/interviewAttempt/analyse',
-            ['attemptId'=>1],
+            ['id'=>1],
+            $token
+        );
+
+        print_r($response);
+    }
+
+    public function testGetAttempts(){
+        $token = $this->loginAsUser();
+        $response = $this->http->request(
+            'GET',
+            '/interviewAttempt/getAttempts',
+            null,
             $token
         );
 
