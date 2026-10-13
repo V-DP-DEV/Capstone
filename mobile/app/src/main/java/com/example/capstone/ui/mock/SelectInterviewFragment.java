@@ -17,6 +17,7 @@ import com.example.capstone.adapter.InterviewAdapter;
 import com.example.capstone.databinding.FragmentSelectInterviewBinding;
 import com.example.capstone.domainModels.UserInterview;
 import com.example.capstone.domainModels.UserQuestion;
+import com.example.capstone.ui.components.BottomNavHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,8 @@ import java.util.List;
  * search filtering and handles user selection for downstream navigation.
  */
 public class SelectInterviewFragment extends Fragment {
+
+
 
     // Bundle argument key for receiving the selected difficulty level
     public static final String ARG_DIFFICULTY = "selected_difficulty";
@@ -71,6 +74,9 @@ public class SelectInterviewFragment extends Fragment {
         setupSearchFilter();
         setupActionButtons();
         updateContinueButtonState();
+
+        View bottomBar = view.findViewById(R.id.bottom_nav_container);
+        BottomNavHelper.setupNavListeners(this, bottomBar);
     }
 
     /**
@@ -222,6 +228,12 @@ public class SelectInterviewFragment extends Fragment {
      */
     private List<UserInterview> getAllSampleData() {
         List<UserInterview> list = new ArrayList<>();
+
+        // Add sample items (adjust parameters to match your UserInterview constructor)
+        list.add(new UserInterview("C# Software Engineer", "Hard"));
+        list.add(new UserInterview("Android Developer", "Medium"));
+        list.add(new UserInterview("Full Stack Web Developer", "Intermediate"));
+
         return list;
     }
 

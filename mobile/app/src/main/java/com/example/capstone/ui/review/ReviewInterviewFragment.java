@@ -14,7 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.capstone.R;
 import com.example.capstone.adapter.ReviewInterviewAdapter;
 import com.example.capstone.databinding.FragmentReviewInterviewBinding;
+import com.example.capstone.domainModels.UserAttemptCompetencyFeedback;
 import com.example.capstone.domainModels.UserQuestion;
+import com.example.capstone.ui.components.BottomNavHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +46,52 @@ public class ReviewInterviewFragment extends Fragment {
         displaySessionDetails();
         setupRecyclerView();
         setupClickListeners();
+        setupDropdownListeners();
 
+        View bottomBar = view.findViewById(R.id.bottom_nav_container);
+        BottomNavHelper.setupNavListeners(this, bottomBar);
+    }
+
+    private boolean isStrengthsExpanded = false;
+    private boolean isAreasExpanded = true;
+
+    private void setupDropdownListeners() {
+        if (binding == null) return;
+
+        // Strengths Toggle
+        if (binding.sectionStrengths != null) {
+            binding.sectionStrengths.setOnClickListener(v -> {
+                isStrengthsExpanded = !isStrengthsExpanded;
+                if (binding.layoutStrengthsContent != null) {
+                    binding.layoutStrengthsContent.setVisibility(isStrengthsExpanded ? View.VISIBLE : View.GONE);
+                }
+                if (binding.tvStrengthsPlus != null) {
+                    binding.tvStrengthsPlus.setText(isStrengthsExpanded ? "-" : "+");
+                }
+            });
+        }
+
+        // Areas to Improve Toggle
+        if (binding.sectionAreasImprove != null) {
+            binding.sectionAreasImprove.setOnClickListener(v -> {
+                isAreasExpanded = !isAreasExpanded;
+                if (binding.layoutAreasContent != null) {
+                    binding.layoutAreasContent.setVisibility(isAreasExpanded ? View.VISIBLE : View.GONE);
+                }
+                if (binding.tvAreasPlus != null) {
+                    binding.tvAreasPlus.setText(isAreasExpanded ? "-" : "+");
+                }
+            });
+        }
+    }
+
+    private void populateCompetencyFeedback(UserAttemptCompetencyFeedback feedbackData) {
+        if (feedbackData == null || binding == null) return;
+
+        // Set overall score percentage using model getter
+        if (binding.tvScorePercent != null) {
+            binding.tvScorePercent.setText(String.format(Locale.getDefault(), "%.0f%%", feedbackData.getCompetencyPercentage()));
+        }
     }
 
     private void displaySessionDetails() {
@@ -53,7 +100,7 @@ public class ReviewInterviewFragment extends Fragment {
         String difficulty = getArguments().getString(ARG_DIFFICULTY);
         int answered = getArguments().getInt(ARG_ANSWERED_COUNT);
         int total = getArguments().getInt(ARG_TOTAL_QUESTIONS);
-String duration = getArguments().getString(ARG_DURATION);
+        String duration = getArguments().getString(ARG_DURATION);
 
         if (binding.hard != null) {
             binding.hard.setText(difficulty);
@@ -67,12 +114,27 @@ String duration = getArguments().getString(ARG_DURATION);
         if (binding.tvScorePercent != null) {
             binding.tvScorePercent.setText("80%");
         }
-        if (binding.tvTotalCount != null) {
-            binding.tvTotalCount.setText(String.format(Locale.getDefault(), "Total %d", answered));
-        }
     }
+
     private void setupRecyclerView() {
-        adapter = new ReviewInterviewAdapter(reviewQuestionsList);
+        // Pass click listener to handle navigation when a question item is clicked
+        adapter = new ReviewInterviewAdapter(reviewQuestionsList, (question, position) -> {
+            if (isAdded()) {
+                Bundle args = new Bundle();
+
+                // Pass along session metadata arguments
+                if (getArguments() != null) {
+                    args.putString(ReviewQuestionFragment.ARG_INTERVIEW_TITLE, getArguments().getString(ARG_INTERVIEW_TITLE));
+                    args.putString(ReviewQuestionFragment.ARG_DIFFICULTY, getArguments().getString(ARG_DIFFICULTY));
+                    args.putString(ReviewQuestionFragment.ARG_DURATION, getArguments().getString(ARG_DURATION));
+                }
+
+                // Navigate to ReviewQuestionFragment using action defined in nav graph
+                NavHostFragment.findNavController(this)
+                        .navigate(R.id.action_reviewInterviewFragment_to_reviewQuestionFragment, args);
+            }
+        });
+
         if (binding.rvQList != null) {
             binding.rvQList.setAdapter(adapter);
             binding.rvQList.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -88,11 +150,12 @@ String duration = getArguments().getString(ARG_DURATION);
             binding.divPillBtn.setOnClickListener(v -> {
                 if (isAdded()) {
                     NavHostFragment.findNavController(this)
-                            .popBackStack(R.id.selectDifficultyFragment, false);
+                            .popBackStack(R.id.reviewQuestionFragment, false);
                 }
             });
         }
     }
+
     private void navigateBack() {
         if (isAdded()) {
             NavHostFragment.findNavController(this).navigateUp();

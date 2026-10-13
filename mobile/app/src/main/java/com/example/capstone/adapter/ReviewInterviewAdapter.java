@@ -18,10 +18,20 @@ import java.util.List;
 
 public class ReviewInterviewAdapter extends RecyclerView.Adapter<ReviewInterviewAdapter.ReviewViewHolder> {
 
+    public interface OnQuestionClickListener {
+        void onQuestionClick(UserQuestion question, int position);
+    }
+
     private List<UserQuestion> questionList;
+    private OnQuestionClickListener listener;
 
     public ReviewInterviewAdapter(List<UserQuestion> questionList) {
+        this(questionList, null);
+    }
+
+    public ReviewInterviewAdapter(List<UserQuestion> questionList, OnQuestionClickListener listener) {
         this.questionList = questionList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -34,7 +44,13 @@ public class ReviewInterviewAdapter extends RecyclerView.Adapter<ReviewInterview
 
     @Override
     public void onBindViewHolder(@NonNull ReviewViewHolder holder, int position) {
-        holder.bind(questionList.get(position), position + 1);
+        UserQuestion question = questionList.get(position);
+        holder.bind(question, position + 1);
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onQuestionClick(question, holder.getBindingAdapterPosition());
+            }
+        });
     }
 
     @Override

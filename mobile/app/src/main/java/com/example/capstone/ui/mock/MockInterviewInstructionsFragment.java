@@ -11,6 +11,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentMockInterviewInstructionsBinding;
+import com.example.capstone.ui.components.BottomNavHelper;
 
 /**
  * MockInterviewInstructionsFragment displays the pre-interview briefing screen,
@@ -58,6 +59,9 @@ public class MockInterviewInstructionsFragment extends Fragment {
 
         displayInstructionsDetails();
         setupClickListeners();
+
+        View bottomBar = view.findViewById(R.id.bottom_nav_container);
+        BottomNavHelper.setupNavListeners(this, bottomBar);
     }
 
     /**

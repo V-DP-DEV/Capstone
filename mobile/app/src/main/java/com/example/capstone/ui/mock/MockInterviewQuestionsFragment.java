@@ -16,6 +16,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentMockInterviewQuestionsBinding;
 import com.example.capstone.domainModels.UserQuestion;
+import com.example.capstone.ui.components.BottomNavHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,8 @@ public class MockInterviewQuestionsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        View bottomBar = view.findViewById(R.id.bottom_nav_container);
+        BottomNavHelper.setupNavListeners(this, bottomBar);
         // Retrieve the interview title passed from the instructions fragment
         if (getArguments() != null && getArguments().containsKey(MockInterviewInstructionsFragment.ARG_INTERVIEW_NAME)) {
             interviewTitle = getArguments().getString(MockInterviewInstructionsFragment.ARG_INTERVIEW_NAME, "Java");
