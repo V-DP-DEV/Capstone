@@ -90,5 +90,9 @@ public class UserQuestionAttempt {
   private long score;
   private String type;
 
+  public void setConceptScores(List<UserConceptScores> conceptScores) {
+    this.conceptScores = conceptScores;
+  }
+
   private List<UserConceptScores> conceptScores;
 }
