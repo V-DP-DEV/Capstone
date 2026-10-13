@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -120,18 +121,21 @@ public class ReviewInterviewFragment extends Fragment {
         // Pass click listener to handle navigation when a question item is clicked
         adapter = new ReviewInterviewAdapter(reviewQuestionsList, (question, position) -> {
             if (isAdded()) {
-                Bundle args = new Bundle();
+                NavController navController = NavHostFragment.findNavController(this);
+                if (navController.getCurrentDestination() != null
+                        && navController.getCurrentDestination().getId() == R.id.reviewInterviewFragment) {
+                    Bundle args = new Bundle();
 
-                // Pass along session metadata arguments
-                if (getArguments() != null) {
-                    args.putString(ReviewQuestionFragment.ARG_INTERVIEW_TITLE, getArguments().getString(ARG_INTERVIEW_TITLE));
-                    args.putString(ReviewQuestionFragment.ARG_DIFFICULTY, getArguments().getString(ARG_DIFFICULTY));
-                    args.putString(ReviewQuestionFragment.ARG_DURATION, getArguments().getString(ARG_DURATION));
+                    // Pass along session metadata arguments
+                    if (getArguments() != null) {
+                        args.putString(ReviewQuestionFragment.ARG_INTERVIEW_TITLE, getArguments().getString(ARG_INTERVIEW_TITLE));
+                        args.putString(ReviewQuestionFragment.ARG_DIFFICULTY, getArguments().getString(ARG_DIFFICULTY));
+                        args.putString(ReviewQuestionFragment.ARG_DURATION, getArguments().getString(ARG_DURATION));
+                    }
+
+                    // Navigate to ReviewQuestionFragment using action defined in nav graph
+                    navController.navigate(R.id.action_reviewInterviewFragment_to_reviewQuestionFragment, args);
                 }
-
-                // Navigate to ReviewQuestionFragment using action defined in nav graph
-                NavHostFragment.findNavController(this)
-                        .navigate(R.id.action_reviewInterviewFragment_to_reviewQuestionFragment, args);
             }
         });
 
@@ -143,14 +147,31 @@ public class ReviewInterviewFragment extends Fragment {
 
     private void setupClickListeners() {
         if (binding == null) return;
+
+        // Top back arrow button
         if (binding.btnBack != null) {
             binding.btnBack.setOnClickListener(v -> navigateBack());
         }
+
+        // The "Review questions" pill button (div_pill_btn) should navigate to ReviewQuestionFragment
         if (binding.divPillBtn != null) {
             binding.divPillBtn.setOnClickListener(v -> {
                 if (isAdded()) {
-                    NavHostFragment.findNavController(this)
-                            .popBackStack(R.id.reviewQuestionFragment, false);
+                    NavController navController = NavHostFragment.findNavController(this);
+                    if (navController.getCurrentDestination() != null
+                            && navController.getCurrentDestination().getId() == R.id.reviewInterviewFragment) {
+                        Bundle args = new Bundle();
+
+                        // Pass along session metadata arguments
+                        if (getArguments() != null) {
+                            args.putString(ReviewQuestionFragment.ARG_INTERVIEW_TITLE, getArguments().getString(ARG_INTERVIEW_TITLE));
+                            args.putString(ReviewQuestionFragment.ARG_DIFFICULTY, getArguments().getString(ARG_DIFFICULTY));
+                            args.putString(ReviewQuestionFragment.ARG_DURATION, getArguments().getString(ARG_DURATION));
+                        }
+
+                        // Navigate forward to the question review screen
+                        navController.navigate(R.id.action_reviewInterviewFragment_to_reviewQuestionFragment, args);
+                    }
                 }
             });
         }

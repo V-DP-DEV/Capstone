@@ -22,7 +22,7 @@ public class ReviewInterviewAdapter extends RecyclerView.Adapter<ReviewInterview
         void onQuestionClick(UserQuestion question, int position);
     }
 
-    private List<UserQuestion> questionList;
+    private List<UserQuestion> questionsList;
     private OnQuestionClickListener listener;
 
     public ReviewInterviewAdapter(List<UserQuestion> questionList) {
@@ -30,7 +30,7 @@ public class ReviewInterviewAdapter extends RecyclerView.Adapter<ReviewInterview
     }
 
     public ReviewInterviewAdapter(List<UserQuestion> questionList, OnQuestionClickListener listener) {
-        this.questionList = questionList;
+        this.questionsList = questionList;
         this.listener = listener;
     }
 
@@ -44,7 +44,7 @@ public class ReviewInterviewAdapter extends RecyclerView.Adapter<ReviewInterview
 
     @Override
     public void onBindViewHolder(@NonNull ReviewViewHolder holder, int position) {
-        UserQuestion question = questionList.get(position);
+        UserQuestion question = questionsList.get(position);
         holder.bind(question, position + 1);
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
@@ -55,11 +55,11 @@ public class ReviewInterviewAdapter extends RecyclerView.Adapter<ReviewInterview
 
     @Override
     public int getItemCount() {
-        return questionList != null ? questionList.size() : 0;
+        return questionsList != null ? questionsList.size() : 0;
     }
 
     public void updateData(List<UserQuestion> newList) {
-        this.questionList = newList;
+        this.questionsList = newList;
         notifyDataSetChanged();
     }
 

@@ -164,7 +164,7 @@
     <!-- Included Bottom Navigation Bar -->
     <include
         android:id="@+id/bottom_nav_container"
-        layout="@layout/component_bottom_nav_bar"
+        layout="@layout/component_user_nav_bar"
         android:layout_width="0dp"
         android:layout_height="64dp"
         app:layout_constraintBottom_toBottomOf="parent"

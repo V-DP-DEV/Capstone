@@ -3,6 +3,7 @@ package com.example.capstone.ui.components;
 
 import android.view.View;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.capstone.R;
@@ -27,9 +28,14 @@ public class BottomNavHelper {
 
         // Wire up Home icon
         if (navHome != null) {
-            navHome.setOnClickListener(v ->
-                    NavHostFragment.findNavController(fragment).navigate(R.id.userDashboardFragment)
-            );
+            navHome.setOnClickListener(v -> {
+                if (fragment.isAdded()) {
+                    NavController navController = NavHostFragment.findNavController(fragment);
+                    if (navController.getCurrentDestination() == null || navController.getCurrentDestination().getId() != R.id.userDashboardFragment) {
+                        navController.navigate(R.id.userDashboardFragment);
+                    }
+                }
+            });
         }
 
         // Wire up Settings icon
@@ -49,9 +55,14 @@ public class BottomNavHelper {
 
         // Wire up Presentation / Tips & Library icon
         if (navPresentation != null) {
-            navPresentation.setOnClickListener(v ->
-                    NavHostFragment.findNavController(fragment).navigate(R.id.tipsLibraryFragment)
-            );
+            navPresentation.setOnClickListener(v -> {
+                if (fragment.isAdded()) {
+                    NavController navController = NavHostFragment.findNavController(fragment);
+                    if (navController.getCurrentDestination() == null || navController.getCurrentDestination().getId() != R.id.tipsLibraryFragment) {
+                        navController.navigate(R.id.tipsLibraryFragment);
+                    }
+                }
+            });
         }
 
         // Wire up Profile icon

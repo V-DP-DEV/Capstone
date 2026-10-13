@@ -255,7 +255,7 @@
   <!-- Floating Rounded Bottom Bar -->
   <include
       android:id="@+id/bottom_nav_container"
-      layout="@layout/component_bottom_nav_bar"
+      layout="@layout/component_user_nav_bar"
       android:layout_width="0dp"
       android:layout_height="64dp"
       android:layout_marginHorizontal="0dp"

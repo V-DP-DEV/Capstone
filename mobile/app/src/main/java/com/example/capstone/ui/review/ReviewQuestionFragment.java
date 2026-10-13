@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.capstone.R;
@@ -134,29 +135,14 @@ public class ReviewQuestionFragment extends Fragment {
         if (binding == null) return;
 
         // Top back arrow button
-        binding.btnBack.setOnClickListener(v -> navigateBack());
+        if (binding.btnBack != null) {
+            binding.btnBack.setOnClickListener(v -> navigateBack());
+        }
 
-        // Stepper: Previous Question
-        binding.btnPrevQuestion.setOnClickListener(v -> {
-            if (currentReviewIndex > 0) {
-                currentReviewIndex--;
-                displayQuestionReview(currentReviewIndex);
-            }
-        });
-
-        // Stepper: Next Question
-        binding.btnNextQuestion.setOnClickListener(v -> {
-            if (currentReviewIndex < reviewQuestionsList.size() - 1) {
-                currentReviewIndex++;
-                displayQuestionReview(currentReviewIndex);
-            }
-        });
-
-        // Collapsible AI Concepts / Evaluation Card Toggle
-        binding.cardConcepts.setOnClickListener(v -> toggleConceptsDropdown());
-
-        // Finish Review bottom pill button
-        binding.divPillBtn.setOnClickListener(v -> navigateBackToDashboard());
+        // The "Finish review" pill button (div_pill_btn) should finish review and return to dashboard
+        if (binding.divPillBtn != null) {
+            binding.divPillBtn.setOnClickListener(v -> navigateBackToDashboard());
+        }
     }
 
     /**
@@ -204,8 +190,21 @@ public class ReviewQuestionFragment extends Fragment {
      */
     private void navigateBackToDashboard() {
         if (isAdded()) {
-            NavHostFragment.findNavController(this)
-                    .navigate(R.id.action_reviewQuestionFragment_to_selectDifficultyFragment);
+            try {
+                NavController navController = NavHostFragment.findNavController(this);
+                if (navController.getCurrentDestination() != null
+                        && navController.getCurrentDestination().getId() == R.id.reviewQuestionFragment) {
+                    navController.navigate(R.id.action_reviewQuestionFragment_to_userDashboardFragment);
+                }
+            } catch (Exception e) {
+                try {
+                    NavHostFragment.findNavController(this).popBackStack();
+                } catch (Exception ex) {
+                    if (getActivity() != null) {
+                        getActivity().onBackPressed();
+                    }
+                }
+            }
         }
     }
 
