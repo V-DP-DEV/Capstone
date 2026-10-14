@@ -1,6 +1,8 @@
 <?php
     interface IInterviewAttemptRepository{
-        public function submitAttempt($userId,$interviewId,$answers);
+        public function addInterviewUserAttempt(int $userId,int $interviewId):int;
+        public function addInterviewUserAttemptQuestions(int $attemptId, array $answers):int;
+
         public function getQuestionsForAnalysis(int $attemptId): array;
         public function getAttempt(int $attemptId):array;
         public function getAttemptDetails(int $attemptId):array;
