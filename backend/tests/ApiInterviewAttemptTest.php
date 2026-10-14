@@ -91,4 +91,15 @@ class ApiInterviewAttemptTest extends ApiTestCase
         );
         print_r($response);
     }
+
+    public function testSetToReviewed(){
+        $token = $this->loginAsUser();
+        $response = $this->http->request(
+            'PATCH',
+            '/interviewAttempt/setToReviewed',
+            ['id'=>1],
+            $token
+        );
+        print_r($response);
+    }
 }
