@@ -76,5 +76,13 @@
             //returns success
             JsonResponse::success();
         }
+
+        public function setToReviewed(){
+            Request::requireMethod("PATCH");
+            $data = Request::json();
+            $attemptId = $data['id'];
+            $this->interviewAttemptService->setToReviewed($attemptId);
+            JsonResponse::success();
+        }
     }
 ?>
