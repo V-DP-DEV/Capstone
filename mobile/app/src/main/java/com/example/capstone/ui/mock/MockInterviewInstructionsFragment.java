@@ -7,10 +7,19 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.capstone.AppContainer;
+import com.example.capstone.MyApplication;
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentMockInterviewInstructionsBinding;
+import com.example.capstone.repository.IAuthRepository;
+import com.example.capstone.repository.IInterviewAttemptsRepository;
+import com.example.capstone.repository.IInterviewRepository;
+import com.example.capstone.viewmodel.AnswerViewModel;
+import com.example.capstone.viewmodel.LoginViewModel;
+import com.example.capstone.viewmodel.ViewModelFactory;
 
 /**
  * MockInterviewInstructionsFragment displays the pre-interview briefing screen,
@@ -25,6 +34,8 @@ public class MockInterviewInstructionsFragment extends Fragment {
     public static final String ARG_QUESTION_COUNT = "arg_question_count";
     public static final String ARG_DURATION = "arg_duration";
     public static final String ARG_INPUT_TYPE = "arg_input_type";
+    public static final String ARG_INPUT_ID = "arg_input_it";
+    private AnswerViewModel answerViewModel;
 
     private FragmentMockInterviewInstructionsBinding binding;
 
@@ -32,7 +43,7 @@ public class MockInterviewInstructionsFragment extends Fragment {
      * Factory method to create a new instance of this fragment packed with the required interview details.
      */
     public static MockInterviewInstructionsFragment newInstance(
-            String name, String difficulty, int questionCount, String duration, String inputType) {
+            String name, String difficulty, int questionCount, String duration, String inputType,int id) {
         MockInterviewInstructionsFragment fragment = new MockInterviewInstructionsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_INTERVIEW_NAME, name);
@@ -40,6 +51,7 @@ public class MockInterviewInstructionsFragment extends Fragment {
         args.putInt(ARG_QUESTION_COUNT, questionCount);
         args.putString(ARG_DURATION, duration);
         args.putString(ARG_INPUT_TYPE, inputType);
+        args.putInt(ARG_INPUT_ID,id);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,21 +68,52 @@ public class MockInterviewInstructionsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        displayInstructionsDetails();
+        // Get app-wide repository
+        MyApplication app =
+            (MyApplication) requireActivity().getApplication();
+
+        AppContainer container = app.getAppContainer();
+
+        IInterviewRepository interviewRepository = container.interviewRepository;
+        IInterviewAttemptsRepository interviewAttemptsRepository = container.interviewAttemptsRepository;
+
+        // Create ViewModel factory
+        ViewModelFactory<AnswerViewModel> factory =
+            new ViewModelFactory<>(
+                () -> new AnswerViewModel(interviewRepository,interviewAttemptsRepository)
+            );
+
+        // Create ViewModel
+        answerViewModel = new ViewModelProvider(requireActivity(), factory)
+            .get(AnswerViewModel.class);
+
+
+        answerViewModel.getCurrentInterview().observe(
+            getViewLifecycleOwner(), interview -> {
+                if (interview != null) {
+                    displayInstructionsDetails();
+                    System.out.println("hey");
+                    Integer index =
+                        answerViewModel.getCurrentQuestionIndex().getValue();
+                    //binding.tvHeaderTitle.setText(answerViewModel.getCurrentInterview().getValue().getName());
+                    //displayQuestionAtIndex(index != null ? index : 0);
+                }
+            });
+        answerViewModel.loadInterview(2);
         setupClickListeners();
     }
+
+
 
     /**
      * Extracts bundle arguments and binds the interview metadata to the corresponding instruction TextViews.
      */
     private void displayInstructionsDetails() {
-        if (getArguments() == null || binding == null) return;
-
-        String name = getArguments().getString(ARG_INTERVIEW_NAME, "Interview");
-        String difficulty = getArguments().getString(ARG_INTERVIEW_DIFFICULTY, "Medium");
-        int questionCount = getArguments().getInt(ARG_QUESTION_COUNT, 8);
-        String duration = getArguments().getString(ARG_DURATION, "~25m");
-        String inputType = getArguments().getString(ARG_INPUT_TYPE, "Mic");
+        String name = answerViewModel.getCurrentInterview().getValue().getName();
+        String difficulty = answerViewModel.getCurrentInterview().getValue().getDifficulty();
+        int questionCount = answerViewModel.getCurrentInterview().getValue().getTotalQuestions();
+        String duration = String.valueOf(answerViewModel.getCurrentInterview().getValue().getDuration());
+        String inputType = "Mic";
 
         if (binding.tvInterviewName != null) {
             binding.tvInterviewName.setText(name);
