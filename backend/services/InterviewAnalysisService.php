@@ -5,7 +5,9 @@
         }
 
         public function analysis($attemptId){
+            //get attempt
             $attempt  =$this->interviewAttemptRepository->getAttempt($attemptId);
+            //do validation checks
             if(!$attempt){
                 throw new ValidationException("No attempt provided");
             }
@@ -20,14 +22,17 @@
             }
             $interviewId = $attempt['interview_id'];
 
-            $this->interviewAttemptRepository->updateAnalyseStatus($attemptId,'PROCESSING');
+            //update status to processing
+            
 
+            //get the questions, interviewCompetencies, questionCompetencies and questionConcepts to be analysed
             $questionsRows= $this->interviewAttemptRepository->getQuestionsForAnalysis($attemptId);
             $interviewCompetenciesRows = $this->interviewRepository->getInterviewCompetencies($interviewId);
             $questionCompetenciesRows = $this->interviewRepository->getQuestionCompetencies($interviewId);
             $questionConceptsRows = $this->interviewRepository->getQuestionConcepts($interviewId);
             
-            //get data
+            //get the data from the AI by building the string and sending it
+            $this->interviewAttemptRepository->updateAnalyseStatus($attemptId,'PROCESSING');
             $payload= $this->evalBuilder->build($questionsRows,$questionCompetenciesRows,$questionConceptsRows,$interviewCompetenciesRows);
             $data = $this->aiService->createResponse($payload);
             //extract low level data from response
@@ -35,10 +40,12 @@
             $aiQuestions = $aiResponse['questions'];
             $aiInterviewCompetencies = $aiResponse["interview_competencies"];
             
+            //what will be saved to db
             $dbToSaveQuestionConcepts = [];
             $dbToSaveQuestionCompetencies = [];
             $dbToSaveInterviewCompetencies = [];
 
+            //used to tally the scores of the AI
             $totalQuestionCompetencyScore = 0;
             $totalQuestionConceptScore = 0;
             $maxQuestionCompetencyScore = 0;
@@ -57,6 +64,7 @@
                     $totalQuestionCompetencyScore+=$score;
                     $maxQuestionCompetencyScore+=5;
 
+                    //map to what will be saved for db
                     $dbToSaveQuestionCompetencies[] = ['competency_breakdown_id'=>$competencyId,'score'=>$score,'question_attempt_id'=>$questionAttemptId];
                 }
                 
@@ -68,6 +76,7 @@
                     $totalQuestionConceptScore+=5;
                     $maxQuestionConceptScore+=5;
 
+                    //map to what will be saved for db
                     $dbToSaveQuestionConcepts[] = ['concept_id'=>$conceptId,'score'=>$score,'question_attempt_id'=>$questionAttemptId];
                 }
             }
@@ -79,6 +88,7 @@
                 $strength = $interviewCompetency['strength'];
                 $improvement= $interviewCompetency['improvement'];
 
+                //map to what will be saved for db
                 $dbToSaveInterviewCompetencies[]= [
                     'competency_breakdown_id'=>$competencyId,
                     'interview_attempt_id'=>$attemptId,
@@ -86,10 +96,11 @@
                     'improvement'=>$improvement
                 ];
             }
-            //rolls back
+            
+            //calculates percentage
             $percentage = ($totalQuestionCompetencyScore + $totalQuestionConceptScore) / ($maxQuestionCompetencyScore + $maxQuestionConceptScore);
             try{
-                //begin a transaction
+                //begin a transaction adding all data needed and updating statuses
                 $this->db->beginTransaction();
                 $this->interviewAttemptRepository->addAnalyseInterview($dbToSaveInterviewCompetencies);
                 $this->interviewAttemptRepository->addAnalyseQuestionCompetencies($dbToSaveQuestionCompetencies);
@@ -103,11 +114,10 @@
             catch(Exception $e){
                 //rollback
                 $this->db->rollBack();
+                //update status to failed
                 $this->interviewAttemptRepository->updateAnalyseStatus($attemptId,'FAILED');
                 //re throw to global handler to handle
                 throw $e;
             }
-            
-            return $aiResponse;
         }
     }

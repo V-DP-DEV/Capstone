@@ -52,8 +52,8 @@ class ApiInterviewAttemptTest extends ApiTestCase
         print_r($response);
     }
     
-        
-
+         
+    
     public function testAnalyse(){
         $token = $this->loginAsUser();
 
@@ -66,6 +66,7 @@ class ApiInterviewAttemptTest extends ApiTestCase
 
         print_r($response);
     }
+        
 
     public function testGetAttempts(){
         $token = $this->loginAsUser();
@@ -76,6 +77,29 @@ class ApiInterviewAttemptTest extends ApiTestCase
             $token
         );
 
+        print_r($response);
+    }
+        
+
+    public function testGetAttempt(){
+        $token = $this->loginAsUser();
+        $response = $this->http->request(
+            'GET',
+            '/interviewAttempt/getAttempt?id=1',
+            null,
+            $token
+        );
+        print_r($response);
+    }
+
+    public function testSetToReviewed(){
+        $token = $this->loginAsUser();
+        $response = $this->http->request(
+            'PATCH',
+            '/interviewAttempt/setToReviewed',
+            ['id'=>1],
+            $token
+        );
         print_r($response);
     }
 }
