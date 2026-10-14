@@ -338,5 +338,10 @@
             $query = "DELETE FROM interview_user_attempts WHERE user_id = ?";
             return $this->db->execute($query,[$userId]);
         }
+
+        public function setToReviewed(int $attemptId):int{
+            $query = "UPDATE interview_user_attempts SET reviewed = ? WHERE id=?";
+            return $this->db->execute($query,[true,$attemptId]);
+        }
     }
 ?>

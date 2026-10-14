@@ -18,5 +18,6 @@
         public function getQuestionsMatching($questionIds,$interviewId);
         public function deleteAttempt($interviewAttemptId);
         public function deleteAttempts($userId);
+        public function setToReviewed(int $attemptId):int;
         
     }
