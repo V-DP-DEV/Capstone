@@ -131,43 +131,122 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="12dp"
-          android:orientation="horizontal">
+          android:orientation="horizontal"
+          android:weightSum="3"
+          android:gravity="center">
 
-        <com.example.capstone.ui.components.QuickActionView
-            android:id="@+id/action_start_interview"
+        <!-- 1. Start Interview -->
+        <LinearLayout
+            android:id="@+id/btn_start_interview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            app:actionIcon="@drawable/ic_start_interview"
-            app:actionTint="@color/primary_blue"
-            app:actionTitle="Start\ninterview" />
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:padding="4dp">
 
-        <com.example.capstone.ui.components.QuickActionView
-            android:id="@+id/action_view_interviews"
+          <ImageView
+              android:layout_width="56dp"
+              android:layout_height="56dp"
+              android:background="@drawable/bg_white_circle"
+              android:padding="14dp"
+              android:src="@drawable/ic_start_interview"
+              app:tint="@color/primary_blue" />
+
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="8dp"
+              android:gravity="center"
+              android:textAlignment="center"
+              android:textColor="@android:color/black"
+              android:textSize="13sp"
+              android:text="Start\ninterview" />
+        </LinearLayout>
+
+        <!-- 2. View Previous Interviews -->
+
+        <!-- 3. Tips & Library -->
+        <LinearLayout
+            android:id="@+id/btn_view_interviews"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            app:actionIcon="@drawable/ic_bar_chart"
-            app:actionTint="@color/progress_green"
-            app:actionTitle="View\nprevious\ninterviews" />
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="4dp">
 
-        <com.example.capstone.ui.components.QuickActionView
-            android:id="@+id/action_tips_library"
+          <ImageView
+              android:layout_width="56dp"
+              android:layout_height="56dp"
+              android:background="@drawable/bg_white_circle"
+              android:padding="14dp"
+              android:src="@drawable/ic_bar_chart"
+              app:tint="@color/progress_green" />
+
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="8dp"
+              android:gravity="center"
+              android:text="View\nprevious\ninterviews"
+              android:textAlignment="center"
+              android:textColor="@android:color/black"
+              android:textSize="11sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_tips_library"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            app:actionIcon="@drawable/ic_school"
-            app:actionTint="@color/primary_berry"
-            app:actionTitle="Tips &amp;\nLibrary" />
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:padding="4dp">
 
-        <com.example.capstone.ui.components.QuickActionView
-            android:id="@+id/action_disabled_slot"
+          <ImageView
+              android:layout_width="56dp"
+              android:layout_height="56dp"
+              android:background="@drawable/bg_white_circle"
+              android:padding="14dp"
+              android:src="@drawable/ic_school"
+              app:tint="@color/primary_berry" />
+
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="8dp"
+              android:gravity="center"
+              android:textAlignment="center"
+              android:textColor="@android:color/black"
+              android:textSize="13sp"
+              android:text="Tips &amp;\nLibrary" />
+        </LinearLayout>
+
+        <!-- 4. Disabled Slot / Extra -->
+        <LinearLayout
+            android:id="@+id/btn_disabled_slot"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            app:actionIcon="@drawable/ic_circle_outline"
-            app:actionTint="@color/text_disabled"
-            app:actionTitle="View\nprevious\ninterviews" />
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:padding="4dp">
+
+        </LinearLayout>
+
       </LinearLayout>
 
     </LinearLayout>
@@ -176,7 +255,7 @@
   <!-- Floating Rounded Bottom Bar -->
   <include
       android:id="@+id/bottom_nav_container"
-      layout="@layout/component_bottom_nav_bar"
+      layout="@layout/component_user_nav_bar"
       android:layout_width="0dp"
       android:layout_height="64dp"
       android:layout_marginHorizontal="0dp"

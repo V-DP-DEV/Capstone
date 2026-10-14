@@ -27,6 +27,7 @@ import com.example.capstone.viewmodel.AnswerViewModel;
 import com.example.capstone.viewmodel.LoginViewModel;
 import com.example.capstone.viewmodel.ViewModelFactory;
 import com.google.gson.Gson;
+import com.example.capstone.ui.components.BottomNavHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +62,11 @@ public class MockInterviewQuestionsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        View bottomBar = view.findViewById(R.id.bottom_nav_container);
+        BottomNavHelper.setupNavListeners(this, bottomBar);
+
+
 
         // Get app-wide repository
         MyApplication app =

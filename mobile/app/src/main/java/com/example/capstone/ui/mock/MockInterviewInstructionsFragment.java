@@ -1,5 +1,8 @@
 package com.example.capstone.ui.mock;
 
+import static com.example.capstone.ui.mock.MockInterviewResult.ARG_TOTAL_QUESTIONS;
+import static com.example.capstone.ui.mock.SelectInterviewFragment.ARG_DIFFICULTY;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +23,7 @@ import com.example.capstone.repository.IInterviewRepository;
 import com.example.capstone.viewmodel.AnswerViewModel;
 import com.example.capstone.viewmodel.LoginViewModel;
 import com.example.capstone.viewmodel.ViewModelFactory;
+import com.example.capstone.ui.components.BottomNavHelper;
 
 /**
  * MockInterviewInstructionsFragment displays the pre-interview briefing screen,
@@ -101,6 +105,9 @@ public class MockInterviewInstructionsFragment extends Fragment {
             });
         answerViewModel.loadInterview(2);
         setupClickListeners();
+
+        View bottomBar = view.findViewById(R.id.bottom_nav_container);
+        BottomNavHelper.setupNavListeners(this, bottomBar);
     }
 
 
