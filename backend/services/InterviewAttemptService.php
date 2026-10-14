@@ -171,5 +171,18 @@
             return $this->interviewAttemptRepository->deleteAttempts($userId);
             //call the delete all function
         }
+
+        public function setToReviewed(int $attemptId){
+            //get attempt and do ownership checks
+            $attempt= $this->interviewAttemptRepository->getAttempt($attemptId);
+            if(!$attempt){
+                throw new ValidationException("No interview exists with that id");
+            }
+            if($attempt['user_id']!== $this->request_context->getUserId()){
+                throw new ForbiddenException();
+            }
+            //due set To Reviewed
+            return $this->interviewAttemptRepository->setToReviewed($attemptId);
+        }
     }
 ?>
