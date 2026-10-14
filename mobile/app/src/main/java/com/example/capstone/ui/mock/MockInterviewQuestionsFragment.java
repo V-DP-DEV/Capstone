@@ -11,11 +11,22 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.capstone.AppContainer;
+import com.example.capstone.MyApplication;
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentMockInterviewQuestionsBinding;
 import com.example.capstone.domainModels.UserQuestion;
+import com.example.capstone.repository.IAuthRepository;
+import com.example.capstone.repository.IInterviewAttemptsRepository;
+import com.example.capstone.repository.IInterviewRepository;
+import com.example.capstone.repository.InterviewRepository;
+import com.example.capstone.viewmodel.AnswerViewModel;
+import com.example.capstone.viewmodel.LoginViewModel;
+import com.example.capstone.viewmodel.ViewModelFactory;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +40,12 @@ import java.util.Locale;
 public class MockInterviewQuestionsFragment extends Fragment {
 
     private FragmentMockInterviewQuestionsBinding binding;
-    private List<UserQuestion> questionsList = new ArrayList<>();
+    //private List<UserQuestion> questionsList = new ArrayList<>();
     private int currentQuestionIndex = 0;
 
     private CountDownTimer countDownTimer;
     private boolean isRecording = false;
-    private String interviewTitle = "Java";
+    private AnswerViewModel answerViewModel;
 
     // Standard 3-minute limit per question
     private static final int DEFAULT_QUESTION_DURATION_SECONDS = 180;
@@ -51,57 +62,90 @@ public class MockInterviewQuestionsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Retrieve the interview title passed from the instructions fragment
-        if (getArguments() != null && getArguments().containsKey(MockInterviewInstructionsFragment.ARG_INTERVIEW_NAME)) {
-            interviewTitle = getArguments().getString(MockInterviewInstructionsFragment.ARG_INTERVIEW_NAME, "Java");
-        }
+        // Get app-wide repository
+        MyApplication app =
+            (MyApplication) requireActivity().getApplication();
 
-        binding.tvHeaderTitle.setText(interviewTitle);
+        AppContainer container = app.getAppContainer();
 
-        setupClickListeners();
+        //gets repositories needed
+        IInterviewRepository interviewRepository = container.interviewRepository;
+        IInterviewAttemptsRepository interviewAttemptsRepository = container.interviewAttemptsRepository;
 
-        // Load fallback sample list if no questions were injected beforehand
-        if (questionsList.isEmpty()) {
-            loadSampleQuestions();
-        }
+        // Create ViewModel factory
+        ViewModelFactory<AnswerViewModel> factory =
+            new ViewModelFactory<>(
+                () -> new AnswerViewModel(interviewRepository,interviewAttemptsRepository)
+            );
 
-        if (!questionsList.isEmpty()) {
-            displayQuestionAtIndex(currentQuestionIndex);
-        }
+        // Create ViewModel
+        answerViewModel = new ViewModelProvider(requireActivity(), factory)
+            .get(AnswerViewModel.class);
+
+        Integer index =
+            answerViewModel.getCurrentQuestionIndex().getValue();
+        binding.tvHeaderTitle.setText(answerViewModel.getCurrentInterview().getValue().getName());
+        displayQuestionAtIndex(index != null ? index : 0);
+
+        answerViewModel.getCurrentQuestionIndex().observe(
+            getViewLifecycleOwner(), qindex -> {
+                if (answerViewModel.getCurrentInterview().getValue() != null
+                    && qindex != null) {
+                    displayQuestionAtIndex(qindex);
+                }
+            });
+
+        answerViewModel.getIsSubmitted().observe(
+            getViewLifecycleOwner(),isSubmitted->{
+                if(Boolean.TRUE.equals(isSubmitted)){
+                    NavHostFragment.findNavController(this)
+                        .navigate(R.id.action_mockInterviewQuestions_to_mockInterviewResult);
+                }
+
+            }
+        );
+        setupNewEventListeners();
     }
 
-    /**
-     * Public injection hook used by Person 2 / ViewModel to pass dynamic question sets into this fragment.
-     */
-    public void setQuestions(List<UserQuestion> questions) {
-        this.questionsList = questions != null ? questions : new ArrayList<>();
-        this.currentQuestionIndex = 0;
-        if (binding != null && !questionsList.isEmpty()) {
-            displayQuestionAtIndex(currentQuestionIndex);
-        }
+    private void setupNewEventListeners(){
+        //event listened for both continue and skip
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int index = answerViewModel.getCurrentQuestionIndex().getValue();
+                int total = answerViewModel.getQuestions().size();
+
+                String answer = binding.etAnswer.getText().toString();
+                int seconds = 0;
+
+                //for if just before last question
+                if (index == total - 1) {
+                    boolean saved = answerViewModel.saveCurrentResponse(
+                        binding.etAnswer.getText().toString(),
+                        seconds
+                    );
+
+                    if (saved) {
+                        answerViewModel.submitInterview();
+                    }
+
+                    finishInterview();
+                    return;
+                }
+
+                answerViewModel.moveToNextQuestion(answer, seconds);
+            }
+        };
+        binding.btnContinue.setOnClickListener(listener);
+        binding.btnMic.setOnClickListener(v -> toggleRecording());
+        binding.btnSkip.setOnClickListener(listener);
     }
 
-    /**
-     * Fallback method to populate sample data until connected toViewModel/Repository data.
-     */
-    private void loadSampleQuestions() {
-        questionsList = new ArrayList<>();
-    }
-
-    /**
-     * Renders the question at the specified index, updates progress visuals,
-     * toggles code snippet visibility, resets input fields, and starts the timer.
-     */
     private void displayQuestionAtIndex(int index) {
-        if (index < 0 || index >= questionsList.size()) {
-            finishInterview();
-            return;
-        }
-
-        UserQuestion currentQuestion = questionsList.get(index);
+        UserQuestion currentQuestion = answerViewModel.getQuestions().get(index);
 
         // Update question counter & progress bar UI
-        int totalQuestions = questionsList.size();
+        int totalQuestions = answerViewModel.getQuestions().size();
         binding.tvQuestionProgress.setText(String.format(Locale.getDefault(), "Question %d / %d", index + 1, totalQuestions));
 
         int progressPercentage = (int) (((float) (index + 1) / totalQuestions) * 100);
@@ -171,18 +215,9 @@ public class MockInterviewQuestionsFragment extends Fragment {
                 if (getContext() != null) {
                     Toast.makeText(requireContext(), "Time's up for this question!", Toast.LENGTH_SHORT).show();
                 }
-                nextQuestion();
+                //nextQuestion();
             }
         }.start();
-    }
-
-    /**
-     * Binds user click actions for mic recording toggles, question skipping, and continuing.
-     */
-    private void setupClickListeners() {
-        binding.btnMic.setOnClickListener(v -> toggleRecording());
-        binding.btnSkip.setOnClickListener(v -> nextQuestion());
-        binding.btnContinue.setOnClickListener(v -> nextQuestion());
     }
 
     /**
@@ -243,34 +278,15 @@ public class MockInterviewQuestionsFragment extends Fragment {
                 }).start();
     }
 
-    /**
-     * Advances to the next question or finishes the interview session if completed.
-     */
-    private void nextQuestion() {
-        currentQuestionIndex++;
-        if (currentQuestionIndex < questionsList.size()) {
-            displayQuestionAtIndex(currentQuestionIndex);
-        } else {
-            finishInterview();
-        }
-    }
 
     /**
      * Cancels active timers, packages session result metadata, and navigates to the result screen.
      */
+
+
     private void finishInterview() {
         if (countDownTimer != null) {
             countDownTimer.cancel();
-        }
-
-        Bundle args = new Bundle();
-        args.putString(MockInterviewResult.ARG_INTERVIEW_TITLE, interviewTitle);
-        args.putInt(MockInterviewResult.ARG_ANSWERED_COUNT, currentQuestionIndex);
-        args.putInt(MockInterviewResult.ARG_TOTAL_QUESTIONS, questionsList.size());
-
-        if (getParentFragmentManager() != null && isAdded()) {
-            NavHostFragment.findNavController(this)
-                    .navigate(R.id.action_mockInterviewQuestions_to_mockInterviewResult, args);
         }
     }
 
