@@ -8,6 +8,12 @@ import androidx.lifecycle.ViewModel;
 import com.example.capstone.domainModels.UserInterview;
 import com.example.capstone.domainModels.UserQuestion;
 import com.example.capstone.model.request.QuestionAnswerRequest;
+import com.example.capstone.model.request.SubmitInterviewAttemptRequest;
+import com.example.capstone.model.response.SubmitAttemptResponse;
+import com.example.capstone.network.ApiCallback;
+import com.example.capstone.network.ApiResponse;
+import com.example.capstone.repository.IInterviewAttemptsRepository;
+import com.example.capstone.repository.IInterviewRepository;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -16,19 +22,43 @@ import java.util.Map;
 
 public class AnswerViewModel extends ViewModel {
 
-    private UserInterview currentInterview;
-
-    private final Map<Integer, String> answers = new LinkedHashMap<>();
-    private final Map<Integer, Integer> secondsSpent = new LinkedHashMap<>();
+    private final IInterviewRepository interviewRepository;
+    private final IInterviewAttemptsRepository interviewAttemptsRepository;
+    private final MutableLiveData<UserInterview> currentInterview =
+        new MutableLiveData<>();
 
     private final MutableLiveData<Integer> currentQuestionIndex =
-            new MutableLiveData<>(0);
+        new MutableLiveData<>(0);
 
     private final MutableLiveData<String> currentAnswer =
-            new MutableLiveData<>("");
+        new MutableLiveData<>("");
 
     private final MutableLiveData<String> error =
-            new MutableLiveData<>();
+        new MutableLiveData<>();
+
+    private final MutableLiveData<Boolean> isLoading =
+        new MutableLiveData<>(false);
+
+    private final Map<Integer, QuestionAnswerRequest> answers =
+        new LinkedHashMap<>();
+
+    public MutableLiveData<Boolean> getIsSubmitted() {
+        return isSubmitted;
+    }
+
+    private final MutableLiveData<Boolean> isSubmitted=
+        new MutableLiveData<>(false);
+
+    public AnswerViewModel(IInterviewRepository interviewRepository, IInterviewAttemptsRepository interviewAttemptsRepository) {
+        this.interviewRepository = interviewRepository;
+        this.interviewAttemptsRepository = interviewAttemptsRepository;
+    }
+
+    // Observable state
+
+    public LiveData<UserInterview> getCurrentInterview() {
+        return currentInterview;
+    }
 
     public LiveData<Integer> getCurrentQuestionIndex() {
         return currentQuestionIndex;
@@ -42,170 +72,169 @@ public class AnswerViewModel extends ViewModel {
         return error;
     }
 
-    public void setInterview(UserInterview interview) {
-        currentInterview = interview;
-        answers.clear();
-        secondsSpent.clear();
-        currentQuestionIndex.setValue(0);
-        currentAnswer.setValue("");
+    public LiveData<Boolean> getIsLoading() {
+        return isLoading;
+    }
+
+    // Interview
+
+    public void loadInterview(int id) {
+        isLoading.setValue(true);
         error.setValue(null);
-    }
 
-    public UserInterview getCurrentInterview() {
-        return currentInterview;
-    }
+        interviewRepository.getUserInterview(
+            id,
+            new ApiCallback<UserInterview>() {
+                @Override
+                public void onSuccess(
+                    ApiResponse<UserInterview> response) {
 
-    public List<UserQuestion> getQuestions() {
-        if (currentInterview == null
-                || currentInterview.getQuestions() == null) {
-            return new ArrayList<>();
-        }
+                    UserInterview interview = response.getData();
 
-        return currentInterview.getQuestions();
-    }
+                    if (interview == null) {
+                        error.setValue("Interview not found.");
+                        isLoading.setValue(false);
+                        return;
+                    }
 
-    public void setAnswer(String answer) {
-        currentAnswer.setValue(answer == null ? "" : answer);
-        saveCurrentAnswer(answer);
-    }
+                    currentInterview.setValue(interview);
+                    currentQuestionIndex.setValue(0);
+                    currentAnswer.setValue("");
+                    answers.clear();
 
-    public String getAnswerForQuestion(int questionIndex) {
-        List<UserQuestion> questions = getQuestions();
+                    isLoading.setValue(false);
+                }
 
-        if (questionIndex < 0 || questionIndex >= questions.size()) {
-            return "";
-        }
+                @Override
+                public void onGeneralError(Exception e) {
+                    error.setValue(
+                        e.getMessage() != null
+                            ? e.getMessage()
+                            : "Failed to load interview.");
+                    isLoading.setValue(false);
+                }
 
-        Integer questionId = parseQuestionId(
-                questions.get(questionIndex).getId());
-
-        if (questionId == null) {
-            return "";
-        }
-
-        String savedAnswer = answers.get(questionId);
-        return savedAnswer == null ? "" : savedAnswer;
-    }
-
-    public void saveCurrentAnswer(String answer) {
-        UserQuestion question = getCurrentQuestion();
-
-        if (question == null) {
-            error.setValue("No current question is available.");
-            return;
-        }
-
-        Integer questionId = parseQuestionId(question.getId());
-
-        if (questionId == null) {
-            error.setValue(
-                    "The question has an invalid ID. The answer cannot be saved.");
-            return;
-        }
-
-        answers.put(questionId, answer == null ? "" : answer);
-        error.setValue(null);
-    }
-
-    public void recordTimeSpent(int questionIndex, int seconds) {
-        List<UserQuestion> questions = getQuestions();
-
-        if (questionIndex < 0 || questionIndex >= questions.size()) {
-            error.setValue("Invalid question index.");
-            return;
-        }
-
-        Integer questionId = parseQuestionId(
-                questions.get(questionIndex).getId());
-
-        if (questionId == null) {
-            error.setValue(
-                    "The question has an invalid ID. Time cannot be recorded.");
-            return;
-        }
-
-        secondsSpent.put(questionId, Math.max(0, seconds));
-        error.setValue(null);
-    }
-
-    public boolean moveToQuestion(int questionIndex) {
-        List<UserQuestion> questions = getQuestions();
-
-        if (questionIndex < 0 || questionIndex >= questions.size()) {
-            error.setValue("That question does not exist.");
-            return false;
-        }
-
-        saveCurrentAnswer(currentAnswer.getValue());
-        currentQuestionIndex.setValue(questionIndex);
-        currentAnswer.setValue(getAnswerForQuestion(questionIndex));
-        error.setValue(null);
-        return true;
-    }
-
-    public boolean moveToNextQuestion() {
-        Integer index = currentQuestionIndex.getValue();
-
-        if (index == null) {
-            index = 0;
-        }
-
-        return moveToQuestion(index + 1);
-    }
-
-    public boolean moveToPreviousQuestion() {
-        Integer index = currentQuestionIndex.getValue();
-
-        if (index == null) {
-            index = 0;
-        }
-
-        return moveToQuestion(index - 1);
+                @Override
+                public void onHttpError(
+                    ApiResponse<UserInterview> response) {
+                    error.setValue("Failed to load interview.");
+                    isLoading.setValue(false);
+                }
+            });
     }
 
     public UserQuestion getCurrentQuestion() {
+        List<UserQuestion> questions = getQuestions();
         Integer index = currentQuestionIndex.getValue();
 
-        if (index == null) {
-            return null;
-        }
-
-        List<UserQuestion> questions = getQuestions();
-
-        if (index < 0 || index >= questions.size()) {
+        if (index == null || index < 0 || index >= questions.size()) {
             return null;
         }
 
         return questions.get(index);
     }
 
-    public List<QuestionAnswerRequest> buildSubmissionAnswers() {
-        saveCurrentAnswer(currentAnswer.getValue());
+    public List<UserQuestion> getQuestions() {
+        UserInterview interview = currentInterview.getValue();
 
-        List<QuestionAnswerRequest> result = new ArrayList<>();
-
-        for (UserQuestion question : getQuestions()) {
-            Integer questionId = parseQuestionId(question.getId());
-
-            if (questionId == null) {
-                error.setValue(
-                        "A question has an invalid ID. Please check the interview data.");
-                return new ArrayList<>();
-            }
-
-            String answer = answers.get(questionId);
-            Integer time = secondsSpent.get(questionId);
-
-            result.add(new QuestionAnswerRequest(
-                    questionId,
-                    answer == null ? "" : answer,
-                    time == null ? 0 : time
-            ));
+        if (interview == null || interview.getQuestions() == null) {
+            return new ArrayList<>();
         }
 
-        error.setValue(null);
-        return result;
+        return interview.getQuestions();
     }
+
+    // Navigation
+
+    public boolean moveToNextQuestion(String answer, int seconds) {
+        Integer index = currentQuestionIndex.getValue();
+
+        if (index == null) {
+            return false;
+        }
+
+        return moveToQuestion(index + 1, answer, seconds);
+    }
+
+    public boolean moveToPreviousQuestion(String answer, int seconds) {
+        Integer index = currentQuestionIndex.getValue();
+
+        if (index == null) {
+            return false;
+        }
+
+        return moveToQuestion(index - 1, answer, seconds);
+    }
+
+    private boolean moveToQuestion(
+        int targetIndex,
+        String answer,
+        int seconds) {
+
+        List<UserQuestion> questions = getQuestions();
+
+        if (targetIndex < 0 || targetIndex >= questions.size()) {
+            return false;
+        }
+
+        if (!saveCurrentResponse(answer, seconds)) {
+            return false;
+        }
+
+        currentQuestionIndex.setValue(targetIndex);
+
+        Integer questionId =
+            parseQuestionId(questions.get(targetIndex).getId());
+
+        QuestionAnswerRequest saved = questionId == null
+            ? null
+            : answers.get(questionId);
+
+        currentAnswer.setValue(
+            saved == null ? "" : saved.getAnswer());
+
+        error.setValue(null);
+        return true;
+    }
+
+    // Save the answer and time for the question being left
+
+    public boolean saveCurrentResponse(String answer, int seconds) {
+        UserQuestion question = getCurrentQuestion();
+
+        if (question == null) {
+            error.setValue("No current question is available.");
+            return false;
+        }
+
+        Integer questionId = parseQuestionId(question.getId());
+
+        if (questionId == null) {
+            error.setValue("Invalid question ID.");
+            return false;
+        }
+
+        QuestionAnswerRequest previous = answers.get(questionId);
+
+        int previousSeconds = previous == null
+            ? 0
+            : previous.getSecondsSpent();
+
+        QuestionAnswerRequest response = new QuestionAnswerRequest(
+            questionId,
+            answer == null ? "" : answer,
+            previousSeconds + Math.max(0, seconds)
+        );
+
+        response.setId(questionId);
+
+        answers.put(questionId, response);
+
+        error.setValue(null);
+        return true;
+    }
+
+    // Submission
 
     private Integer parseQuestionId(String id) {
         if (id == null || id.trim().isEmpty()) {
@@ -217,5 +246,71 @@ public class AnswerViewModel extends ViewModel {
         } catch (NumberFormatException e) {
             return null;
         }
+    }
+
+    public void submitInterview() {
+        SubmitInterviewAttemptRequest request =
+            buildSubmissionRequest();
+        System.out.println("hey");
+        if (request == null) {
+            return;
+        }
+
+        isLoading.setValue(true);
+        error.setValue(null);
+
+        interviewAttemptsRepository.submitInterviewAttempt(request, new ApiCallback<SubmitAttemptResponse>() {
+            @Override
+            public void onSuccess(ApiResponse<SubmitAttemptResponse> response) {
+                isSubmitted.setValue(true);
+                isLoading.setValue(false);
+            }
+
+            @Override
+            public void onGeneralError(Exception e) {
+                isLoading.setValue(false);
+            }
+
+            @Override
+            public void onHttpError(ApiResponse<SubmitAttemptResponse> response) {
+                isLoading.setValue(false);
+            }
+        });
+
+        // Call your repository's submission method here.
+    }
+
+
+    public SubmitInterviewAttemptRequest buildSubmissionRequest() {
+        int interviewId = getCurrentInterview().getValue().getId();
+        List<QuestionAnswerRequest> submissionAnswers =
+            new ArrayList<>();
+
+        for (UserQuestion question : getQuestions()) {
+            Integer questionId = parseQuestionId(question.getId());
+
+            if (questionId == null) {
+                error.setValue("A question has an invalid ID.");
+                return null;
+            }
+
+            QuestionAnswerRequest response = answers.get(questionId);
+
+            if (response == null) {
+                response = new QuestionAnswerRequest(
+                    questionId, "", 0);
+            }
+
+            submissionAnswers.add(response);
+        }
+
+        SubmitInterviewAttemptRequest request =
+            new SubmitInterviewAttemptRequest();
+
+        request.setId(interviewId);
+        request.setAnswers(submissionAnswers);
+
+        error.setValue(null);
+        return request;
     }
 }
