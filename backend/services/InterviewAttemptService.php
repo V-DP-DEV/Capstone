@@ -95,7 +95,7 @@
                         'maxScore'=>$row['maxScore'],
                         'score'=>$row['score'],
                         'type'=>$row['type'],
-                        'concepts'=>[]
+                        'conceptScores'=>[]
                     ];
                 }
                 //add a concept for each row
