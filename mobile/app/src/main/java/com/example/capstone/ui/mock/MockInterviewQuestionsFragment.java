@@ -55,7 +55,8 @@ public class MockInterviewQuestionsFragment extends Fragment {
         View bottomBar = view.findViewById(R.id.bottom_nav_container);
         BottomNavHelper.setupNavListeners(this, bottomBar);
 
-        // Ensure this matches the constant name in MockInterviewInstructionsFragment
+
+        // interview title or selected interview from a shared ViewModel or Repository instead.
         if (getArguments() != null && getArguments().containsKey(MockInterviewInstructionsFragment.ARG_INTERVIEW_TITLE)) {
             interviewTitle = getArguments().getString(MockInterviewInstructionsFragment.ARG_INTERVIEW_TITLE, "Java");
         }
@@ -85,10 +86,14 @@ public class MockInterviewQuestionsFragment extends Fragment {
     }
 
     /**
-     * Fallback method to populate sample data until connected toViewModel/Repository data.
+     * Fallback method to populate sample data until connected to ViewModel/Repository data.
      */
     private void loadSampleQuestions() {
         questionsList = new ArrayList<>();
+        // =========================================================================
+        // TODO FOR PERSON 2: Replace or populate this list by querying your Repository
+        // or shared ViewModel for the active interview's list of UserQuestion items.
+        // =========================================================================
     }
 
     /**
@@ -265,6 +270,7 @@ public class MockInterviewQuestionsFragment extends Fragment {
         if (countDownTimer != null) {
             countDownTimer.cancel();
         }
+
 
         Bundle args = new Bundle();
         args.putString(MockInterviewResult.ARG_INTERVIEW_TITLE, interviewTitle);

@@ -155,7 +155,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
-            android:text="Review questions"
+            android:text="Request Analysis"
             android:textColor="#FFFFFFFF"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -186,38 +186,42 @@
             android:paddingEnd="26dp"
             android:paddingBottom="26dp">
 
-            <!-- Competencies Section Header -->
-            <TextView
-                android:id="@+id/header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:fontFamily="sans-serif"
-                android:text="Competencies"
-                android:textColor="#FF000000"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
             <!-- Competencies Summary Card -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/card_competencies"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_rounded"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <!-- Competencies Section Header -->
+                <TextView
+                    android:id="@+id/header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:text="Competencies"
+                    android:textColor="#FF000000"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <!-- Centered Overall Score Header -->
                 <TextView
                     android:id="@+id/tv_overall_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
                     android:fontFamily="sans-serif"
                     android:text="Overall Score"
                     android:textColor="#FF000000"
                     android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@id/header" />
 
                 <!-- Centered Score Percentage -->
                 <TextView
@@ -272,9 +276,9 @@
                         android:layout_marginTop="12dp"
                         android:orientation="vertical"
                         android:visibility="gone"
-                        app:layout_constraintTop_toBottomOf="@id/tv_strengths_title"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent">
+                        app:layout_constraintTop_toBottomOf="@id/tv_strengths_title">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -316,16 +320,16 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <!-- Areas Content Wrapper (Visible by default matching prototype) -->
+                    <!-- Areas Content Wrapper (Visible by default) -->
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/layout_areas_content"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:visibility="visible"
-                        app:layout_constraintTop_toBottomOf="@id/tv_areas_title"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent">
+                        app:layout_constraintTop_toBottomOf="@id/tv_areas_title">
 
                         <!-- Item 1: Structure -->
                         <View

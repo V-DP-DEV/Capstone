@@ -25,15 +25,9 @@ import java.util.Locale;
 
 public class ReviewQuestionFragment extends Fragment {
 
-    public static final String ARG_INTERVIEW_TITLE = "arg_interview_title";
-    public static final String ARG_DIFFICULTY = "arg_difficulty";
-    public static final String ARG_DURATION = "arg_duration";
-
     private FragmentReviewQuestionBinding binding;
     private List<UserQuestionAttempt> reviewQuestionsList = new ArrayList<>();
     private int currentReviewIndex = 0;
-
-    private boolean isConceptsExpanded = true;
 
     @Nullable
     @Override
@@ -46,7 +40,7 @@ public class ReviewQuestionFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        extractSessionMetadata();
+        displaySessionMetadata();
         loadReviewData();
         setupClickListeners();
 
@@ -58,28 +52,31 @@ public class ReviewQuestionFragment extends Fragment {
         }
     }
 
-    private void extractSessionMetadata() {
-        if (getArguments() == null || binding == null) return;
+    private void displaySessionMetadata() {
+        if (binding == null) return;
 
-        String title = getArguments().getString(ARG_INTERVIEW_TITLE, "C# Developer");
-        String difficulty = getArguments().getString(ARG_DIFFICULTY, "Hard");
-        String duration = getArguments().getString(ARG_DURATION, "01:24 / 20 minutes");
-
+        // TODO FOR PERSON 2: Bind session metadata (title, difficulty, timer)
+        // from your shared ViewModel or Repository instead of static text.
         if (binding.tvRoleTitle != null) {
-            binding.tvRoleTitle.setText(title);
+            binding.tvRoleTitle.setText("C# Developer");
         }
         if (binding.tvDifficulty != null) {
-            binding.tvDifficulty.setText(difficulty);
+            binding.tvDifficulty.setText("Hard");
         }
         if (binding.tvTimer != null) {
-            binding.tvTimer.setText(duration);
+            binding.tvTimer.setText("01:24 / 20 minutes");
         }
     }
 
     private void loadReviewData() {
         reviewQuestionsList = new ArrayList<>();
 
-        // Create mock concept scores using UserConceptScores
+        // =========================================================================
+        // TODO FOR PERSON 2: Replace this mock implementation with a call to your
+        // ViewModel or Repository to fetch the actual UserQuestionAttempt data
+        // for the selected interview attempt (bundle-free architecture).
+        // =========================================================================
+
         List<UserConceptScores> mockScores = new ArrayList<>();
 
         UserConceptScores score1 = new UserConceptScores();
@@ -94,17 +91,21 @@ public class ReviewQuestionFragment extends Fragment {
         score2.setMaxScore(5);
         mockScores.add(score2);
 
-        // Create a mock UserQuestionAttempt
         UserQuestionAttempt mockAttempt = new UserQuestionAttempt();
         mockAttempt.setType("Technical");
-        mockAttempt.setQuestion("Explain how polymorphism works in Java and give a practical example.");
+        mockAttempt.setQuestion("Explain how polymorphism works in C# and give a practical example.");
         mockAttempt.setAnswer("Polymorphism allows objects to be treated as instances of their parent class...");
         mockAttempt.setExpectedAnswer("Polymorphism is categorized into compile-time and runtime...");
+        mockAttempt.setScore(4);
+        mockAttempt.setMaxScore(5);
         mockAttempt.setConceptScores(mockScores);
 
         reviewQuestionsList.add(mockAttempt);
     }
 
+    /**
+     * Public injection hook for Person 2 / ViewModel to supply the list of question attempts directly.
+     */
     public void setReviewQuestions(List<UserQuestionAttempt> questions) {
         this.reviewQuestionsList = questions != null ? questions : new ArrayList<>();
         this.currentReviewIndex = 0;
@@ -131,18 +132,56 @@ public class ReviewQuestionFragment extends Fragment {
         UserQuestionAttempt q = reviewQuestionsList.get(index);
         int total = reviewQuestionsList.size();
 
-        binding.tvQuestionCounter.setText(String.format(Locale.getDefault(), "Question %d / %d", index + 1, total));
+        if (binding.tvQuestionCounter != null) {
+            binding.tvQuestionCounter.setText(String.format(Locale.getDefault(), "Question %d / %d", index + 1, total));
+        }
 
-        String category = q.getType() != null ? q.getType().toUpperCase(Locale.getDefault()) : "INTRODUCTION";
-        binding.tvCategoryTitle.setText(category);
-        binding.tvQuestionText.setText(q.getQuestion() != null ? q.getQuestion() : "No question text available.");
+        String category = q.getType() != null ? q.getType().toUpperCase(Locale.getDefault()) : "TECHNICAL";
+        if (binding.tvCategoryTitle != null) {
+            binding.tvCategoryTitle.setText(category);
+        }
+        if (binding.tvQuestionText != null) {
+            binding.tvQuestionText.setText(q.getQuestion() != null ? q.getQuestion() : "No question text available.");
+        }
 
-        // Bind actual user and expected answers from the Attempt model
-        binding.tvUserAnswerText.setText(q.getAnswer() != null ? q.getAnswer() : "No answer provided.");
-        binding.tvExpectedAnswerText.setText(q.getExpectedAnswer() != null ? q.getExpectedAnswer() : "No expected answer available.");
+        if (binding.tvUserAnswerText != null) {
+            binding.tvUserAnswerText.setText(q.getAnswer() != null ? q.getAnswer() : "No answer provided.");
+        }
+        if (binding.tvExpectedAnswerText != null) {
+            binding.tvExpectedAnswerText.setText(q.getExpectedAnswer() != null ? q.getExpectedAnswer() : "No expected answer available.");
+        }
 
-        // Populate concept scores if present
         populateConceptScores(q.getConceptScores());
+    }
+
+    private void populateConceptScores(List<UserConceptScores> conceptScores) {
+        if (binding == null || binding.layoutConceptsContent == null) return;
+
+        binding.layoutConceptsContent.removeAllViews();
+
+        if (conceptScores == null || conceptScores.isEmpty()) {
+            return;
+        }
+
+        for (UserConceptScores concept : conceptScores) {
+            TextView tvConcept = new TextView(requireContext());
+            tvConcept.setLayoutParams(new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            ));
+            tvConcept.setPadding(0, 8, 0, 8);
+            tvConcept.setTextColor(getResources().getColor(android.R.color.black, null));
+            tvConcept.setTextSize(14f);
+
+            String conceptText = String.format(Locale.getDefault(), "• %s: %.1f / %d",
+                    concept.getName(),
+                    concept.getScore(),
+                    concept.getMaxScore()
+            );
+
+            tvConcept.setText(conceptText);
+            binding.layoutConceptsContent.addView(tvConcept);
+        }
     }
 
     private void navigateBack() {
@@ -168,37 +207,6 @@ public class ReviewQuestionFragment extends Fragment {
                     }
                 }
             }
-        }
-    }
-
-    private void populateConceptScores(List<UserConceptScores> conceptScores) {
-        if (binding == null || binding.layoutConceptsContent == null) return;
-
-        binding.layoutConceptsContent.removeAllViews();
-
-        if (conceptScores == null || conceptScores.isEmpty()) {
-            return;
-        }
-
-        for (UserConceptScores concept : conceptScores) {
-            TextView tvConcept = new TextView(requireContext());
-            tvConcept.setLayoutParams(new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-            ));
-            tvConcept.setPadding(0, 8, 0, 8);
-            tvConcept.setTextColor(getResources().getColor(android.R.color.black, null));
-            tvConcept.setTextSize(14f);
-
-            // Fixed double score formatting (%.1f) vs int maxScore (%d)
-            String conceptText = String.format(Locale.getDefault(), "• %s: %.1f / %d",
-                    concept.getName(),
-                    concept.getScore(),
-                    concept.getMaxScore()
-            );
-
-            tvConcept.setText(conceptText);
-            binding.layoutConceptsContent.addView(tvConcept);
         }
     }
 
