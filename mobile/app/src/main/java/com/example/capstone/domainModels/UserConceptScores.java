@@ -9,14 +9,6 @@ public class UserConceptScores {
     this.id = id;
   }
 
-  public int getConcept_id() {
-    return conceptId;
-  }
-
-  public void setConcept_id(int concept_id) {
-    this.conceptId = concept_id;
-  }
-
   public String getName() {
     return name;
   }
@@ -25,11 +17,11 @@ public class UserConceptScores {
     this.name = name;
   }
 
-  public int getScore() {
+  public double getScore() {
     return score;
   }
 
-  public void setScore(int score) {
+  public void setScore(double score) {
     this.score = score;
   }
 
@@ -42,8 +34,7 @@ public class UserConceptScores {
   }
 
   private int id;
-  private int conceptId;
   private String name;
-  private int score;
+  private double score;
   private int maxScore;
 }
