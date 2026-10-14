@@ -11,6 +11,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentMockInterviewResultBinding;
+import com.example.capstone.ui.components.BottomNavHelper;
 
 import java.util.Locale;
 
@@ -61,6 +62,9 @@ public class MockInterviewResult extends Fragment {
 
         displaySessionDetails();
         setupClickListeners();
+
+        View bottomBar = view.findViewById(R.id.bottom_nav_container);
+        BottomNavHelper.setupNavListeners(this, bottomBar);
     }
 
     /**

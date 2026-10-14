@@ -4,17 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph2"
     app:startDestination="@id/userDashboardFragment">
+
   <!-- User Dashboard Screen -->
   <fragment
       android:id="@+id/userDashboardFragment"
       android:name="com.example.capstone.ui.user.UserDashboardFragment"
       android:label="User Dashboard"
       tools:layout="@layout/fragment_user_dashboard">
-
-    <!-- Action targeting Select Difficulty Fragment -->
     <action
         android:id="@+id/action_userDashboardFragment_to_selectDifficultyFragment"
         app:destination="@id/selectDifficultyFragment" />
+    <action
+        android:id="@+id/action_userDashboardFragment_to_tipsLibraryFragment"
+        app:destination="@id/tipsLibraryFragment" />
     <action
         android:id="@+id/action_userDashboardFragment_self"
         app:destination="@id/userDashboardFragment" />
@@ -79,6 +81,9 @@
     <action
         android:id="@+id/action_mockInterviewResult_to_reviewInterviewFragment"
         app:destination="@id/reviewInterviewFragment" />
+    <action
+        android:id="@+id/action_mockInterviewResult_to_reviewQuestionFragment"
+        app:destination="@id/reviewQuestionFragment" />
   </fragment>
 
   <!-- Review Interview Screen -->
@@ -86,6 +91,48 @@
       android:id="@+id/reviewInterviewFragment"
       android:name="com.example.capstone.ui.review.ReviewInterviewFragment"
       android:label="Review Interview"
-      tools:layout="@layout/fragment_review_interview" />
+      tools:layout="@layout/fragment_review_interview">
+
+    <!-- Add this action so it can navigate to the question review -->
+    <action
+        android:id="@+id/action_reviewInterviewFragment_to_reviewQuestionFragment"
+        app:destination="@id/reviewQuestionFragment" />
+
+  </fragment>
+
+  <!-- Review Question Screen -->
+  <fragment
+      android:id="@+id/reviewQuestionFragment"
+      android:name="com.example.capstone.ui.review.ReviewQuestionFragment"
+      android:label="Review Question"
+      tools:layout="@layout/fragment_review_question">
+
+    <!-- Action to return to difficulty selection upon finishing review -->
+    <action
+        android:id="@+id/action_reviewQuestionFragment_to_selectDifficultyFragment"
+        app:destination="@id/selectDifficultyFragment"
+        app:popUpTo="@id/selectDifficultyFragment"
+        app:popUpToInclusive="false" />
+
+    <action
+        android:id="@+id/action_reviewQuestionFragment_to_userDashboardFragment"
+        app:destination="@id/userDashboardFragment"
+        app:popUpTo="@id/userDashboardFragment"
+        app:popUpToInclusive="false" />
+  </fragment>
+
+  <!-- Tips & Library Screen -->
+  <fragment
+      android:id="@+id/tipsLibraryFragment"
+      android:name="com.example.capstone.ui.user.TipsLibraryFragment"
+      android:label="Tips &amp; Library"
+      tools:layout="@layout/fragment_tips_library">
+    <action
+        android:id="@+id/action_tipsLibraryFragment_to_homeFragment"
+        app:destination="@id/userDashboardFragment" />
+    <action
+        android:id="@+id/action_tipsLibraryFragment_to_selectInterviewFragment"
+        app:destination="@id/selectInterviewFragment" />
+  </fragment>
 
 </navigation>

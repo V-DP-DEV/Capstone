@@ -17,6 +17,7 @@ import com.example.capstone.adapter.InterviewAdapter;
 import com.example.capstone.databinding.FragmentSelectInterviewBinding;
 import com.example.capstone.domainModels.UserInterview;
 import com.example.capstone.domainModels.UserQuestion;
+import com.example.capstone.ui.components.BottomNavHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +72,9 @@ public class SelectInterviewFragment extends Fragment {
         setupSearchFilter();
         setupActionButtons();
         updateContinueButtonState();
+
+        View bottomBar = view.findViewById(R.id.bottom_nav_container);
+        BottomNavHelper.setupNavListeners(this, bottomBar);
     }
 
     /**
@@ -95,6 +99,21 @@ public class SelectInterviewFragment extends Fragment {
 
         binding.rvInterviews.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvInterviews.setAdapter(adapter);
+
+        // =========================================================================
+        // TODO FOR PERSON 2 (LIVEDATA INTEGRATION):
+        // Initialize your ViewModel here and observe the LiveData stream for interviews:
+        //
+        //   viewModel.getInterviewsLiveData().observe(getViewLifecycleOwner(), allInterviews -> {
+        //       if (allInterviews != null) {
+        //           // Update local cache and refresh filtered list based on selectedDifficulty
+        //           difficultyFilteredList = filterByDifficulty(allInterviews, selectedDifficulty);
+        //           adapter.updateData(new ArrayList<>(difficultyFilteredList));
+        //       }
+        //   });
+        //
+        // This ensures the UI automatically reacts to asynchronous database/API updates.
+        // =========================================================================
     }
 
     /**
@@ -218,10 +237,19 @@ public class SelectInterviewFragment extends Fragment {
     }
 
     /**
-     * Placeholder method returning sample data. To be replaced or integrated with ViewModel/Repository data by Person 2.
+     * Placeholder method returning sample data. To be replaced with ViewModel/Repository data by Person 2.
      */
     private List<UserInterview> getAllSampleData() {
         List<UserInterview> list = new ArrayList<>();
+
+        // =========================================================================
+        // TODO FOR PERSON 2: Replace this placeholder sample data list with a live query
+        // to your Repository / ViewModel fetching available UserInterview items from Room or API.
+        // =========================================================================
+        list.add(new UserInterview("C# Software Engineer", "Hard"));
+        list.add(new UserInterview("Android Developer", "Medium"));
+        list.add(new UserInterview("Full Stack Web Developer", "Intermediate"));
+
         return list;
     }
 
