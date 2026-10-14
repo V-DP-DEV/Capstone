@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.capstone.R;
 import com.example.capstone.adapter.ReviewInterviewAdapter;
 import com.example.capstone.databinding.FragmentReviewInterviewBinding;
-import com.example.capstone.domainModels.UserAttemptCompetencyFeedback;
+import com.example.capstone.domainModels.UserAttemptCompetencyBreakdownFeedback;
 import com.example.capstone.domainModels.UserQuestion;
 import com.example.capstone.ui.components.BottomNavHelper;
 
@@ -86,20 +86,20 @@ public class ReviewInterviewFragment extends Fragment {
         }
     }
 
-    private void populateCompetencyFeedback(UserAttemptCompetencyFeedback feedbackData) {
+    /**
+     * Populates competency feedback using UserAttemptCompetencyBreakdownFeedback and getBreakdownPercentage().
+     */
+    private void populateCompetencyFeedback(UserAttemptCompetencyBreakdownFeedback feedbackData) {
         if (feedbackData == null || binding == null) return;
 
-        // Set overall score percentage using model getter
         if (binding.tvScorePercent != null) {
-            binding.tvScorePercent.setText(String.format(Locale.getDefault(), "%.0f%%", feedbackData.getCompetencyPercentage()));
+            binding.tvScorePercent.setText(String.format(Locale.getDefault(), "%.0f%%", feedbackData.getBreakdownPercentage()));
         }
     }
 
     private void displaySessionDetails() {
         if (getArguments() == null || binding == null) return;
-        String title = getArguments().getString(ARG_INTERVIEW_TITLE);
         String difficulty = getArguments().getString(ARG_DIFFICULTY);
-        int answered = getArguments().getInt(ARG_ANSWERED_COUNT);
         int total = getArguments().getInt(ARG_TOTAL_QUESTIONS);
         String duration = getArguments().getString(ARG_DURATION);
 
@@ -112,13 +112,9 @@ public class ReviewInterviewFragment extends Fragment {
         if (binding.tvDuration != null) {
             binding.tvDuration.setText(duration);
         }
-        if (binding.tvScorePercent != null) {
-            binding.tvScorePercent.setText("80%");
-        }
     }
 
     private void setupRecyclerView() {
-        // Pass click listener to handle navigation when a question item is clicked
         adapter = new ReviewInterviewAdapter(reviewQuestionsList, (question, position) -> {
             if (isAdded()) {
                 NavController navController = NavHostFragment.findNavController(this);
@@ -126,14 +122,12 @@ public class ReviewInterviewFragment extends Fragment {
                         && navController.getCurrentDestination().getId() == R.id.reviewInterviewFragment) {
                     Bundle args = new Bundle();
 
-                    // Pass along session metadata arguments
                     if (getArguments() != null) {
                         args.putString(ReviewQuestionFragment.ARG_INTERVIEW_TITLE, getArguments().getString(ARG_INTERVIEW_TITLE));
                         args.putString(ReviewQuestionFragment.ARG_DIFFICULTY, getArguments().getString(ARG_DIFFICULTY));
                         args.putString(ReviewQuestionFragment.ARG_DURATION, getArguments().getString(ARG_DURATION));
                     }
 
-                    // Navigate to ReviewQuestionFragment using action defined in nav graph
                     navController.navigate(R.id.action_reviewInterviewFragment_to_reviewQuestionFragment, args);
                 }
             }
@@ -148,12 +142,10 @@ public class ReviewInterviewFragment extends Fragment {
     private void setupClickListeners() {
         if (binding == null) return;
 
-        // Top back arrow button
         if (binding.btnBack != null) {
             binding.btnBack.setOnClickListener(v -> navigateBack());
         }
 
-        // The "Review questions" pill button (div_pill_btn) should navigate to ReviewQuestionFragment
         if (binding.divPillBtn != null) {
             binding.divPillBtn.setOnClickListener(v -> {
                 if (isAdded()) {
@@ -162,14 +154,12 @@ public class ReviewInterviewFragment extends Fragment {
                             && navController.getCurrentDestination().getId() == R.id.reviewInterviewFragment) {
                         Bundle args = new Bundle();
 
-                        // Pass along session metadata arguments
                         if (getArguments() != null) {
                             args.putString(ReviewQuestionFragment.ARG_INTERVIEW_TITLE, getArguments().getString(ARG_INTERVIEW_TITLE));
                             args.putString(ReviewQuestionFragment.ARG_DIFFICULTY, getArguments().getString(ARG_DIFFICULTY));
                             args.putString(ReviewQuestionFragment.ARG_DURATION, getArguments().getString(ARG_DURATION));
                         }
 
-                        // Navigate forward to the question review screen
                         navController.navigate(R.id.action_reviewInterviewFragment_to_reviewQuestionFragment, args);
                     }
                 }

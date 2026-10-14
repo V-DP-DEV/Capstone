@@ -1,5 +1,8 @@
 package com.example.capstone.ui.mock;
 
+import static com.example.capstone.ui.mock.MockInterviewResult.ARG_TOTAL_QUESTIONS;
+import static com.example.capstone.ui.mock.SelectInterviewFragment.ARG_DIFFICULTY;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +24,7 @@ import com.example.capstone.ui.components.BottomNavHelper;
 public class MockInterviewInstructionsFragment extends Fragment {
 
     // Bundle argument keys for receiving interview metadata from the selection screen
+    public static final String ARG_INTERVIEW_TITLE = "arg_interview_title";
     public static final String ARG_INTERVIEW_NAME = "arg_interview_name";
     public static final String ARG_INTERVIEW_DIFFICULTY = "arg_interview_difficulty";
     public static final String ARG_QUESTION_COUNT = "arg_question_count";
@@ -33,12 +37,12 @@ public class MockInterviewInstructionsFragment extends Fragment {
      * Factory method to create a new instance of this fragment packed with the required interview details.
      */
     public static MockInterviewInstructionsFragment newInstance(
-            String name, String difficulty, int questionCount, String duration, String inputType) {
+            String title, String difficulty, int questionCount, String duration, String inputType) {
         MockInterviewInstructionsFragment fragment = new MockInterviewInstructionsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_INTERVIEW_NAME, name);
-        args.putString(ARG_INTERVIEW_DIFFICULTY, difficulty);
-        args.putInt(ARG_QUESTION_COUNT, questionCount);
+        args.putString(ARG_INTERVIEW_TITLE, title);
+        args.putString(ARG_DIFFICULTY, difficulty);
+        args.putInt(ARG_TOTAL_QUESTIONS, questionCount);
         args.putString(ARG_DURATION, duration);
         args.putString(ARG_INPUT_TYPE, inputType);
         fragment.setArguments(args);
@@ -48,7 +52,6 @@ public class MockInterviewInstructionsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Inflate layout using ViewBinding
         binding = FragmentMockInterviewInstructionsBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -70,14 +73,15 @@ public class MockInterviewInstructionsFragment extends Fragment {
     private void displayInstructionsDetails() {
         if (getArguments() == null || binding == null) return;
 
-        String name = getArguments().getString(ARG_INTERVIEW_NAME, "Interview");
-        String difficulty = getArguments().getString(ARG_INTERVIEW_DIFFICULTY, "Medium");
-        int questionCount = getArguments().getInt(ARG_QUESTION_COUNT, 8);
+        // Use aligned keys
+        String title = getArguments().getString(ARG_INTERVIEW_TITLE, "Interview");
+        String difficulty = getArguments().getString(ARG_DIFFICULTY, "Medium");
+        int questionCount = getArguments().getInt(ARG_TOTAL_QUESTIONS, 8);
         String duration = getArguments().getString(ARG_DURATION, "~25m");
         String inputType = getArguments().getString(ARG_INPUT_TYPE, "Mic");
 
         if (binding.tvInterviewName != null) {
-            binding.tvInterviewName.setText(name);
+            binding.tvInterviewName.setText(title);
         }
 
         if (binding.tvInterviewDifficulty != null) {
@@ -101,6 +105,7 @@ public class MockInterviewInstructionsFragment extends Fragment {
      * Sets up click listeners for back navigation and starting the interview session.
      */
     private void setupClickListeners() {
+        if (binding == null) return;
         binding.btnBack.setOnClickListener(v -> navigateBack());
         binding.btnStart.setOnClickListener(v -> startInterviewSession());
     }

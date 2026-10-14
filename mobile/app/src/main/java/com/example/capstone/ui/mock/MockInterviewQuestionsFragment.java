@@ -54,16 +54,16 @@ public class MockInterviewQuestionsFragment extends Fragment {
 
         View bottomBar = view.findViewById(R.id.bottom_nav_container);
         BottomNavHelper.setupNavListeners(this, bottomBar);
-        // Retrieve the interview title passed from the instructions fragment
-        if (getArguments() != null && getArguments().containsKey(MockInterviewInstructionsFragment.ARG_INTERVIEW_NAME)) {
-            interviewTitle = getArguments().getString(MockInterviewInstructionsFragment.ARG_INTERVIEW_NAME, "Java");
+
+        // Ensure this matches the constant name in MockInterviewInstructionsFragment
+        if (getArguments() != null && getArguments().containsKey(MockInterviewInstructionsFragment.ARG_INTERVIEW_TITLE)) {
+            interviewTitle = getArguments().getString(MockInterviewInstructionsFragment.ARG_INTERVIEW_TITLE, "Java");
         }
 
         binding.tvHeaderTitle.setText(interviewTitle);
 
         setupClickListeners();
 
-        // Load fallback sample list if no questions were injected beforehand
         if (questionsList.isEmpty()) {
             loadSampleQuestions();
         }
