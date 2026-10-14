@@ -4,6 +4,7 @@ import com.example.capstone.domainModels.UserInterviewAttempt;
 import com.example.capstone.domainModels.UserInterviewAttemptSummary;
 import com.example.capstone.model.request.AnalyseRequest;
 import com.example.capstone.model.request.DeleteAttemptRequest;
+import com.example.capstone.model.request.SetAttemptToReviewedRequest;
 import com.example.capstone.model.request.SubmitInterviewAttemptRequest;
 import com.example.capstone.model.response.SubmitAttemptResponse;
 import com.example.capstone.network.ApiCallback;
@@ -56,5 +57,9 @@ public class InterviewAttemptsService {
     Type type = new TypeToken<List<UserInterviewAttemptSummary>>() {}.getType();
 
     apiClient.execute(request,type,callback);
+  }
+
+  public void setToReviewed(SetAttemptToReviewedRequest setAttemptToReviewedRequest, ApiCallback<Void> callback){
+
   }
 }

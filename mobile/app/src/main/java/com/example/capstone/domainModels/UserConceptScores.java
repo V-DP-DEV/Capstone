@@ -10,11 +10,11 @@ public class UserConceptScores {
   }
 
   public int getConcept_id() {
-    return concept_id;
+    return conceptId;
   }
 
   public void setConcept_id(int concept_id) {
-    this.concept_id = concept_id;
+    this.conceptId = concept_id;
   }
 
   public String getName() {
@@ -42,7 +42,7 @@ public class UserConceptScores {
   }
 
   private int id;
-  private int concept_id;
+  private int conceptId;
   private String name;
   private int score;
   private int maxScore;
