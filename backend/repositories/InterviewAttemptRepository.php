@@ -227,6 +227,7 @@
                         iua.analysed as analysed,
                         iua.status as analysedStatus,
                         i.estimated_time_in_minutes as estimatedMinutes,
+                        iua.reviewed as reviewed
                         
                         
                         COALESCE(iqa.totalSecondsSpent, 0) AS totalSecondsSpent,
