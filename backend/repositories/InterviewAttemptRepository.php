@@ -2,30 +2,27 @@
     class InterviewAttemptRepository implements IInterviewAttemptRepository{
         public function __construct(private Db $db){}
 
-        public function submitAttempt($userId,$interviewId, $answers){ 
-                //create the user interview attempt
-                $query = "INSERT INTO interview_user_attempts (user_id,interview_id) VALUES (?,?)";
-                $this->db->execute($query,[$userId,$interviewId]);
-                $attemptId = $this->db->lastInsertId();
 
-                //add the question responses
-                $user_attempt_id = $this->db->lastInsertId();
-                
-                //build the params and placeholders to be passed
-                $placeHolders = [];
-                $params = [];
-                foreach($answers as $answer){
-                    $placeHolders[] = "(?,?,?,?)";
-                    $params[] = $user_attempt_id;
-                    $params[] = $answer['id'];
-                    $params[] = $answer['answer'];
-                    $params[] = $answer['secondsSpent'];
-                }
-                //insert into the db
-                $query = "INSERT INTO interview_question_attempts (interview_attempt_id,question_id,answer,seconds_spent) VALUES " . implode(',',$placeHolders);
-                $this->db->execute($query,$params);
-                return $attemptId;
+        public function addInterviewUserAttempt(int $userId,int $interviewId):int{
+            //create the user interview attempt
+            $query = "INSERT INTO interview_user_attempts (user_id,interview_id) VALUES (?,?)";
+            return $this->db->execute($query,[$userId,$interviewId]);
+        }
 
+        public function addInterviewUserAttemptQuestions(int $attemptId,array $answers):int{
+            //build the params and placeholders to be passed
+            $placeHolders = [];
+            $params = [];
+            foreach($answers as $answer){
+                $placeHolders[] = "(?,?,?,?)";
+                $params[] = $attemptId;
+                $params[] = $answer['id'];
+                $params[] = $answer['answer'];
+                $params[] = $answer['secondsSpent'];
+            }
+            //insert into the db all question attempts once off
+            $query = "INSERT INTO interview_question_attempts (interview_attempt_id,question_id,answer,seconds_spent) VALUES " . implode(',',$placeHolders);
+            return $this->db->execute($query,$params);
         }
 
         public function getQuestionsMatching($questionIds,$interviewId){
@@ -37,11 +34,8 @@
                 WHERE interview_id = ?
                 AND id IN ($placeholders)
             ";
-            //gets the questions from db and compares count
+            //returns all questions that matches
             return $this->db->queryAll($query,array_merge([$interviewId], $questionIds));
-            if (count($validQuestions) !== count($questionIds)) {
-                throw new ValidationException('One or more questions do not belong to this interview.');
-            }
         }
 
         //gets the users attempt and returns all information, without questions
@@ -50,6 +44,9 @@
         }
 
         public function getAttemptDetails(int $attemptId):array{
+            //coalesce used to ensure if null->0
+            //case used to do bool check if completed in time
+            //
             $query = "SELECT
                         iua.id as id,
                         i.interview_name as name,
@@ -85,7 +82,22 @@
             return $this->db->queryOne($query,[$attemptId]);
         }
 
+        //gets competency feedback with overall percentage
+        //competency breakdown percentage
+        //and strength + improvement
         public function getCompetenciesFeedback($attemptId){
+            //with used to make query more readable
+            //CTE 1 
+            //breakdown scores gets percentage, competency breakdown name and competency
+            //with strenght + improvement
+            //group by used to correctly aggregate score to competency breakdown
+
+            //CTE 2
+            //calculates the total competency from cte1
+            //group by used to correctly aggregate according to competency
+            
+            //last query gets all the results from cte1, cte2
+            //and joins them
             $query = 'WITH breakdown_scores AS (
                 SELECT
                     cb.competency_id,
@@ -96,22 +108,22 @@
                     icbf.strength,
                     icbf.improvement
     				
-                FROM interview_competency_breakdown_feedbacks icbf
-                JOIN interview_question_attempts iqa
-                    ON iqa.interview_attempt_id = icbf.interview_attempt_id
-                JOIN question_competency_breakdown_scores qcbc
-                    ON qcbc.question_attempt_id = iqa.id
-                AND qcbc.competency_breakdown_id =
-                    icbf.competency_breakdown_id
-                JOIN competency_breakdowns cb
-                    ON cb.id = icbf.competency_breakdown_id
-    			JOIN competencies c
-    				ON c.id = cb.competency_id
-                WHERE icbf.interview_attempt_id = ?
-                GROUP BY
-                    cb.competency_id,
-                    icbf.competency_breakdown_id
-                ),
+                    FROM interview_competency_breakdown_feedbacks icbf
+                    JOIN interview_question_attempts iqa
+                        ON iqa.interview_attempt_id = icbf.interview_attempt_id
+                    JOIN question_competency_breakdown_scores qcbc
+                        ON qcbc.question_attempt_id = iqa.id
+                    AND qcbc.competency_breakdown_id =
+                        icbf.competency_breakdown_id
+                    JOIN competency_breakdowns cb
+                        ON cb.id = icbf.competency_breakdown_id
+    			    JOIN competencies c
+    				    ON c.id = cb.competency_id
+                    WHERE icbf.interview_attempt_id = ?
+                    GROUP BY
+                        cb.competency_id,
+                        icbf.competency_breakdown_id
+                    ),
                 competency_totals AS (
                     SELECT
                         competency_id,
@@ -128,7 +140,20 @@
             return $this->db->queryAll($query,[$attemptId]);
         }
 
+        //gets question attempts
+        //gets scores if there is any scores for competencies
+        //gets scores if any for concepts but still returns concepts
+        //the competency score will be the question score
         public function getAttemptQuestions(int $attemptId):array{
+            //with and CTEs used for readibility
+            //first cte calculates the score
+            //groups to do it per question
+
+            //final query uses CTE
+            //gets relevant information about question
+            //than attempts to join to get expected answer and question
+            //joins to get question types
+            //gets the concepts and if it has any scoring with it
             $query = "WITH competency_score AS (
                         SELECT
                             AVG(qcbc.score) AS competency_score,
@@ -172,7 +197,11 @@
             return $this->db->queryAll($query,[$attemptId,$attemptId]);
         }
 
+
+        //gets high overall summary of attempts
         public function getAttempts(int $userId, SortOptions $sortOptions){
+            //sort options maps field and throws error if not in field.
+            //used for security
             $sort_collumns = [
                 'completedAt' => 'iua.completed_at',
                 'scorePercentage' => 'iua.score_percentage'
@@ -180,6 +209,15 @@
 
             $sortColumn = $sortOptions->mapField($sort_collumns);
 
+            //query uses coalesce to make null ->0
+            //uses case to check if completed in time
+            
+            //does sub query to get total seconds spent
+            //sub query groups by interview id
+
+            //joins interview attempt to interview to get other details
+            //such as name difficulty and estimated time
+            //aliased for frontend
             $query = "SELECT
                         iua.id as id,
                         i.interview_name as name,
@@ -214,6 +252,7 @@
         }
 
         //get the question answer, expected answer and question for analysis
+        //needs to join question attempt with question
         public function getQuestionsForAnalysis(int $attemptId): array{
             $query = "SELECT iq.id,iq.answer as expected_answer,iq.text as question,iqa.answer,iqa.id as question_attempt_id
                 FROM interview_questions iq 
@@ -234,7 +273,7 @@
                 $params[] = $concepts['score'];
             }
 
-            //performs the query
+            //performs the query for all questions
             $query = 'INSERT INTO question_concept_scores (question_attempt_id,concept_id,score) VALUES ' . implode(',',$placeHolders);
             $this->db->execute($query,$params);
         }
@@ -253,11 +292,12 @@
                 $params[] = $interviewCompetencies['improvement'];
             }
 
-            //performs the query
+            //performs the query for all competencies
             $query = 'INSERT INTO interview_competency_breakdown_feedbacks (interview_attempt_id,competency_breakdown_id,strength,improvement) VALUES ' . implode(',',$placeHolders);
             $this->db->execute($query,$params);
         }
 
+        //inserts data into question competencies analysed
         public function addAnalyseQuestionCompetencies($aiQuestionCompetencies){
             //creates the params and placeholders to do one bulk query
             $placeHolders = [];
@@ -270,7 +310,7 @@
                 $params[] = $competencies['score'];
             }
             
-            //performs the query
+            //performs the query for all questions
             $query = 'INSERT INTO question_competency_breakdown_scores (question_attempt_id,competency_breakdown_id,score) VALUES ' . implode(',',$placeHolders);
             $this->db->execute($query,$params);
         }
