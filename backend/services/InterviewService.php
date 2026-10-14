@@ -15,7 +15,10 @@
         //checks what role user is to retrieve the right data
         //no further checks needed
         if($this->requestContext->getRole() === 'USER'){
-            return $this->interviewRepository->getUserInterview($id);
+            $interview = $this->interviewRepository->getUserInterview($id);
+            $questions = $this->interviewRepository->getUserInterviewQuestions($id);
+            $interview['questions']=$questions;
+            return $interview;
         }
         else if($this->requestContext->getRole() === 'ADMIN'){
 
@@ -26,7 +29,26 @@
         //checks what role user is to retrieve the right data
         //no further checks needed
         if($this->requestContext->getRole() === 'USER'){
-            return $this->interviewRepository->getUserInterviews($categoryId, $name, $difficulty);
+            //get interviews
+            $interviews = $this->interviewRepository->getUserInterviews($categoryId,$name,$difficulty);
+            //extract interview ids
+            $interviewIds = array_column($interviews, 'id');
+            //get interview question types
+            $interviewQuestionsTypes = $this->interviewRepository->getInterviewsQuestionTypes($interviewIds);
+            //group them in object
+            $typesByInterview = [];
+            foreach ($interviewQuestionsTypes as $question) {
+                $typesByInterview[$question['interview_id']][] = $question['name'];
+            }
+
+            //add question type to interview
+            foreach ($interviews as &$interview) {
+                $id = $interview['id'];
+
+                $interview['questionTypes'] =$typesByInterview[$id] ?? [];
+                unset($interview);
+            }
+            return $interviews;
         }
         else if($this->requestContext->getRole() === 'ADMIN'){
 
