@@ -40,7 +40,7 @@
 '-Incorrect or contradictory information should reduce the score when it directly relates to the competency or concept being evaluated. ' .
 
 '### SCORING RUBRIC ### ' .
-'-Use the following rubric consistently for every competency and concept. ' .
+'-Use the following rubric consistently for every competency' .
 
 '-0 = Not demonstrated. ' .
 'No relevant evidence.' .
@@ -59,7 +59,19 @@
 
 '-5 = Fully demonstrated. ' .
 ' Comprehensive and accurate evidence covering the important aspects relevant to the question..' .
+
+"-Use the following rubric consistently for every concept".
+'-0 = Not demonstrated. ' .
+'Concept was not demonstrated.' .
+
+'-1 = Partially demonstrated. ' .
+'Concept was briefly mentioned or could be inferred by answer but minor gaps in understanding' .
+
+
+'-2 = Strongly demonstrated. ' .
+'Concept mentioned and demonstrated with understanding' .
 "Before assigning a score, identify the evidence in the candidate's answer that is relevant to the specific competency or concept. Then assign the score based only on that evidence.".
+
 
 
 '### STRENGTHS + IMPROVEMENTS ### ' .
@@ -190,7 +202,7 @@
                                     "score" => [
                                         "type" => "integer",
                                         "minimum" => 0,
-                                        "maximum" => 5
+                                        "maximum" => 2
                                     ]
                                 ],
                                 "required" => [

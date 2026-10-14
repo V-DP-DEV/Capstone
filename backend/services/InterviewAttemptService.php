@@ -101,7 +101,7 @@
                 //add a concept for each row
                 $questions[$questionId]['concepts'][] = [
                     'name'=>$row['concept_name'],
-                    'maxScore'=>5,
+                    'maxScore'=>2,
                     'score'=>$row['concept_score'],
                     'id'=>$row['concept_id']
                 ];
