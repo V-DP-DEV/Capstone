@@ -4,11 +4,11 @@ import java.util.List;
 
 public class UserQuestionAttempt {
 
-  public String getId() {
+  public int getId() {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(int id) {
     this.id = id;
   }
 
@@ -60,7 +60,7 @@ public class UserQuestionAttempt {
     this.maxScore = maxScore;
   }
 
-  public long getScore() {
+  public double getScore() {
     return score;
   }
 
@@ -80,14 +80,14 @@ public class UserQuestionAttempt {
     return conceptScores;
   }
 
-  private String id;
+  private int id;
   private String question;
   private String answer;
   private String expectedAnswer;
   private String difficulty;
   private long secondsSpent;
   private long maxScore;
-  private long score;
+  private double score;
   private String type;
 
   public void setConceptScores(List<UserConceptScores> conceptScores) {
