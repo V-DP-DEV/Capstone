@@ -75,6 +75,11 @@ public class SelectInterviewFragment extends Fragment {
 
         View bottomBar = view.findViewById(R.id.bottom_nav_container);
         BottomNavHelper.setupNavListeners(this, bottomBar);
+        Bundle args = new Bundle();
+        args.putInt(MockInterviewInstructionsFragment.ARG_INPUT_ID,3);
+
+        NavHostFragment.findNavController(this)
+            .navigate(R.id.action_selectInterviewFragment_to_mockInterviewInstructionsFragment, args);
     }
 
     /**
@@ -205,12 +210,7 @@ public class SelectInterviewFragment extends Fragment {
 
             // Package selected interview details into a bundle for the instructions screen
             Bundle args = new Bundle();
-            args.putString(MockInterviewInstructionsFragment.ARG_INTERVIEW_NAME, selectedInterview.getName());
-            args.putString(MockInterviewInstructionsFragment.ARG_INTERVIEW_DIFFICULTY, selectedInterview.getDifficulty());
-            args.putInt(MockInterviewInstructionsFragment.ARG_QUESTION_COUNT, questionCount);
-            args.putString(MockInterviewInstructionsFragment.ARG_DURATION, durationText);
-            args.putString(MockInterviewInstructionsFragment.ARG_INPUT_TYPE, "Mic / Text");
-
+            args.putInt(MockInterviewInstructionsFragment.ARG_INPUT_ID,2);
             if (isAdded()) {
                 NavHostFragment.findNavController(this)
                         .navigate(R.id.action_selectInterviewFragment_to_mockInterviewInstructionsFragment, args);
