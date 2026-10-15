@@ -59,6 +59,7 @@ public class AnswerViewModel extends ViewModel {
     public LiveData<UserInterview> getCurrentInterview() {
         return currentInterview;
     }
+    public Map<Integer, QuestionAnswerRequest> getAnswers(){return answers;}
 
     public LiveData<Integer> getCurrentQuestionIndex() {
         return currentQuestionIndex;
@@ -311,5 +312,15 @@ public class AnswerViewModel extends ViewModel {
 
         error.setValue(null);
         return request;
+    }
+
+    public void clearViewModel(){
+        currentAnswer.setValue("");
+        currentInterview.setValue(null);
+        currentQuestionIndex.setValue(0);
+        error.setValue("");
+        isLoading.setValue(false);
+        isSubmitted.setValue(false);
+        answers.clear();;
     }
 }
