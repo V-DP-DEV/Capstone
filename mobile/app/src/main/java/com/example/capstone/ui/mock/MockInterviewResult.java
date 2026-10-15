@@ -7,11 +7,19 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.capstone.AppContainer;
+import com.example.capstone.MyApplication;
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentMockInterviewResultBinding;
+import com.example.capstone.model.request.QuestionAnswerRequest;
+import com.example.capstone.repository.IInterviewAttemptsRepository;
+import com.example.capstone.repository.IInterviewRepository;
 import com.example.capstone.ui.components.BottomNavHelper;
+import com.example.capstone.viewmodel.AnswerViewModel;
+import com.example.capstone.viewmodel.ViewModelFactory;
 
 import java.util.Locale;
 
@@ -30,6 +38,7 @@ public class MockInterviewResult extends Fragment {
     public static final String ARG_DURATION = "arg_duration";
 
     private FragmentMockInterviewResultBinding binding;
+    private AnswerViewModel answerViewModel;
 
     /**
      * Factory method to create a new instance of this fragment packed with completed interview metrics.
@@ -60,6 +69,26 @@ public class MockInterviewResult extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Get app-wide repository
+        MyApplication app =
+            (MyApplication) requireActivity().getApplication();
+
+        AppContainer container = app.getAppContainer();
+
+        //gets repositories needed
+        IInterviewRepository interviewRepository = container.interviewRepository;
+        IInterviewAttemptsRepository interviewAttemptsRepository = container.interviewAttemptsRepository;
+
+        // Create ViewModel factory
+        ViewModelFactory<AnswerViewModel> factory =
+            new ViewModelFactory<>(
+                () -> new AnswerViewModel(interviewRepository,interviewAttemptsRepository)
+            );
+
+        // Create ViewModel
+        answerViewModel = new ViewModelProvider(requireActivity(), factory)
+            .get(AnswerViewModel.class);
+
         displaySessionDetails();
         setupClickListeners();
 
@@ -71,13 +100,22 @@ public class MockInterviewResult extends Fragment {
      * Extracts session metadata from the argument bundle and populates the results screen TextViews.
      */
     private void displaySessionDetails() {
-        if (getArguments() == null || binding == null) return;
+        //if (getArguments() == null || binding == null) return;
+        String title = answerViewModel.getCurrentInterview().getValue().getName();
+        //String title = getArguments().getString(ARG_INTERVIEW_TITLE, "Mock Interview");
+        String difficulty = answerViewModel.getCurrentInterview().getValue().getDifficulty();
+        //String difficulty = getArguments().getString(ARG_DIFFICULTY, "Medium");
+        int answered = answerViewModel.getCurrentInterview().getValue().getTotalQuestions();
+        //int answered = getArguments().getInt(ARG_ANSWERED_COUNT, 0);
+        //int total = getArguments().getInt(ARG_TOTAL_QUESTIONS, 0);
+        int total = answerViewModel.getCurrentInterview().getValue().getTotalQuestions();
+        int totalSeconds = 0;
 
-        String title = getArguments().getString(ARG_INTERVIEW_TITLE, "Mock Interview");
-        String difficulty = getArguments().getString(ARG_DIFFICULTY, "Medium");
-        int answered = getArguments().getInt(ARG_ANSWERED_COUNT, 0);
-        int total = getArguments().getInt(ARG_TOTAL_QUESTIONS, 0);
-        String duration = getArguments().getString(ARG_DURATION, "0m");
+        for (QuestionAnswerRequest answer : answerViewModel.getAnswers().values()) {
+            totalSeconds += answer.getSecondsSpent();
+        }
+        int totalMinutes = Math.floorDiv(totalSeconds,60);
+        String duration = String.valueOf(totalMinutes) + "m";
 
         if (binding.tvHeaderTitle != null) {
             binding.tvHeaderTitle.setText("Interview Complete");
@@ -102,6 +140,7 @@ public class MockInterviewResult extends Fragment {
         if (binding == null) return;
 
         if (binding.btnViewReview != null) {
+            answerViewModel.clearViewModel();
             binding.btnViewReview.setOnClickListener(v -> navigateToReview());
         }
     }
