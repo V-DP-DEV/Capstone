@@ -19,7 +19,6 @@ import com.example.capstone.service.UserService;
 import com.example.capstone.util.PreferenceManager;
 import com.example.capstone.util.SecureSession;
 import com.example.capstone.viewmodel.SetupViewModel;
-import com.example.capstone.viewmodel.SubmitViewModel;
 import com.google.gson.Gson;
 
 public class AppContainer {
@@ -76,9 +75,5 @@ public class AppContainer {
 
   public SetupViewModel createSetupViewModel() {
     return new SetupViewModel(interviewRepository);
-  }
-
-  public SubmitViewModel createSubmitViewModel() {
-    return new SubmitViewModel(interviewAttemptsRepository);
   }
 }

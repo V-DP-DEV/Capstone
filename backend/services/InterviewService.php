@@ -18,6 +18,7 @@
             $interview = $this->interviewRepository->getUserInterview($id);
             $questions = $this->interviewRepository->getUserInterviewQuestions($id);
             $interview['questions']=$questions;
+            $interview['totalQuestions']=count($questions);
             return $interview;
         }
         else if($this->requestContext->getRole() === 'ADMIN'){
