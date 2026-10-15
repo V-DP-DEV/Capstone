@@ -19,7 +19,7 @@
 
         //gets the user interview questions and their typing
         public function getUserInterviewQuestions(int $id):array{
-             $query = "SELECT iq.id,iq.difficulty,iq.text,qt.name 
+             $query = "SELECT iq.id,iq.difficulty,iq.text,qt.name 'type'
                         FROM interview_questions iq 
                         JOIN question_types qt ON iq.type_id = qt.id 
                         WHERE iq.active =1 AND iq.interview_id=? 
