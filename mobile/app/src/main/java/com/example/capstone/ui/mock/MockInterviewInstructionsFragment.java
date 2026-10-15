@@ -20,6 +20,7 @@ import com.example.capstone.databinding.FragmentMockInterviewInstructionsBinding
 import com.example.capstone.repository.IAuthRepository;
 import com.example.capstone.repository.IInterviewAttemptsRepository;
 import com.example.capstone.repository.IInterviewRepository;
+import com.example.capstone.ui.BaseActivity;
 import com.example.capstone.viewmodel.AnswerViewModel;
 import com.example.capstone.viewmodel.LoginViewModel;
 import com.example.capstone.viewmodel.ViewModelFactory;
@@ -31,13 +32,6 @@ import com.example.capstone.ui.components.BottomNavHelper;
  * and input type before the user officially starts the session.
  */
 public class MockInterviewInstructionsFragment extends Fragment {
-
-    // Bundle argument keys for receiving interview metadata from the selection screen
-    public static final String ARG_INTERVIEW_NAME = "arg_interview_name";
-    public static final String ARG_INTERVIEW_DIFFICULTY = "arg_interview_difficulty";
-    public static final String ARG_QUESTION_COUNT = "arg_question_count";
-    public static final String ARG_DURATION = "arg_duration";
-    public static final String ARG_INPUT_TYPE = "arg_input_type";
     public static final String ARG_INPUT_ID = "arg_input_it";
     private AnswerViewModel answerViewModel;
 
@@ -46,15 +40,9 @@ public class MockInterviewInstructionsFragment extends Fragment {
     /**
      * Factory method to create a new instance of this fragment packed with the required interview details.
      */
-    public static MockInterviewInstructionsFragment newInstance(
-            String name, String difficulty, int questionCount, String duration, String inputType,int id) {
+    public static MockInterviewInstructionsFragment newInstance(int id) {
         MockInterviewInstructionsFragment fragment = new MockInterviewInstructionsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_INTERVIEW_NAME, name);
-        args.putString(ARG_INTERVIEW_DIFFICULTY, difficulty);
-        args.putInt(ARG_QUESTION_COUNT, questionCount);
-        args.putString(ARG_DURATION, duration);
-        args.putString(ARG_INPUT_TYPE, inputType);
         args.putInt(ARG_INPUT_ID,id);
         fragment.setArguments(args);
         return fragment;
@@ -95,15 +83,47 @@ public class MockInterviewInstructionsFragment extends Fragment {
         answerViewModel.getCurrentInterview().observe(
             getViewLifecycleOwner(), interview -> {
                 if (interview != null) {
+                    if (getActivity() instanceof BaseActivity) {
+                        // 1. Show loading spinner
+                        ((BaseActivity) getActivity()).hideLoadingDialog();
+                    }
                     displayInstructionsDetails();
-                    System.out.println("hey");
-                    Integer index =
-                        answerViewModel.getCurrentQuestionIndex().getValue();
-                    //binding.tvHeaderTitle.setText(answerViewModel.getCurrentInterview().getValue().getName());
-                    //displayQuestionAtIndex(index != null ? index : 0);
                 }
             });
-        answerViewModel.loadInterview(2);
+
+        //observe loading and show or hide the loading
+        answerViewModel.getIsLoading().observe(getViewLifecycleOwner(),isLoading->{
+            if(Boolean.TRUE.equals(isLoading)){
+                if (getActivity() instanceof BaseActivity) {
+                    ((BaseActivity) getActivity()).showLoadingDialog("Getting interview...");
+                }
+            }
+            else{
+                if (getActivity() instanceof BaseActivity) {
+                    ((BaseActivity) getActivity()).hideLoadingDialog();
+                }
+            }
+        });
+
+        //if error display in box and than return to previous screen
+        answerViewModel.getError().observe(getViewLifecycleOwner(),error->{
+            if (error != null && !error.isEmpty()) {
+                BaseActivity baseActivity = ((BaseActivity) getActivity());
+                baseActivity.showAlertDialog("Error",error,()->{
+                    NavHostFragment.findNavController(this).navigateUp();
+                });
+            }
+        });
+
+        //load args from select screens
+        Bundle args = getArguments();
+
+        if (args != null) {
+            int id = args.getInt(MockInterviewInstructionsFragment.ARG_INPUT_ID);
+            System.out.println(id);
+            answerViewModel.loadInterview(id);
+        }
+
         setupClickListeners();
 
         View bottomBar = view.findViewById(R.id.bottom_nav_container);
