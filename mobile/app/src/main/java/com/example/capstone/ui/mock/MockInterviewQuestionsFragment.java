@@ -4,6 +4,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,12 @@ public class MockInterviewQuestionsFragment extends Fragment {
 
     // Standard 3-minute limit per question
     private static final int DEFAULT_QUESTION_DURATION_SECONDS = 180;
+
+    private android.os.Handler timerHandler = new android.os.Handler();
+    private long startTime = 0;
+    private long elapsedTime = 0;
+    private boolean isTimerRunning = false;
+    private Runnable timerRunnable;
 
     @Nullable
     @Override
@@ -122,7 +129,7 @@ public class MockInterviewQuestionsFragment extends Fragment {
                 int total = answerViewModel.getQuestions().size();
 
                 String answer = binding.etAnswer.getText().toString();
-                int seconds = 0;
+                int seconds = getElapsedSeconds();
 
                 //for if just before last question
                 if (index == total - 1) {
@@ -177,7 +184,7 @@ public class MockInterviewQuestionsFragment extends Fragment {
         stopRecordingState();
 
         // Start countdown timer for the current question
-        startTimer(DEFAULT_QUESTION_DURATION_SECONDS);
+        startTimer();
     }
 
     /**
@@ -196,35 +203,66 @@ public class MockInterviewQuestionsFragment extends Fragment {
     }
 
     /**
-     * Starts or resets the CountDownTimer for the current question.
+     * Starts a count-up timer from 00:00 for the current question.
      */
-    private void startTimer(int seconds) {
-        if (countDownTimer != null) {
-            countDownTimer.cancel();
-        }
+    private void startTimer() {
+        //stop timer
+        stopTimer();
 
-        countDownTimer = new CountDownTimer(seconds * 1000L, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                long minutes = (millisUntilFinished / 1000) / 60;
-                long secs = (millisUntilFinished / 1000) % 60;
-                if (binding != null) {
-                    binding.tvTimer.setText(String.format(Locale.getDefault(), "%02d:%02d", minutes, secs));
-                }
-            }
+        //uses the systems start clock time and subtracts from current time
+        startTime = SystemClock.elapsedRealtime();
+        elapsedTime = 0;
+        isTimerRunning = true;
 
+        binding.tvTimer.setText("00:00");
+
+        timerRunnable = new Runnable() {
             @Override
-            public void onFinish() {
-                if (binding != null) {
-                    binding.tvTimer.setText("00:00");
+            public void run() {
+                if (binding == null || !isTimerRunning) {
+                    return;
                 }
-                if (getContext() != null) {
-                    Toast.makeText(requireContext(), "Time's up for this question!", Toast.LENGTH_SHORT).show();
-                }
-                //nextQuestion();
+
+                elapsedTime =
+                    SystemClock.elapsedRealtime() - startTime;
+
+                long totalSeconds = elapsedTime / 1000;
+                long minutes = totalSeconds / 60;
+                long seconds = totalSeconds % 60;
+
+                binding.tvTimer.setText(
+                    String.format(
+                        Locale.getDefault(),
+                        "%02d:%02d",
+                        minutes,
+                        seconds
+                    )
+                );
+                //run the event every second
+                timerHandler.postDelayed(this, 1000);
             }
-        }.start();
+        };
+
+        //create the timer on seperate thread
+        timerHandler.post(timerRunnable);
     }
+
+    /**
+     * Stops the current count-up timer.
+     */
+    private void stopTimer() {
+        isTimerRunning = false;
+
+        if (timerRunnable != null) {
+            timerHandler.removeCallbacks(timerRunnable);
+            timerRunnable = null;
+        }
+    }
+
+    private int getElapsedSeconds() {
+        return (int) ((SystemClock.elapsedRealtime() - startTime) / 1000);
+    }
+
 
     /**
      * Toggles mic recording state and updates visual feedback (color, text, animation).
@@ -291,9 +329,7 @@ public class MockInterviewQuestionsFragment extends Fragment {
 
 
     private void finishInterview() {
-        if (countDownTimer != null) {
-            countDownTimer.cancel();
-        }
+        stopTimer();
     }
 
     /**
@@ -307,11 +343,8 @@ public class MockInterviewQuestionsFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+        stopTimer();
         super.onDestroyView();
-        // Cancel active countdown timer and nullify binding to prevent memory leaks
-        if (countDownTimer != null) {
-            countDownTimer.cancel();
-        }
         binding = null;
     }
 }
