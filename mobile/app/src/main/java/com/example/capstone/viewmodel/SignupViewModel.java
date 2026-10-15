@@ -1,5 +1,7 @@
 package com.example.capstone.viewmodel;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -13,6 +15,8 @@ import com.example.capstone.util.FormValidator;
 import java.util.Map;
 
 public class SignupViewModel extends ViewModel {
+
+  private static final String TAG = "PROFILE_DEBUG";
 
   private final IAuthRepository authRepository;
 
@@ -137,6 +141,7 @@ public class SignupViewModel extends ViewModel {
 
 
   public void signup() {
+    Log.d(TAG, "2. signup() called in ViewModel");
 
     firstnameError.setValue(null);
     surnameError.setValue(null);
@@ -165,6 +170,11 @@ public class SignupViewModel extends ViewModel {
                     confirmPassword.getValue()
             );
 
+    Log.d(TAG, "Validation check -> validFirstname: " + validFirstname
+            + ", validSurname: " + validSurname
+            + ", validEmail: " + validEmail
+            + ", validPassword: " + validPassword
+            + ", validConfirmPassword: " + validConfirmPassword);
 
     if (!validFirstname) {
       firstnameError.setValue(
@@ -196,15 +206,16 @@ public class SignupViewModel extends ViewModel {
       );
     }
 
-
     if (!validFirstname
             || !validSurname
             || !validEmail
             || !validPassword
             || !validConfirmPassword) {
+      Log.w(TAG, "Validation failed! Returning early without calling repository.");
       return;
     }
 
+    Log.d(TAG, "Validation passed. Building SignupRequest and calling repository...");
 
     SignupRequest request = new SignupRequest();
 
@@ -223,6 +234,7 @@ public class SignupViewModel extends ViewModel {
               public void onSuccess(
                       ApiResponse<Void> response
               ) {
+                Log.d(TAG, "authRepository.signup onSuccess() triggered!");
                 loading.setValue(false);
                 signUpSuccess.setValue(true);
               }
@@ -231,17 +243,22 @@ public class SignupViewModel extends ViewModel {
               public void onGeneralError(
                       Exception e
               ) {
+                Log.e(TAG, "authRepository.signup onGeneralError() triggered! Exception: ", e);
                 loading.setValue(false);
 
-                generalError.setValue(
-                        "Something went wrong. Please try again."
-                );
+                // Dynamically surface the real exception object/message to the UI label:
+                String errorDetail = (e != null && e.getMessage() != null && !e.getMessage().trim().isEmpty())
+                        ? e.getMessage()
+                        : String.valueOf(e);
+
+                generalError.setValue(errorDetail);
               }
 
               @Override
               public void onHttpError(
                       ApiResponse<Void> response
               ) {
+                Log.e(TAG, "authRepository.signup onHttpError() triggered! Response: " + response);
                 loading.setValue(false);
 
                 if (response != null
