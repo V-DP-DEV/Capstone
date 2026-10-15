@@ -88,7 +88,7 @@ public class AnswerViewModel extends ViewModel {
                 @Override
                 public void onSuccess(
                     ApiResponse<UserInterview> response) {
-
+                    isLoading.setValue(false);
                     UserInterview interview = response.getData();
 
                     if (interview == null) {
@@ -102,23 +102,21 @@ public class AnswerViewModel extends ViewModel {
                     currentAnswer.setValue("");
                     answers.clear();
 
-                    isLoading.setValue(false);
                 }
 
                 @Override
                 public void onGeneralError(Exception e) {
+                    isLoading.setValue(false);
                     error.setValue(
                         e.getMessage() != null
                             ? e.getMessage()
                             : "Failed to load interview.");
-                    isLoading.setValue(false);
                 }
 
                 @Override
                 public void onHttpError(
                     ApiResponse<UserInterview> response) {
-                    error.setValue("Failed to load interview.");
-                    isLoading.setValue(false);
+                    error.setValue(response.getError().getMessage());
                 }
             });
     }
@@ -251,7 +249,6 @@ public class AnswerViewModel extends ViewModel {
     public void submitInterview() {
         SubmitInterviewAttemptRequest request =
             buildSubmissionRequest();
-        System.out.println("hey");
         if (request == null) {
             return;
         }
@@ -268,11 +265,13 @@ public class AnswerViewModel extends ViewModel {
 
             @Override
             public void onGeneralError(Exception e) {
+                error.setValue("Failed to submit attempt");
                 isLoading.setValue(false);
             }
 
             @Override
             public void onHttpError(ApiResponse<SubmitAttemptResponse> response) {
+                error.setValue(response.getError().getMessage());
                 isLoading.setValue(false);
             }
         });
