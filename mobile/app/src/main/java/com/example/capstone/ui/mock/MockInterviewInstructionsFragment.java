@@ -188,6 +188,7 @@ public class MockInterviewInstructionsFragment extends Fragment {
      */
     private void navigateBack() {
         if (isAdded()) {
+            answerViewModel.clearViewModel();
             NavHostFragment.findNavController(this).navigateUp();
         }
     }
