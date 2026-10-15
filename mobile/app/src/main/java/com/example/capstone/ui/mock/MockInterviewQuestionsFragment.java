@@ -24,6 +24,7 @@ import com.example.capstone.repository.IAuthRepository;
 import com.example.capstone.repository.IInterviewAttemptsRepository;
 import com.example.capstone.repository.IInterviewRepository;
 import com.example.capstone.repository.InterviewRepository;
+import com.example.capstone.ui.BaseActivity;
 import com.example.capstone.viewmodel.AnswerViewModel;
 import com.example.capstone.viewmodel.LoginViewModel;
 import com.example.capstone.viewmodel.ViewModelFactory;
@@ -219,17 +220,21 @@ public class MockInterviewQuestionsFragment extends Fragment {
         timerRunnable = new Runnable() {
             @Override
             public void run() {
+                //stops loop if not valid
                 if (binding == null || !isTimerRunning) {
                     return;
                 }
 
+                //calculates estimated time
                 elapsedTime =
                     SystemClock.elapsedRealtime() - startTime;
 
+                //calculates minutes and seconds to display
                 long totalSeconds = elapsedTime / 1000;
                 long minutes = totalSeconds / 60;
                 long seconds = totalSeconds % 60;
 
+                //formats the timer and sets the text
                 binding.tvTimer.setText(
                     String.format(
                         Locale.getDefault(),
@@ -251,14 +256,17 @@ public class MockInterviewQuestionsFragment extends Fragment {
      * Stops the current count-up timer.
      */
     private void stopTimer() {
+        //change boolean
         isTimerRunning = false;
 
+        //remove callbacks if object exists and make the object null
         if (timerRunnable != null) {
             timerHandler.removeCallbacks(timerRunnable);
             timerRunnable = null;
         }
     }
 
+    //gets elapsed seconds
     private int getElapsedSeconds() {
         return (int) ((SystemClock.elapsedRealtime() - startTime) / 1000);
     }
@@ -329,6 +337,7 @@ public class MockInterviewQuestionsFragment extends Fragment {
 
 
     private void finishInterview() {
+        //destroy timer
         stopTimer();
     }
 
@@ -343,6 +352,7 @@ public class MockInterviewQuestionsFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+        //remove timer and call normal on destroy
         stopTimer();
         super.onDestroyView();
         binding = null;
