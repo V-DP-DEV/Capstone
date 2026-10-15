@@ -14,8 +14,8 @@ public class UserService {
 
   // TODO: Confirm these paths against the deployed backend.
   private static final String UPDATE_PROFILE_PATH = "users/profile";
-  private static final String CHANGE_PASSWORD_PATH = null;
-  private static final String DELETE_ACCOUNT_PATH = null;
+  private static final String CHANGE_PASSWORD_PATH = "User/changePassword";
+  private static final String DELETE_ACCOUNT_PATH = "User/delete";
 
   public UserService(ApiClient apiClient) {
     this.apiClient = apiClient;
@@ -51,7 +51,7 @@ public class UserService {
 
     ApiRequest request = new ApiRequest(CHANGE_PASSWORD_PATH);
 
-    request.setMethodPUT();
+    request.setMethodPATCH();
     request.setRequiresAuthentication(true);
     request.setBody(changePasswordRequest);
 
