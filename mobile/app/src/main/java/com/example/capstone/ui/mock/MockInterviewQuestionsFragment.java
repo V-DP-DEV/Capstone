@@ -118,6 +118,34 @@ public class MockInterviewQuestionsFragment extends Fragment {
 
             }
         );
+        answerViewModel.getIsLoading().observe(
+            getViewLifecycleOwner(),isLoading->{
+                if(Boolean.TRUE.equals(isLoading)){
+                    if (getActivity() instanceof BaseActivity) {
+                        // 1. Show loading spinner
+                        ((BaseActivity) getActivity()).showLoadingDialog("Submitting your interview...");
+                    }
+                }
+                else{
+                    if (getActivity() instanceof BaseActivity) {
+                        // 1. Show loading spinner
+                        ((BaseActivity) getActivity()).hideLoadingDialog();
+                    }
+                }
+            }
+        );
+
+        answerViewModel.getError().observe(
+            getViewLifecycleOwner(),error->{
+                if (error != null && !error.isEmpty()) {
+                    BaseActivity baseActivity = ((BaseActivity) getActivity());
+                    baseActivity.showAlertDialog("Could not submit",error,()->{
+                        baseActivity.navigateToHome();
+                    });
+                }
+            }
+        );
+
         setupNewEventListeners();
     }
 
