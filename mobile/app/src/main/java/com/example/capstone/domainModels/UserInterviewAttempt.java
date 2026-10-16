@@ -45,11 +45,11 @@ public class UserInterviewAttempt {
     this.analysed = analysed;
   }
 
-  public boolean isAnalysedStatus() {
+  public String  isAnalysedStatus() {
     return analysedStatus;
   }
 
-  public void setAnalysedStatus(boolean analysedStatus) {
+  public void setAnalysedStatus(String analysedStatus) {
     this.analysedStatus = analysedStatus;
   }
 
@@ -104,7 +104,7 @@ public class UserInterviewAttempt {
   private String difficulty;
   private long completedAt;
   private boolean analysed;
-  private boolean analysedStatus;
+  private String analysedStatus;
   private boolean reviewed;
 
   private long totalSecondsSpent;
