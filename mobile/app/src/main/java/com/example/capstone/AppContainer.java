@@ -4,6 +4,7 @@ package com.example.capstone;
 import android.content.Context;
 
 import com.example.capstone.network.ApiClient;
+
 import com.example.capstone.repository.AuthRepository;
 import com.example.capstone.repository.IAuthRepository;
 import com.example.capstone.repository.IInterviewAttemptsRepository;
@@ -16,37 +17,49 @@ import com.example.capstone.service.AuthService;
 import com.example.capstone.service.InterviewAttemptsService;
 import com.example.capstone.service.InterviewService;
 import com.example.capstone.service.UserService;
+import com.example.capstone.util.FlexibleBooleanAdapter;
 import com.example.capstone.util.PreferenceManager;
 import com.example.capstone.util.SecureSession;
 import com.example.capstone.viewmodel.SetupViewModel;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class AppContainer {
 
   public final IAuthRepository authRepository;
   public final AuthService authService;
+
   public final IUserRepository userRepository;
   public final UserService userService;
+
   public final InterviewAttemptsService interviewAttemptsService;
   public final IInterviewAttemptsRepository interviewAttemptsRepository;
+
   public final ApiClient apiClient;
   public final PreferenceManager preferenceManager;
   public final SecureSession secureSession;
+
   public final IInterviewRepository interviewRepository;
   public final InterviewService interviewService;
+
   public final Gson gson;
 
   public AppContainer(Context context) {
     secureSession = new SecureSession(context);
     preferenceManager = new PreferenceManager(context);
-    gson = new Gson();
+    gson = new GsonBuilder()
+        .registerTypeAdapter(boolean.class, new FlexibleBooleanAdapter())
+        .registerTypeAdapter(Boolean.class, new FlexibleBooleanAdapter())
+        .create();
 
     apiClient = new ApiClient(secureSession, gson);
+
     authService = new AuthService(
             apiClient,
             secureSession,
             preferenceManager
     );
+
     authRepository = new AuthRepository(authService);
 
     apiClient.setRefreshCaller(
@@ -57,9 +70,13 @@ public class AppContainer {
     userService = new UserService(apiClient);
     userRepository = new UserRepository(userService);
 
-    interviewAttemptsService = new InterviewAttemptsService(apiClient);
+    interviewAttemptsService =
+            new InterviewAttemptsService(apiClient);
+
     interviewAttemptsRepository =
-            new InterviewAttemptsRepository(interviewAttemptsService);
+            new InterviewAttemptsRepository(
+                    interviewAttemptsService
+            );
 
     interviewService = new InterviewService(apiClient);
     interviewRepository = new InterviewRepository(interviewService);
@@ -76,4 +93,5 @@ public class AppContainer {
   public SetupViewModel createSetupViewModel() {
     return new SetupViewModel(interviewRepository);
   }
+
 }
