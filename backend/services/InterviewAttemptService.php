@@ -99,7 +99,7 @@
                     ];
                 }
                 //add a concept for each row
-                $questions[$questionId]['concepts'][] = [
+                $questions[$questionId]['conceptScores'][] = [
                     'name'=>$row['concept_name'],
                     'maxScore'=>2,
                     'score'=>$row['concept_score'],
@@ -107,7 +107,7 @@
                 ];
             }
             //than add the questions to the attempt object
-            $attempt['questions'] = $questions;
+            $attempt['questions'] = array_values($questions);
 
             //check if analaysed
             if($attempt['analysed']){
@@ -146,7 +146,6 @@
                 $attempt['competencies'] = $competencies;
             }   
 
-            $attempt['questions'] = $questions;
             return $attempt;
         }
 
