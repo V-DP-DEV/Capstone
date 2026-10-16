@@ -227,7 +227,7 @@
                         iua.analysed as analysed,
                         iua.status as analysedStatus,
                         i.estimated_time_in_minutes as estimatedMinutes,
-                        iua.reviewed as reviewed
+                        iua.reviewed as reviewed,
                         
                         
                         COALESCE(iqa.totalSecondsSpent, 0) AS totalSecondsSpent,
@@ -248,7 +248,7 @@
                     LEFT JOIN interviews i
                     ON iua.interview_id = i.id
                     WHERE iua.user_id = ?
-                    ORDER BY iua.completed_at DESC;";
+                    ORDER BY " . $sortColumn . " ". $sortOptions->direction .";";
             return $this->db->queryAll($query,[$userId]);
         }
 
