@@ -11,15 +11,15 @@
         public function getUserInterview(int $id):array{
             //map as to match frontend
             //get the user interview general info
-            $query = "SELECT id,interview_name as name,difficulty,estimated_time_in_minutes as duration 
-                        FROM interviews 
+            $query = "SELECT id,interview_name as name,difficulty,estimated_time_in_minutes as duration
+                        FROM interviews
                         WHERE id = ? AND active = 1";
             return $this->db->queryOne($query,[$id]);
         }
 
         //gets the user interview questions and their typing
         public function getUserInterviewQuestions(int $id):array{
-             $query = "SELECT iq.id,iq.difficulty,iq.text,qt.name 
+             $query = "SELECT iq.id,iq.difficulty,iq.text,qt.name 'type'
                         FROM interview_questions iq 
                         JOIN question_types qt ON iq.type_id = qt.id 
                         WHERE iq.active =1 AND iq.interview_id=? 

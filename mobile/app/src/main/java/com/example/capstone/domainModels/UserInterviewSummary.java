@@ -1,4 +1,4 @@
-        package com.example.capstone.domainModels;
+package com.example.capstone.domainModels;
 
 import java.util.List;
 

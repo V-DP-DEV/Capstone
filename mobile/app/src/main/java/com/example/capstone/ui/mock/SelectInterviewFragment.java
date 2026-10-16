@@ -6,17 +6,28 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.capstone.AppContainer;
+import com.example.capstone.MyApplication;
 import com.example.capstone.R;
 import com.example.capstone.adapter.InterviewAdapter;
 import com.example.capstone.databinding.FragmentSelectInterviewBinding;
 import com.example.capstone.domainModels.UserInterview;
+import com.example.capstone.domainModels.UserInterviewSummary;
 import com.example.capstone.domainModels.UserQuestion;
+import com.example.capstone.repository.IInterviewRepository;
+import com.example.capstone.ui.BaseActivity;
+import com.example.capstone.ui.components.BottomNavHelper;
+import com.example.capstone.viewmodel.SetupViewModel;
+import com.example.capstone.viewmodel.ViewModelFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +44,10 @@ public class SelectInterviewFragment extends Fragment {
 
     private FragmentSelectInterviewBinding binding;
     private InterviewAdapter adapter;
-    private List<UserInterview> difficultyFilteredList;
+    private List<UserInterview> difficultyFilteredList = new ArrayList<>();
     private UserInterview selectedInterview = null;
 
+    private SetupViewModel setupViewModel;
     private String selectedDifficulty = "All";
 
     /**
@@ -48,11 +60,9 @@ public class SelectInterviewFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Inflate the layout using ViewBinding
         binding = FragmentSelectInterviewBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -61,16 +71,79 @@ public class SelectInterviewFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Retrieve difficulty argument passed from SelectDifficultyFragment
+        // 1. Retrieve difficulty argument passed from SelectDifficultyFragment
         if (getArguments() != null && getArguments().containsKey(ARG_DIFFICULTY)) {
             selectedDifficulty = getArguments().getString(ARG_DIFFICULTY, "All");
         }
 
+        // 2. Instantiate SetupViewModel using AppContainer and ViewModelFactory
+        MyApplication app = (MyApplication) requireActivity().getApplication();
+        AppContainer container = app.getAppContainer();
+        IInterviewRepository interviewRepository = container.interviewRepository;
+
+        ViewModelFactory<SetupViewModel> factory = new ViewModelFactory<>(
+                () -> new SetupViewModel(interviewRepository)
+        );
+        setupViewModel = new ViewModelProvider(this, factory).get(SetupViewModel.class);
+
+        // 3. Setup UI components
         setupHeader();
         setupRecyclerView();
         setupSearchFilter();
         setupActionButtons();
         updateContinueButtonState();
+
+        // 4. Setup Bottom Navigation
+        View bottomBar = view.findViewById(R.id.bottom_nav_container);
+        if (bottomBar != null) {
+            BottomNavHelper.setupNavListeners(this, bottomBar);
+        }
+
+        // 5. Setup Observers for ViewModel
+        setupObservers();
+
+        // 6. Trigger data fetch
+        String filterDifficulty = "All".equalsIgnoreCase(selectedDifficulty) ? "" : selectedDifficulty;
+        setupViewModel.loadInterviews(0, "", filterDifficulty);
+    }
+
+    /**
+     * Observes LiveData from SetupViewModel
+     */
+    private void setupObservers() {
+        // Observe interview list
+        setupViewModel.getInterviews().observe(getViewLifecycleOwner(), interviewSummaries -> {
+            if (interviewSummaries != null && !interviewSummaries.isEmpty()) {
+                List<UserInterview> mappedList = new ArrayList<>();
+                for (UserInterviewSummary summary : interviewSummaries) {
+                    UserInterview ui = new UserInterview();
+                    ui.setId((int) summary.getId());
+                    ui.setName(summary.getName());
+                    ui.setDifficulty(summary.getDifficulty());
+                    mappedList.add(ui);
+                }
+                difficultyFilteredList = mappedList;
+                adapter.updateData(new ArrayList<>(difficultyFilteredList));
+            }
+        });
+
+        // Observe loading state
+        setupViewModel.getLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            if (getActivity() instanceof BaseActivity) {
+                if (Boolean.TRUE.equals(isLoading)) {
+                    ((BaseActivity) getActivity()).showLoadingDialog("Loading interviews...");
+                } else {
+                    ((BaseActivity) getActivity()).hideLoadingDialog();
+                }
+            }
+        });
+
+        // Observe errors
+        setupViewModel.getError().observe(getViewLifecycleOwner(), errorMsg -> {
+            if (errorMsg != null && !errorMsg.trim().isEmpty()) {
+                Toast.makeText(requireContext(), errorMsg, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**
@@ -86,8 +159,6 @@ public class SelectInterviewFragment extends Fragment {
      * Initializes the RecyclerView with filtered interview data and sets up the item selection listener.
      */
     private void setupRecyclerView() {
-        difficultyFilteredList = getInterviewsByDifficulty(selectedDifficulty);
-
         adapter = new InterviewAdapter(new ArrayList<>(difficultyFilteredList), interview -> {
             selectedInterview = interview;
             updateContinueButtonState();
@@ -119,7 +190,7 @@ public class SelectInterviewFragment extends Fragment {
     }
 
     /**
-     * Filters the interview list dynamically against the user's search query (matching name, category, or questions).
+     * Filters the interview list dynamically against the user's search query.
      */
     private void filterInterviews(String query) {
         List<UserInterview> searchResults = new ArrayList<>();
@@ -166,7 +237,7 @@ public class SelectInterviewFragment extends Fragment {
     }
 
     /**
-     * Configures back navigation and forward navigation with bundled interview metadata.
+     * Configures back navigation and forward navigation with bundled interview ID.
      */
     private void setupActionButtons() {
         binding.btnBack.setOnClickListener(v -> {
@@ -178,19 +249,9 @@ public class SelectInterviewFragment extends Fragment {
         binding.btnContinue.setOnClickListener(v -> {
             if (selectedInterview == null) return;
 
-            int questionCount = selectedInterview.getQuestions() != null
-                    ? selectedInterview.getQuestions().size()
-                    : selectedInterview.getTotalQuestions();
-
-            String durationText = "~" + (selectedInterview.getDuration() > 0 ? selectedInterview.getDuration() : 25) + "m";
-
-            // Package selected interview details into a bundle for the instructions screen
+            // Package the selected interview ID into bundle using ARG_INPUT_ID
             Bundle args = new Bundle();
-            args.putString(MockInterviewInstructionsFragment.ARG_INTERVIEW_NAME, selectedInterview.getName());
-            args.putString(MockInterviewInstructionsFragment.ARG_INTERVIEW_DIFFICULTY, selectedInterview.getDifficulty());
-            args.putInt(MockInterviewInstructionsFragment.ARG_QUESTION_COUNT, questionCount);
-            args.putString(MockInterviewInstructionsFragment.ARG_DURATION, durationText);
-            args.putString(MockInterviewInstructionsFragment.ARG_INPUT_TYPE, "Mic / Text");
+            args.putInt(MockInterviewInstructionsFragment.ARG_INPUT_ID, (int) selectedInterview.getId());
 
             if (isAdded()) {
                 NavHostFragment.findNavController(this)
@@ -199,36 +260,9 @@ public class SelectInterviewFragment extends Fragment {
         });
     }
 
-    /**
-     * Filters sample or repository data by the specified difficulty level.
-     */
-    private List<UserInterview> getInterviewsByDifficulty(String difficulty) {
-        List<UserInterview> allInterviews = getAllSampleData();
-        if (difficulty == null || difficulty.equalsIgnoreCase("All")) {
-            return allInterviews;
-        }
-
-        List<UserInterview> filtered = new ArrayList<>();
-        for (UserInterview item : allInterviews) {
-            if (item.getDifficulty() != null && item.getDifficulty().equalsIgnoreCase(difficulty)) {
-                filtered.add(item);
-            }
-        }
-        return filtered;
-    }
-
-    /**
-     * Placeholder method returning sample data. To be replaced or integrated with ViewModel/Repository data by Person 2.
-     */
-    private List<UserInterview> getAllSampleData() {
-        List<UserInterview> list = new ArrayList<>();
-        return list;
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // Clear binding reference to prevent memory leaks in fragments
         binding = null;
     }
 }

@@ -6,7 +6,6 @@ import android.content.Context;
 import com.example.capstone.network.ApiClient;
 
 import com.example.capstone.repository.AuthRepository;
-import com.example.capstone.repository.FeedbackRepository;
 import com.example.capstone.repository.IAuthRepository;
 import com.example.capstone.repository.IInterviewAttemptsRepository;
 import com.example.capstone.repository.IInterviewRepository;
@@ -14,20 +13,13 @@ import com.example.capstone.repository.IUserRepository;
 import com.example.capstone.repository.InterviewAttemptsRepository;
 import com.example.capstone.repository.InterviewRepository;
 import com.example.capstone.repository.UserRepository;
-
 import com.example.capstone.service.AuthService;
-import com.example.capstone.service.FeedbackService;
 import com.example.capstone.service.InterviewAttemptsService;
 import com.example.capstone.service.InterviewService;
 import com.example.capstone.service.UserService;
-
 import com.example.capstone.util.PreferenceManager;
 import com.example.capstone.util.SecureSession;
-
-import com.example.capstone.viewmodel.FeedbackViewModel;
 import com.example.capstone.viewmodel.SetupViewModel;
-import com.example.capstone.viewmodel.SubmitViewModel;
-
 import com.google.gson.Gson;
 
 public class AppContainer {
@@ -50,12 +42,7 @@ public class AppContainer {
 
   public final Gson gson;
 
-  // Personalised Feedback dependencies
-  public final FeedbackService feedbackService;
-  public final FeedbackRepository feedbackRepository;
-
   public AppContainer(Context context) {
-
     secureSession = new SecureSession(context);
     preferenceManager = new PreferenceManager(context);
     gson = new Gson();
@@ -88,10 +75,6 @@ public class AppContainer {
 
     interviewService = new InterviewService(apiClient);
     interviewRepository = new InterviewRepository(interviewService);
-
-    // Personalised Feedback initialization
-    feedbackService = new FeedbackService(apiClient);
-    feedbackRepository = new FeedbackRepository(feedbackService);
   }
 
   public SecureSession getSecureSession() {
@@ -108,12 +91,5 @@ public class AppContainer {
 
   public SubmitViewModel createSubmitViewModel() {
     return new SubmitViewModel(interviewAttemptsRepository);
-  }
-
-  // Personalised Feedback ViewModel
-  public FeedbackViewModel createFeedbackViewModel() {
-    return new FeedbackViewModel(
-            (InterviewAttemptsRepository) interviewAttemptsRepository
-    );
   }
 }
