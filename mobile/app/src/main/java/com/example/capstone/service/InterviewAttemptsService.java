@@ -78,12 +78,11 @@ public class InterviewAttemptsService {
   public void requestAnalysis(
           AnalyseRequest analyseRequest,
           ApiCallback<Void> callback) {
-
-    callback.onGeneralError(
-            new UnsupportedOperationException(
-                    "Analysis endpoint not configured"
-            )
-    );
+    ApiRequest request = new ApiRequest("interviewAttempt/analyse");
+    request.setMethodPost();
+    request.setBody(analyseRequest);
+    request.setRequiresAuthentication(true);
+    apiClient.execute(request,Void.class, callback);
   }
 
   // GET: Retrieve a specific interview attempt
