@@ -59,6 +59,8 @@
                 $id = $attempt['interview_id'];
 
                 $attempt['questionTypes'] =$typesByInterview[$id] ?? [];
+                $date = $attempt['completedAt'];
+                $attempt['completedAt'] = TimeUtil::toMillis($date);
                 unset($attempt);
             }
             return $attempts;
@@ -78,6 +80,8 @@
 
             //get attempt questions
             $dbQuestions = $this->interviewAttemptRepository->getAttemptQuestions($id);
+            $date = $attempt['completedAt'];
+            $attempt['completedAt'] = TimeUtil::toMillis($date);
             
             //map the questions for each db row for frontend to consume
             $questions = [];
