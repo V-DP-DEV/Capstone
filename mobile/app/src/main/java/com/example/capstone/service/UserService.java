@@ -12,11 +12,6 @@ public class UserService {
 
   private final ApiClient apiClient;
 
-  // TODO: Confirm these paths against the deployed backend.
-  private static final String UPDATE_PROFILE_PATH = "users/profile";
-  private static final String CHANGE_PASSWORD_PATH = "User/changePassword";
-  private static final String DELETE_ACCOUNT_PATH = "User/delete";
-
   public UserService(ApiClient apiClient) {
     this.apiClient = apiClient;
   }
@@ -26,7 +21,7 @@ public class UserService {
           UpdateUserRequest updateUserRequest,
           ApiCallback<Void> callback) {
 
-    ApiRequest request = new ApiRequest(UPDATE_PROFILE_PATH);
+    ApiRequest request = new ApiRequest("user/updateDetails");
 
     request.setMethodPUT();
     request.setRequiresAuthentication(true);
@@ -40,16 +35,7 @@ public class UserService {
           ChangePasswordRequest changePasswordRequest,
           ApiCallback<Void> callback) {
 
-    if (CHANGE_PASSWORD_PATH == null) {
-      callback.onGeneralError(
-              new IllegalStateException(
-                      "Change password endpoint not configured"
-              )
-      );
-      return;
-    }
-
-    ApiRequest request = new ApiRequest(CHANGE_PASSWORD_PATH);
+    ApiRequest request = new ApiRequest("user/changePassword");
 
     request.setMethodPATCH();
     request.setRequiresAuthentication(true);
@@ -62,17 +48,7 @@ public class UserService {
   public void deleteAccount(
           DeleteAccountRequest deleteAccountRequest,
           ApiCallback<Void> callback) {
-
-    if (DELETE_ACCOUNT_PATH == null) {
-      callback.onGeneralError(
-              new IllegalStateException(
-                      "Delete account endpoint not configured"
-              )
-      );
-      return;
-    }
-
-    ApiRequest request = new ApiRequest(DELETE_ACCOUNT_PATH);
+    ApiRequest request = new ApiRequest("user/delete");
 
     request.setMethodDELETE();
     request.setRequiresAuthentication(true);
