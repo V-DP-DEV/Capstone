@@ -1,6 +1,6 @@
 package com.example.capstone.viewmodel;
 
-import android.content.Context;
+
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -38,12 +38,6 @@ public class HistoryViewModel extends ViewModel {
         this.repository = repository;
     }
 
-    public static HistoryViewModel create(Context context) {
-        ApiClient apiClient = new ApiClient(new SecureSession(context), new Gson());
-        InterviewAttemptsService service = new InterviewAttemptsService(apiClient);
-        IInterviewAttemptsRepository repository = new InterviewAttemptsRepository(service);
-        return new HistoryViewModel(repository);
-    }
 
     public LiveData<List<UserInterviewAttemptSummary>> getHistoryList() {
         return historyList;
@@ -81,7 +75,6 @@ public class HistoryViewModel extends ViewModel {
             @Override
             public void onGeneralError(Exception e) {
                 isLoading.setValue(false);
-                // Log or display the exact exception message causing the failure
                 error.setValue("Error: " + e.getMessage());
             }
 
@@ -91,7 +84,6 @@ public class HistoryViewModel extends ViewModel {
                 if (response.getError() != null) {
                     error.setValue(response.getError().getMessage());
                 } else {
-                    // This is where HTTP status codes get formatted
                     error.setValue("Server error (HTTP " + response.getStatusCode() + ")");
                 }
             }
@@ -103,6 +95,7 @@ public class HistoryViewModel extends ViewModel {
         error.setValue(null);
 
         DeleteAttemptRequest deleteRequest = new DeleteAttemptRequest();
+        deleteRequest.setId(attemptId);
 
 
         repository.deleteInterviewAttempt(deleteRequest, new ApiCallback<Void>() {

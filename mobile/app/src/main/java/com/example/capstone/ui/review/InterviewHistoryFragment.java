@@ -17,9 +17,13 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.capstone.AppContainer;
+import com.example.capstone.MyApplication;
 import com.example.capstone.R;
 import com.example.capstone.adapter.InterviewHistoryAdapter;
 import com.example.capstone.domainModels.UserInterviewAttemptSummary;
+import com.example.capstone.repository.IInterviewAttemptsRepository;
+import com.example.capstone.ui.BaseActivity;
 import com.example.capstone.viewmodel.HistoryViewModel;
 import com.example.capstone.viewmodel.ViewModelFactory;
 
@@ -42,10 +46,21 @@ public class InterviewHistoryFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_interview_history, container, false);
+return view;
+    }
 
-        // Clean Architecture: Fragment is completely decoupled from network/data layers.
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Get app-wide repository instance via AppContainer (matching AuthLoginFragment pattern)
+        MyApplication app = (MyApplication) requireActivity().getApplication();
+        AppContainer appContainer = app.getAppContainer();
+        IInterviewAttemptsRepository interviewAttemptRepository = appContainer.interviewAttemptsRepository;
+
+        // Create ViewModel factory injecting the repository
         ViewModelFactory<HistoryViewModel> factory = new ViewModelFactory<>(() ->
-                HistoryViewModel.create(requireContext())
+                new HistoryViewModel(interviewAttemptRepository)
         );
 
         historyViewModel = new ViewModelProvider(this, factory).get(HistoryViewModel.class);
@@ -62,10 +77,7 @@ public class InterviewHistoryFragment extends Fragment {
         observeViewModel();
 
         historyViewModel.loadHistory();
-
-        return view;
     }
-
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new InterviewHistoryAdapter(new ArrayList<>(), new InterviewHistoryAdapter.OnItemClickListener() {
@@ -85,6 +97,17 @@ public class InterviewHistoryFragment extends Fragment {
     }
 
     private void observeViewModel() {
+        historyViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            if (getActivity() instanceof BaseActivity) {
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+                if (Boolean.TRUE.equals(isLoading)) {
+                    baseActivity.showLoadingDialog("Loading interview history...");
+                } else {
+                    baseActivity.hideLoadingDialog();
+                }
+            }
+        });
+
         historyViewModel.getHistoryList().observe(getViewLifecycleOwner(), attempts -> {
             if (attempts != null) {
                 adapter.updateData(attempts);
