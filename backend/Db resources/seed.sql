@@ -7,7 +7,7 @@ INSERT INTO users (email,password,role) VALUES ('user2@example.com','$2y$10$\/0V
 -- =========================================================
 
 INSERT INTO interview_categories (name)
-VALUES ('Software Development');
+VALUES ('Java'),('C#'),('Python'),('Cybersecurity'),('Data science');
 
 
 -- =========================================================
@@ -319,7 +319,12 @@ WHERE qt.name = 'Experience'
 -- CONCEPTS
 -- =========================================================
 
+-- =========================================================
+-- CONCEPTS
+-- =========================================================
+
 INSERT INTO concepts (name) VALUES
+-- C# and .NET
 ('csharp-basics'),
 ('dependency-injection'),
 ('constructor-injection'),
@@ -335,11 +340,16 @@ INSERT INTO concepts (name) VALUES
 ('access-tokens'),
 ('ienumerable'),
 ('iqueryable'),
+
+-- Python and LINQ
+('python-basics'),
 ('linq'),
 ('deferred-execution'),
 ('entity-framework'),
 ('linq-filtering'),
 ('query-optimization'),
+
+-- SQL and databases
 ('sql-indexing'),
 ('sql-query-performance'),
 ('sql-execution-plans'),
@@ -349,6 +359,14 @@ INSERT INTO concepts (name) VALUES
 ('read-models'),
 ('controller-service-pattern'),
 ('data-access-layer'),
+('sql-transactions'),
+('atomicity'),
+('rollback'),
+('data-consistency'),
+('database-access'),
+('sql-data-access'),
+
+-- ASP.NET Core and APIs
 ('http-request-pipeline'),
 ('aspnet-core-middleware'),
 ('routing'),
@@ -358,13 +376,17 @@ INSERT INTO concepts (name) VALUES
 ('api-contracts'),
 ('input-validation'),
 ('request-tracing'),
+('api-validation'),
+('request-response-cycle'),
+('idempotency'),
+
+-- Frontend and full-stack development
 ('frontend-state'),
 ('browser-caching'),
 ('api-caching'),
 ('performance-profiling'),
 ('full-stack-development'),
 ('frontend-integration'),
-('java-basics'),
 ('javascript'),
 ('javascript-fetch'),
 ('error-handling'),
@@ -373,6 +395,10 @@ INSERT INTO concepts (name) VALUES
 ('frontend-architecture'),
 ('api-client'),
 ('state-management'),
+('full-stack-architecture'),
+
+-- Java and Spring
+('java-basics'),
 ('spring-dependency-injection'),
 ('constructor-injection-java'),
 ('inversion-of-control'),
@@ -394,1104 +420,1868 @@ INSERT INTO concepts (name) VALUES
 ('eager-loading'),
 ('orm'),
 ('persistence-api'),
-('sql-transactions'),
-('atomicity'),
-('rollback'),
-('data-consistency'),
-('request-response-cycle'),
-('database-access'),
-('api-validation'),
+
+-- Architecture and design
 ('dto'),
 ('entity-exposure'),
 ('domain-model-separation'),
 ('data-projection'),
-('full-stack-architecture'),
-('sql-data-access'),
 ('performance-trade-offs'),
-('maintainability');
+('maintainability'),
+('concurrency'),
+('message-processing'),
+('distributed-caching'),
+
+-- Data science fundamentals
+('data-science-basics'),
+('data-science-workflow'),
+('data-types'),
+('structured-data'),
+('unstructured-data'),
+('data-collection'),
+('data-quality'),
+('exploratory-data-analysis'),
+('descriptive-statistics'),
+('data-visualization'),
+
+-- Statistics and probability
+('probability-theory'),
+('probability-distributions'),
+('mean-median-mode'),
+('variance-and-standard-deviation'),
+('sampling-methods'),
+('sampling-bias'),
+('correlation'),
+('statistical-significance'),
+('hypothesis-testing'),
+('confidence-intervals'),
+
+-- Data preparation
+('data-cleaning'),
+('missing-data'),
+('outlier-detection'),
+('data-normalization'),
+('feature-scaling'),
+('categorical-encoding'),
+('feature-engineering'),
+('data-transformation'),
+('data-aggregation'),
+('data-leakage'),
+
+-- Data science tools and analysis
+('python-data-science'),
+('numpy'),
+('pandas'),
+('dataframes'),
+('sql-for-data-analysis'),
+('data-filtering'),
+('data-joining'),
+('group-by-aggregation'),
+('matplotlib'),
+('seaborn'),
+
+-- Machine learning fundamentals
+('machine-learning-basics'),
+('supervised-learning'),
+('unsupervised-learning'),
+('classification'),
+('regression'),
+('clustering'),
+('training-and-test-data'),
+('cross-validation'),
+('overfitting-and-underfitting'),
+('model-evaluation'),
+
+-- Machine learning algorithms
+('linear-regression'),
+('logistic-regression'),
+('decision-trees'),
+('random-forests'),
+('gradient-boosting'),
+('k-means-clustering'),
+('knn'),
+('support-vector-machines'),
+('dimensionality-reduction'),
+('principal-component-analysis'),
+
+-- Model optimization and evaluation
+('bias-variance-tradeoff'),
+('hyperparameter-tuning'),
+('precision-and-recall'),
+('confusion-matrix'),
+('roc-auc'),
+('class-imbalance'),
+('feature-selection'),
+('model-interpretability'),
+('ensemble-learning'),
+('model-drift'),
+
+-- Data engineering and MLOps
+('data-pipelines'),
+('etl-and-elt'),
+('batch-processing'),
+('stream-processing'),
+('data-warehousing'),
+('data-lakes'),
+('data-versioning'),
+('model-deployment'),
+('mlops'),
+('model-monitoring'),
+('cybersecurity-basics'),
+('cia-triad'),
+('security-principles'),
+('threat-modeling'),
+('attack-surface'),
+('threat-actors'),
+('security-vulnerabilities'),
+('security-risk-assessment'),
+('defense-in-depth'),
+('least-privilege'),
+
+-- Network Security and Cryptography
+('network-security'),
+('tcp-ip'),
+('dns-security'),
+('firewall-rules'),
+('network-segmentation'),
+('vpn'),
+('tls-https'),
+('public-key-cryptography'),
+('symmetric-encryption'),
+('hashing'),
+('digital-signatures'),
+('certificate-management'),
+
+-- Web Application Security
+('owasp-top-ten'),
+('sql-injection'),
+('cross-site-scripting'),
+('cross-site-request-forgery'),
+('server-side-request-forgery'),
+('secure-coding'),
+('output-encoding'),
+('security-headers'),
+('secure-session-management'),
+('secrets-management'),
+
+-- Identity and Access Management
+('multi-factor-authentication'),
+('identity-management'),
+('role-based-access-control'),
+('privileged-access-management'),
+('password-security'),
+('oauth2'),
+('openid-connect'),
+('session-security'),
+
+-- Security Monitoring and Incident Response
+('security-logging'),
+('security-monitoring'),
+('siem'),
+('intrusion-detection'),
+('endpoint-detection-response'),
+('vulnerability-scanning'),
+('patch-management'),
+('incident-response'),
+('digital-forensics'),
+('malware-analysis'),
+
+-- Security Governance and Operations
+('secure-software-development-lifecycle'),
+('penetration-testing'),
+('risk-mitigation'),
+('security-auditing'),
+('backup-and-recovery'),
+('business-continuity'),
+('data-classification'),
+('security-compliance');
+
+
 
 
 -- =========================================================
--- INTERVIEWS
+-- JAVA EASY INTERVIEW
+-- 1 interview | 6 questions
+-- Admin ID: 1
+-- =========================================================
+
+-- =========================================================
+-- 1. CREATE JAVA EASY INTERVIEW
 -- =========================================================
 
 INSERT INTO interviews
-(interview_name, category_id, admin_id, description, difficulty, active, estimated_time_in_minutes)
+(interview_name, category_id, admin_id, description,
+ difficulty, active, estimated_time_in_minutes)
 SELECT
-    'C# Frontend',
-    id,
+    'Java Fundamentals Beginner',
+    c.id,
     1,
-    'An interview covering C# frontend development, API integration, Blazor, authentication and frontend debugging.',
-    'intermediate',
-    TRUE,
-    35
-FROM interview_categories
-WHERE name = 'Software Development';
-
-SET @csharp_frontend_id = LAST_INSERT_ID();
-
-
-INSERT INTO interviews
-(interview_name, category_id, admin_id, description, difficulty, active, estimated_time_in_minutes)
-SELECT
-    'C# Backend',
-    id,
-    1,
-    'An interview covering C# backend development, LINQ, Entity Framework, SQL and backend performance.',
-    'intermediate',
-    TRUE,
-    40
-FROM interview_categories
-WHERE name = 'Software Development';
-
-SET @csharp_backend_id = LAST_INSERT_ID();
-
-
-INSERT INTO interviews
-(interview_name, category_id, admin_id, description, difficulty, active, estimated_time_in_minutes)
-SELECT
-    'C# Full Stack',
-    id,
-    1,
-    'An interview covering C# APIs, frontend integration, SQL, authentication and application architecture.',
-    'intermediate',
-    TRUE,
-    40
-FROM interview_categories
-WHERE name = 'Software Development';
-
-SET @csharp_fullstack_id = LAST_INSERT_ID();
-
-
-INSERT INTO interviews
-(interview_name, category_id, admin_id, description, difficulty, active, estimated_time_in_minutes)
-SELECT
-    'Java Frontend',
-    id,
-    1,
-    'An interview covering frontend development, Java REST APIs, API contracts and frontend debugging.',
-    'intermediate',
-    TRUE,
-    35
-FROM interview_categories
-WHERE name = 'Software Development';
-
-SET @java_frontend_id = LAST_INSERT_ID();
-
-
-INSERT INTO interviews
-(interview_name, category_id, admin_id, description, difficulty, active, estimated_time_in_minutes)
-SELECT
-    'Java Backend',
-    id,
-    1,
-    'An interview covering Java backend development, Spring Boot, JPA, Hibernate and SQL.',
-    'intermediate',
-    TRUE,
-    40
-FROM interview_categories
-WHERE name = 'Software Development';
-
-SET @java_backend_id = LAST_INSERT_ID();
-
-
-INSERT INTO interviews
-(interview_name, category_id, admin_id, description, difficulty, active, estimated_time_in_minutes)
-SELECT
-    'Java Full Stack',
-    id,
-    1,
-    'An interview covering Java, Spring Boot, SQL, REST APIs and frontend integration.',
-    'intermediate',
-    TRUE,
-    40
-FROM interview_categories
-WHERE name = 'Software Development';
-
-SET @java_fullstack_id = LAST_INSERT_ID();
-
-
--- =========================================================
--- C# FRONTEND QUESTIONS
--- =========================================================
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @csharp_frontend_id,
-    1,
-    id,
+    'An introductory Java interview covering core concepts, object oriented programming and basic implementation.',
     'easy',
-    'Tell me about your experience working with C# and frontend applications.',
-    'The candidate should briefly describe their experience with C# and frontend development, including the frameworks or types of applications they have worked on.'
-FROM question_types
-WHERE name = 'Introduction';
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @csharp_frontend_id,
-    1,
-    id,
-    'easy',
-    'What is dependency injection in C#, and why is it useful in a frontend application?',
-    'Dependency injection means a class receives its dependencies from outside rather than creating them itself. In C#, this is commonly done through constructor injection and a DI container. It reduces coupling and makes components easier to test and replace.'
-FROM question_types
-WHERE name = 'Definition';
-
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('dependency-injection', 'constructor-injection', 'loose-coupling');
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @csharp_frontend_id,
-    1,
-    id,
-    'medium',
-    'Why should an HTTP request in a C# frontend normally use await instead of blocking on the result?',
-    'Await allows the asynchronous HTTP operation to complete without synchronously blocking the calling thread. Blocking with Result or GetResult can reduce scalability and can cause deadlocks in some application environments.'
-FROM question_types
-WHERE name = 'Conceptual';
-
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('async-await', 'http-client');
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @csharp_frontend_id,
-    1,
-    id,
-    'medium',
-    'Implement a small C# method that asynchronously retrieves the name of a user from an HTTP API endpoint /users/{id}.',
-    'The candidate should use an async method, await the HTTP request, check for an unsuccessful response where appropriate, and deserialize or extract the returned user name.'
-FROM question_types
-WHERE name = 'Implementation';
-
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('async-await', 'http-client', 'rest-api', 'error-handling');
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @csharp_frontend_id,
-    1,
-    id,
-    'medium',
-    CONCAT(
-        'What is wrong with this C# code?',
-        CHAR(10),
-        CHAR(10),
-        'var response = httpClient.GetAsync("/products").Result;',
-        CHAR(10),
-        CHAR(10),
-        'How would you fix it?'
-    ),
-    'The code synchronously blocks while waiting for an asynchronous operation. The request should normally be awaited inside an async method.'
-FROM question_types
-WHERE name = 'Debugging';
-
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('async-await', 'http-client');
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @csharp_frontend_id,
-    1,
-    id,
-    'medium',
-    'How would you structure a Blazor application that consumes several backend APIs?',
-    'A reasonable structure separates UI components from API clients and application logic. API communication should be handled by injected services or clients, while components focus primarily on presentation and user interaction.'
-FROM question_types
-WHERE name = 'Architecture';
-
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('blazor-components', 'dependency-injection', 'api-client', 'loose-coupling');
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @csharp_frontend_id,
-    1,
-    id,
-    'medium',
-    'Users report that navigating between Blazor pages sometimes causes the same API request to run multiple times. How would you investigate it?',
-    'The candidate should inspect network requests and component lifecycle execution to identify where duplicate calls originate. They should check initialization logic, state changes, event handlers and whether a component is being recreated unexpectedly.'
-FROM question_types
-WHERE name = 'Debugging';
-
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('component-lifecycle', 'network-debugging', 'duplicate-requests', 'frontend-state');
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @csharp_frontend_id,
-    1,
-    id,
-    'medium',
-    'Tell me about a frontend performance problem you encountered and how you approached it.',
-    'The candidate should describe a specific performance problem, how they investigated it, what the root cause was, and how they verified that their solution improved the application.'
-FROM question_types
-WHERE name = 'Experience';
-
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name = 'performance-profiling';
-
+    TRUE,
+    20
+FROM interview_categories c
+WHERE c.name = 'Java'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM interviews i
+      WHERE i.interview_name = 'Java Fundamentals Beginner'
+        AND i.category_id = c.id
+  );
 
 -- =========================================================
--- C# BACKEND QUESTIONS
+-- 2. INSERT INTERVIEW QUESTIONS
 -- =========================================================
 
 INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
+(interview_id, admin_id, type_id, difficulty, text, answer, active)
 SELECT
-    @csharp_backend_id,
+    i.id,
     1,
-    id,
+    qt.id,
     'easy',
-    'Tell me about your experience building backend applications with C#.',
-    'The candidate should briefly describe their backend experience, the types of systems they have built, and the C# or .NET technologies they have used.'
-FROM question_types
-WHERE name = 'Introduction';
+    q.question_text,
+    q.expected_answer,
+    TRUE
+FROM interviews i
+JOIN interview_categories c
+    ON c.id = i.category_id
+JOIN (
+    SELECT
+        'Introduction' AS question_type,
+        'Tell me about yourself and your experience learning or using Java.' AS question_text,
+        'A good answer introduces the candidate, describes their Java learning or development experience, mentions a relevant project and explains their current goals.' AS expected_answer
 
+    UNION ALL
 
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
+    SELECT
+        'Definition',
+        'What is Java and what are its main characteristics?',
+        'Java is a high level, class based programming language. Its main characteristics include object oriented programming, static typing, automatic memory management and execution through the Java Virtual Machine.'
+
+    UNION ALL
+
+    SELECT
+        'Definition',
+        'What is the difference between a class and an object in Java?',
+        'A class defines the structure and behaviour of a type. An object is an instance of a class created at runtime. Objects can maintain their own instance state.'
+
+    UNION ALL
+
+    SELECT
+        'Conceptual',
+        'What is encapsulation and why is it useful in Java?',
+        'Encapsulation combines data and behaviour within a class and controls access to internal state. Private fields and public methods can protect object invariants and improve maintainability.'
+
+    UNION ALL
+
+    SELECT
+        'Implementation',
+        'How would you write a Java method that checks whether an integer is even?',
+        'One valid implementation is boolean isEven(int number) { return number % 2 == 0; }. The modulo operator returns the remainder after division by two.'
+
+    UNION ALL
+
+    SELECT
+        'Conceptual',
+        'What is the difference between an int and a String in Java?',
+        'int is a primitive type used to represent whole numbers. String is a reference type used to represent text and is implemented as an immutable class.'
+) q
+    ON TRUE
+JOIN question_types qt
+    ON qt.name = q.question_type
+WHERE i.interview_name = 'Java Fundamentals Beginner'
+  AND c.name = 'Java'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM interview_questions existing
+      WHERE existing.interview_id = i.id
+        AND existing.text = q.question_text
+  );
+
+-- =========================================================
+-- 3. MAP QUESTIONS TO EXISTING CONCEPTS
+-- =========================================================
+
+INSERT INTO interview_question_concepts
+(question_id, concept_id)
 SELECT
-    @csharp_backend_id,
-    1,
-    id,
-    'easy',
-    'What is a SQL index?',
-    'An index is a data structure that helps the database find rows faster without scanning the entire table. Indexes improve reads but require additional storage and can add overhead to inserts and updates.'
-FROM question_types
-WHERE name = 'Definition';
+    iq.id,
+    co.id
+FROM interview_questions iq
+JOIN interviews i
+    ON i.id = iq.interview_id
+JOIN (
+    SELECT
+        'Tell me about yourself and your experience learning or using Java.' AS question_text,
+        'java-basics' AS concept_name
 
-SET @question_id = LAST_INSERT_ID();
+    UNION ALL
 
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name = 'sql-indexing';
+    SELECT
+        'What is Java and what are its main characteristics?',
+        'java-basics'
+
+    UNION ALL
+
+    SELECT
+        'What is the difference between a class and an object in Java?',
+        'java-basics'
+
+    UNION ALL
+
+    SELECT
+        'What is encapsulation and why is it useful in Java?',
+        'java-basics'
+
+    UNION ALL
+
+    SELECT
+        'How would you write a Java method that checks whether an integer is even?',
+        'java-basics'
+
+    UNION ALL
+
+    SELECT
+        'What is the difference between an int and a String in Java?',
+        'java-basics'
+) mapping
+    ON mapping.question_text = iq.text
+JOIN concepts co
+    ON co.name = mapping.concept_name
+WHERE i.interview_name = 'Java Fundamentals Beginner'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM interview_question_concepts existing
+      WHERE existing.question_id = iq.id
+        AND existing.concept_id = co.id
+  );
 
 
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- =========================================================
+-- JAVA MEDIUM INTERVIEW
+-- 1 interview | 7 questions
+-- 2 to 3 concepts per question
+-- Admin ID: 1
+-- =========================================================
+
+-- =========================================================
+-- 1. CREATE INTERVIEW
+-- =========================================================
+
+INSERT INTO interviews
+(interview_name, category_id, admin_id, description,
+ difficulty, active, estimated_time_in_minutes)
 SELECT
-    @csharp_backend_id,
+    'Java Intermediate Problem Solving',
+    c.id,
     1,
-    id,
-    'intermediate',
-    'Why can filtering with IQueryable before ToList be more efficient than calling ToList first?',
-    'Calling ToList first loads the query results into memory before filtering. Applying Where before ToList allows Entity Framework to translate the filter into SQL so the database returns only the required rows.'
-FROM question_types
-WHERE name = 'Conceptual';
-
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('iqueryable', 'linq-filtering', 'entity-framework', 'deferred-execution');
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @csharp_backend_id,
-    1,
-    id,
+    'An intermediate Java interview covering object oriented design, collections, persistence, API development and practical problem solving.',
     'medium',
-    'Implement a LINQ query that returns the names of active users whose age is at least 18.',
-    'The candidate should filter users with IsActive and Age >= 18, then project the result to the Name property.'
-FROM question_types
-WHERE name = 'Implementation';
+    TRUE,
+    30
+FROM interview_categories c
+WHERE c.name = 'Java'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM interviews existing
+      WHERE existing.interview_name = 'Java Intermediate Problem Solving'
+        AND existing.category_id = c.id
+  );
 
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('linq', 'linq-filtering');
-
+-- =========================================================
+-- 2. INSERT QUESTIONS
+-- =========================================================
 
 INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
+(interview_id, admin_id, type_id, difficulty, text, answer, active)
 SELECT
-    @csharp_backend_id,
+    i.id,
     1,
-    id,
+    qt.id,
     'medium',
-    CONCAT(
-        'What is wrong with this LINQ query?',
-        CHAR(10),
-        CHAR(10),
-        'var users = db.Users.ToList().Where(u => u.IsActive);',
-        CHAR(10),
-        CHAR(10),
-        'How would you fix it?'
-    ),
-    'ToList executes the database query before the filter is applied, causing all users to be loaded into memory. The Where filter should be applied before ToList so the database performs the filtering.'
-FROM question_types
-WHERE name = 'Debugging';
+    q.question_text,
+    q.expected_answer,
+    TRUE
+FROM interviews i
+JOIN interview_categories c
+    ON c.id = i.category_id
+CROSS JOIN (
+    SELECT
+        'Introduction' AS question_type,
+        'Walk me through a Java application you have built or studied and explain how its main components work together.' AS question_text,
+        'A good answer describes the application purpose, its main components, how data flows between them and the candidates own contribution or learning.' AS expected_answer
 
-SET @question_id = LAST_INSERT_ID();
+    UNION ALL
 
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('linq-filtering', 'entity-framework', 'deferred-execution', 'query-optimization');
+    SELECT
+        'Experience',
+        'Describe a situation where you had to improve an existing Java implementation without changing its expected behaviour.',
+        'A good answer explains how the candidate understood the existing behaviour, identified the improvement opportunity, considered regression risks, made targeted changes and validated the result with suitable tests.'
 
+    UNION ALL
 
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
+    SELECT
+        'Definition',
+        'What is the repository pattern in Java and why might an application use it?',
+        'The repository pattern separates data access logic from business logic. It provides a consistent interface for retrieving and persisting data, improves separation of concerns and can make application code easier to test.'
+
+    UNION ALL
+
+    SELECT
+        'Conceptual',
+        'How do Java HashMap and ArrayList differ in how they store and retrieve data, and when would you choose each?',
+        'ArrayList stores an ordered sequence of elements and supports indexed access. HashMap stores key value associations and provides efficient average lookup by key. The choice depends on whether the application needs ordered elements or lookup by unique keys.'
+
+    UNION ALL
+
+    SELECT
+        'Implementation',
+        'How would you use Java Streams to group a list of orders by customer identifier and count the orders for each customer?',
+        'A suitable solution is orders.stream().collect(Collectors.groupingBy(Order::getCustomerId, Collectors.counting())). This groups orders by customer identifier and counts the orders in each group.'
+
+    UNION ALL
+
+    SELECT
+        'Debugging',
+        'A Java REST endpoint occasionally returns duplicate records after a user refreshes the page. How would you investigate the cause and prevent the duplicates?',
+        'A strong answer checks browser requests, API logs, repeated submissions, service logic and database constraints. The candidate should identify whether duplication occurs in the client, request handling or persistence layer and apply an appropriate fix such as preventing duplicate requests, using idempotency or enforcing suitable uniqueness constraints.'
+
+    UNION ALL
+
+    SELECT
+        'Trade-off',
+        'A Java application needs to process a large collection of records. Would you process everything in memory or retrieve and process records in batches? Explain how you would decide.',
+        'A strong answer considers collection size, available memory, processing time, database load, network overhead and failure recovery. Batching can reduce memory pressure and support large workloads, while in memory processing may be simpler and faster for suitably sized datasets.'
+) AS q
+    ON TRUE
+JOIN question_types qt
+    ON qt.name = q.question_type
+WHERE i.interview_name = 'Java Intermediate Problem Solving'
+  AND c.name = 'Java'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM interview_questions existing
+      WHERE existing.interview_id = i.id
+        AND existing.text = q.question_text
+  );
+
+-- =========================================================
+-- 3. MAP QUESTIONS TO EXISTING CONCEPTS
+-- Each question receives 2 or 3 concepts
+-- =========================================================
+
+INSERT INTO interview_question_concepts
+(question_id, concept_id)
 SELECT
-    @csharp_backend_id,
+    iq.id,
+    co.id
+FROM interview_questions iq
+JOIN interviews i
+    ON i.id = iq.interview_id
+JOIN (
+    SELECT
+        'Walk me through a Java application you have built or studied and explain how its main components work together.' AS question_text,
+        'java-basics' AS concept_name
+
+    UNION ALL
+
+    SELECT
+        'Walk me through a Java application you have built or studied and explain how its main components work together.',
+        'layered-architecture'
+
+    UNION ALL
+
+    SELECT
+        'Describe a situation where you had to improve an existing Java implementation without changing its expected behaviour.',
+        'maintainability'
+
+    UNION ALL
+
+    SELECT
+        'Describe a situation where you had to improve an existing Java implementation without changing its expected behaviour.',
+        'testability'
+
+    UNION ALL
+
+    SELECT
+        'What is the repository pattern in Java and why might an application use it?',
+        'repository-pattern'
+
+    UNION ALL
+
+    SELECT
+        'What is the repository pattern in Java and why might an application use it?',
+        'data-access-layer'
+
+    UNION ALL
+
+    SELECT
+        'How do Java HashMap and ArrayList differ in how they store and retrieve data, and when would you choose each?',
+        'java-basics'
+
+    UNION ALL
+
+    SELECT
+        'How do Java HashMap and ArrayList differ in how they store and retrieve data, and when would you choose each?',
+        'maintainability'
+
+    UNION ALL
+
+    SELECT
+        'How would you use Java Streams to group a list of orders by customer identifier and count the orders for each customer?',
+        'java-streams'
+
+    UNION ALL
+
+    SELECT
+        'How would you use Java Streams to group a list of orders by customer identifier and count the orders for each customer?',
+        'stream-collect'
+
+    UNION ALL
+
+    SELECT
+        'How would you use Java Streams to group a list of orders by customer identifier and count the orders for each customer?',
+        'stream-terminal-operations'
+
+    UNION ALL
+
+    SELECT
+        'A Java REST endpoint occasionally returns duplicate records after a user refreshes the page. How would you investigate the cause and prevent the duplicates?',
+        'duplicate-requests'
+
+    UNION ALL
+
+    SELECT
+        'A Java REST endpoint occasionally returns duplicate records after a user refreshes the page. How would you investigate the cause and prevent the duplicates?',
+        'idempotency'
+
+    UNION ALL
+
+    SELECT
+        'A Java REST endpoint occasionally returns duplicate records after a user refreshes the page. How would you investigate the cause and prevent the duplicates?',
+        'sql-transactions'
+
+    UNION ALL
+
+    SELECT
+        'A Java application needs to process a large collection of records. Would you process everything in memory or retrieve and process records in batches? Explain how you would decide.',
+        'batch-processing'
+
+    UNION ALL
+
+    SELECT
+        'A Java application needs to process a large collection of records. Would you process everything in memory or retrieve and process records in batches? Explain how you would decide.',
+        'performance-trade-offs'
+
+    UNION ALL
+
+    SELECT
+        'A Java application needs to process a large collection of records. Would you process everything in memory or retrieve and process records in batches? Explain how you would decide.',
+        'query-optimization'
+) AS mapping
+    ON mapping.question_text = iq.text
+JOIN concepts co
+    ON co.name = mapping.concept_name
+WHERE i.interview_name = 'Java Intermediate Problem Solving'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM interview_question_concepts existing
+      WHERE existing.question_id = iq.id
+        AND existing.concept_id = co.id
+  );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -- =========================================================
+-- JAVA HARD INTERVIEW
+-- 1 interview | 8 questions
+-- 3 to 4 concepts per question
+-- Admin ID: 1
+-- =========================================================
+
+-- =========================================================
+-- 1. CREATE INTERVIEW
+-- =========================================================
+
+INSERT INTO interviews
+(interview_name, category_id, admin_id, description,
+ difficulty, active, estimated_time_in_minutes)
+SELECT
+    'Java Advanced Engineering',
+    c.id,
     1,
-    id,
+    'An advanced Java interview covering architecture, concurrency, persistence performance, distributed systems and complex problem solving.',
     'hard',
-    'How would you structure an ASP.NET Core API that needs to access SQL data and expose business operations?',
-    'The API should separate HTTP handling, business logic and database access. Controllers should handle HTTP concerns, services should contain business logic, and a data-access layer should handle persistence. Dependencies should be injected rather than created directly.'
-FROM question_types
-WHERE name = 'Architecture';
-
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('controller-service-pattern', 'data-access-layer', 'dependency-injection', 'layered-architecture');
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @csharp_backend_id,
-    1,
-    id,
-    'medium',
-    'An API endpoint becomes slow after the amount of database data increases. How would you investigate it?',
-    'The candidate should inspect the generated SQL and execution plan, then check indexes on filtering and joining columns. They should also look for expensive joins and unnecessarily large result sets.'
-FROM question_types
-WHERE name = 'Debugging';
-
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('sql-query-performance', 'sql-execution-plans', 'sql-indexing', 'sql-joins', 'query-optimization');
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @csharp_backend_id,
-    1,
-    id,
-    'medium',
-    'Tell me about a backend system where you had to make a trade-off between performance and maintainability.',
-    'The candidate should describe the specific trade-off, why one approach was chosen, and what consequences the decision had for performance and maintainability.'
-FROM question_types
-WHERE name = 'Experience';
-
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('performance-trade-offs', 'maintainability');
-
+    TRUE,
+    45
+FROM interview_categories c
+WHERE c.name = 'Java'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM interviews existing
+      WHERE existing.interview_name = 'Java Advanced Engineering'
+        AND existing.category_id = c.id
+  );
 
 -- =========================================================
--- C# FULL STACK QUESTIONS
+-- 2. INSERT QUESTIONS
 -- =========================================================
 
 INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
+(interview_id, admin_id, type_id, difficulty, text, answer, active)
 SELECT
-    @csharp_fullstack_id,
+    i.id,
     1,
-    id,
-    'easy',
-    'Tell me about your experience working across both the frontend and backend of a C# application.',
-    'The candidate should briefly describe their full stack experience and their responsibilities across frontend, backend and database layers.'
-FROM question_types
-WHERE name = 'Introduction';
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @csharp_fullstack_id,
-    1,
-    id,
-    'easy',
-    'What is a REST API?',
-    'A REST API is an HTTP-based interface where clients interact with resources through defined endpoints and HTTP methods such as GET, POST, PUT and DELETE. Responses commonly use formats such as JSON.'
-FROM question_types
-WHERE name = 'Definition';
-
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name = 'rest-api';
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @csharp_fullstack_id,
-    1,
-    id,
-    'intermediate',
-    'Why should a frontend application use DTOs instead of directly displaying backend database entities?',
-    'DTOs separate the API contract from the persistence model. They allow the backend to control which fields are exposed and prevent changes to database entities from automatically becoming API contract changes.'
-FROM question_types
-WHERE name = 'Conceptual';
-
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('dto', 'api-contracts', 'entity-exposure', 'domain-model-separation');
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @csharp_fullstack_id,
-    1,
-    id,
-    'medium',
-    'Implement a C# API endpoint that validates a required name field before creating a resource.',
-    'The endpoint should validate that the name is present and valid before calling the service or persistence layer. Invalid input should result in an appropriate 4xx response rather than creating the resource.'
-FROM question_types
-WHERE name = 'Implementation';
-
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('input-validation', 'api-validation', 'rest-api');
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @csharp_fullstack_id,
-    1,
-    id,
-    'medium',
-    'Users report that changes made in the frontend are sometimes not visible immediately. How would you investigate this?',
-    'The candidate should trace the update from the frontend through the API and database to verify that the new value is persisted. If persistence is correct, they should investigate frontend state, browser caching, API caching and stale objects.'
-FROM question_types
-WHERE name = 'Debugging';
-
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('request-tracing', 'frontend-state', 'browser-caching', 'api-caching', 'data-consistency');
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @csharp_fullstack_id,
-    1,
-    id,
+    qt.id,
     'hard',
-    'How would you design a small full stack application with a C# API, SQL database and frontend?',
-    'The application should separate frontend, API/business logic and database responsibilities. The API should expose a clear contract, validate input, use a dedicated data-access approach, and handle authentication at the appropriate boundary.'
-FROM question_types
-WHERE name = 'Architecture';
+    q.question_text,
+    q.answer_text,
+    TRUE
+FROM interviews i
+JOIN interview_categories c
+    ON c.id = i.category_id
+JOIN (
+    SELECT
+        'Introduction' AS question_type,
+        'Explain how you would design a production grade Java service that must remain maintainable, reliable and responsive under heavy traffic.' AS question_text,
+        'A strong answer discusses clear architectural boundaries, dependency management, observability, resilience, testing, performance measurement and operational requirements. The candidate should explain how these choices work together and identify relevant trade offs.' AS answer_text
 
-SET @question_id = LAST_INSERT_ID();
+    UNION ALL
 
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('layered-architecture', 'api-contracts', 'data-access-layer', 'input-validation', 'authentication');
+    SELECT
+        'Experience',
+        'Describe a complex Java performance or reliability issue you investigated. Explain how you identified the root cause, evaluated possible solutions and measured the outcome.',
+        'A strong answer gives a structured account of the symptoms, evidence gathered, root cause, alternatives considered, implementation and measurable outcome. It should distinguish observed facts from assumptions and explain any remaining risks.'
 
+    UNION ALL
 
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @csharp_fullstack_id,
-    1,
-    id,
-    'medium',
-    'Would you choose browser caching or API caching for a read-heavy product catalogue? Explain the main trade-off.',
-    'Browser caching can reduce network requests for data specific to a client, while API caching can reduce backend and database work for repeated requests across clients. The choice depends on data freshness, cache invalidation and whether the response is safe to share.'
-FROM question_types
-WHERE name = 'Trade-off';
+    SELECT
+        'Architecture',
+        'How would you structure a Java application that needs to support multiple database implementations while keeping business rules independent of persistence details?',
+        'A strong answer separates domain and business logic from infrastructure concerns, defines appropriate interfaces, uses dependency inversion and injects persistence implementations. It also discusses transaction boundaries, testing and the cost of additional abstraction.'
 
-SET @question_id = LAST_INSERT_ID();
+    UNION ALL
 
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('browser-caching', 'api-caching', 'performance-trade-offs');
+    SELECT
+        'Conceptual',
+        'Explain how Java memory visibility and thread safety differ, and describe how volatile, synchronized and atomic classes address concurrency problems.',
+        'Volatile provides visibility and ordering guarantees for access to a variable but does not make compound operations atomic. Synchronized provides mutual exclusion and happens before guarantees. Atomic classes support thread safe atomic operations through compare and set mechanisms. The correct choice depends on the required invariant and contention.'
 
+    UNION ALL
 
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @csharp_fullstack_id,
-    1,
-    id,
-    'medium',
-    'Describe a full stack feature you have built from the database through to the user interface.',
-    'The candidate should describe a specific feature and explain their responsibilities across the database, backend/API and frontend. They should mention at least one technical decision or challenge.'
-FROM question_types
-WHERE name = 'Experience';
+    SELECT
+        'Implementation',
+        'How would you implement a reliable background processing service in Java that handles concurrent tasks, limits resource usage and supports graceful shutdown?',
+        'A strong solution uses a suitably configured ExecutorService or ThreadPoolExecutor, bounded queues, controlled rejection handling, explicit task error handling and graceful shutdown with a timeout. It should also address interruption, resource cleanup, back pressure and monitoring.'
 
-SET @question_id = LAST_INSERT_ID();
+    UNION ALL
 
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name = 'full-stack-development';
+    SELECT
+        'Debugging',
+        'A Java application experiences intermittent deadlocks after a new feature introduces several shared locks. How would you diagnose the issue and prevent it from recurring?',
+        'A strong answer captures thread dumps, identifies threads waiting on locks and reconstructs the lock dependency cycle. Prevention may involve consistent lock ordering, smaller synchronized sections, reducing shared mutable state, using suitable concurrent utilities and adding stress tests.'
 
+    UNION ALL
 
--- =========================================================
--- JAVA FRONTEND QUESTIONS
--- =========================================================
+    SELECT
+        'Trade-off',
+        'A Java service must process millions of database records within a limited time window. How would you choose between parallel processing, batched queries and asynchronous processing?',
+        'A strong answer measures the workload and identifies whether the bottleneck is CPU, database access, network latency or memory. It evaluates batch size, connection pool limits, parallelism, ordering requirements, failure recovery and transaction boundaries. The chosen design should be benchmarked under realistic load.'
 
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @java_frontend_id,
-    1,
-    id,
-    'easy',
-    'Tell me about your experience working on frontend applications backed by Java services.',
-    'The candidate should briefly describe their frontend experience and how they have interacted with Java-based backend services.'
-FROM question_types
-WHERE name = 'Introduction';
+    UNION ALL
 
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @java_frontend_id,
-    1,
-    id,
-    'easy',
-    'What is a DTO and why is it commonly used between a frontend and backend?',
-    'A DTO is an object used to transfer a defined set of data across a boundary such as an API. It prevents the API from needing to expose the internal persistence model directly.'
-FROM question_types
-WHERE name = 'Definition';
-
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('dto', 'api-contracts', 'entity-exposure');
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @java_frontend_id,
-    1,
-    id,
-    'intermediate',
-    'Why should a frontend check HTTP status codes instead of assuming that every fetch request succeeded?',
-    'A fetch request can complete successfully at the network level while the server returns an HTTP error such as 400 or 500. The frontend should inspect the status and handle successful and unsuccessful responses differently.'
-FROM question_types
-WHERE name = 'Conceptual';
-
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('javascript-fetch', 'http-status-codes', 'error-handling');
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @java_frontend_id,
-    1,
-    id,
-    'medium',
-    'Implement the frontend logic needed to fetch /api/users and display the returned user list.',
-    'The candidate should make the HTTP request, check for an unsuccessful response, parse the response body and store the resulting users in frontend state for rendering.'
-FROM question_types
-WHERE name = 'Implementation';
-
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('javascript-fetch', 'api-client', 'frontend-state', 'error-handling');
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @java_frontend_id,
-    1,
-    id,
-    'medium',
-    'A frontend application is making many more API requests than expected. How would you investigate the problem?',
-    'The candidate should inspect browser network requests to identify duplicated calls and when they occur. They should then trace component lifecycle events, event handlers and state changes to determine what is triggering the additional requests.'
-FROM question_types
-WHERE name = 'Debugging';
-
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('network-debugging', 'duplicate-requests', 'frontend-state', 'component-lifecycle');
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @java_frontend_id,
-    1,
-    id,
-    'medium',
-    'How would you structure a frontend that consumes several Java backend services?',
-    'API communication should be separated from UI components through dedicated API clients or services. The application should also have consistent approaches for shared state, authentication, error handling and API response models.'
-FROM question_types
-WHERE name = 'Architecture';
-
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('frontend-architecture', 'api-client', 'state-management', 'error-handling', 'authentication');
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @java_frontend_id,
-    1,
-    id,
-    'medium',
-    'Would you keep API calls directly inside UI components or use a dedicated API client layer? Explain the trade-off.',
-    'A dedicated API client layer usually centralizes HTTP behavior and keeps UI components focused on presentation. Direct calls can be simpler for very small applications, but become harder to maintain as the number of endpoints grows.'
-FROM question_types
-WHERE name = 'Trade-off';
-
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('api-client', 'frontend-architecture', 'loose-coupling', 'maintainability');
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @java_frontend_id,
-    1,
-    id,
-    'medium',
-    'Tell me about a difficult frontend integration with a backend API and how you solved it.',
-    'The candidate should explain the integration problem, how they investigated it, what the underlying issue was, and how they resolved it.'
-FROM question_types
-WHERE name = 'Experience';
-
+    SELECT
+        'Architecture',
+        'A distributed Java application sometimes processes the same incoming event more than once when consumers restart. How would you design the processing flow to protect data consistency without assuming that delivery occurs exactly once?',
+        'A strong answer assumes at least once delivery, uses stable event identifiers and durable deduplication where appropriate, and defines transaction boundaries for recording processing state and applying business changes. It also considers idempotent operations, retry behaviour, concurrent consumers and recovery after partial failure.'
+) AS q
+    ON TRUE
+JOIN question_types qt
+    ON qt.name = q.question_type
+WHERE i.interview_name = 'Java Advanced Engineering'
+  AND c.name = 'Java'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM interview_questions existing
+      WHERE existing.interview_id = i.id
+        AND existing.text = q.question_text
+  );
 
 -- =========================================================
--- JAVA BACKEND QUESTIONS
+-- 3. MAP QUESTIONS TO EXISTING CONCEPTS
 -- =========================================================
 
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
+INSERT INTO interview_question_concepts
+(question_id, concept_id)
 SELECT
-    @java_backend_id,
+    iq.id,
+    co.id
+FROM interview_questions iq
+JOIN interviews i
+    ON i.id = iq.interview_id
+JOIN (
+    SELECT
+        'Explain how you would design a production grade Java service that must remain maintainable, reliable and responsive under heavy traffic.' AS question_text,
+        'layered-architecture' AS concept_name
+
+    UNION ALL
+    SELECT
+        'Explain how you would design a production grade Java service that must remain maintainable, reliable and responsive under heavy traffic.',
+        'maintainability'
+
+    UNION ALL
+    SELECT
+        'Explain how you would design a production grade Java service that must remain maintainable, reliable and responsive under heavy traffic.',
+        'performance-trade-offs'
+
+    UNION ALL
+    SELECT
+        'Explain how you would design a production grade Java service that must remain maintainable, reliable and responsive under heavy traffic.',
+        'request-tracing'
+
+    UNION ALL
+    SELECT
+        'Describe a complex Java performance or reliability issue you investigated. Explain how you identified the root cause, evaluated possible solutions and measured the outcome.',
+        'performance-profiling'
+
+    UNION ALL
+    SELECT
+        'Describe a complex Java performance or reliability issue you investigated. Explain how you identified the root cause, evaluated possible solutions and measured the outcome.',
+        'maintainability'
+
+    UNION ALL
+    SELECT
+        'Describe a complex Java performance or reliability issue you investigated. Explain how you identified the root cause, evaluated possible solutions and measured the outcome.',
+        'error-handling'
+
+    UNION ALL
+    SELECT
+        'Describe a complex Java performance or reliability issue you investigated. Explain how you identified the root cause, evaluated possible solutions and measured the outcome.',
+        'data-consistency'
+
+    UNION ALL
+    SELECT
+        'How would you structure a Java application that needs to support multiple database implementations while keeping business rules independent of persistence details?',
+        'layered-architecture'
+
+    UNION ALL
+    SELECT
+        'How would you structure a Java application that needs to support multiple database implementations while keeping business rules independent of persistence details?',
+        'dependency-injection'
+
+    UNION ALL
+    SELECT
+        'How would you structure a Java application that needs to support multiple database implementations while keeping business rules independent of persistence details?',
+        'repository-pattern'
+
+    UNION ALL
+    SELECT
+        'How would you structure a Java application that needs to support multiple database implementations while keeping business rules independent of persistence details?',
+        'testability'
+
+    UNION ALL
+    SELECT
+        'Explain how Java memory visibility and thread safety differ, and describe how volatile, synchronized and atomic classes address concurrency problems.',
+        'concurrency'
+
+    UNION ALL
+    SELECT
+        'Explain how Java memory visibility and thread safety differ, and describe how volatile, synchronized and atomic classes address concurrency problems.',
+        'java-basics'
+
+    UNION ALL
+    SELECT
+        'Explain how Java memory visibility and thread safety differ, and describe how volatile, synchronized and atomic classes address concurrency problems.',
+        'maintainability'
+
+    UNION ALL
+    SELECT
+        'How would you implement a reliable background processing service in Java that handles concurrent tasks, limits resource usage and supports graceful shutdown?',
+        'concurrency'
+
+    UNION ALL
+    SELECT
+        'How would you implement a reliable background processing service in Java that handles concurrent tasks, limits resource usage and supports graceful shutdown?',
+        'message-processing'
+
+    UNION ALL
+    SELECT
+        'How would you implement a reliable background processing service in Java that handles concurrent tasks, limits resource usage and supports graceful shutdown?',
+        'error-handling'
+
+    UNION ALL
+    SELECT
+        'How would you implement a reliable background processing service in Java that handles concurrent tasks, limits resource usage and supports graceful shutdown?',
+        'performance-trade-offs'
+
+    UNION ALL
+    SELECT
+        'A Java application experiences intermittent deadlocks after a new feature introduces several shared locks. How would you diagnose the issue and prevent it from recurring?',
+        'concurrency'
+
+    UNION ALL
+    SELECT
+        'A Java application experiences intermittent deadlocks after a new feature introduces several shared locks. How would you diagnose the issue and prevent it from recurring?',
+        'maintainability'
+
+    UNION ALL
+    SELECT
+        'A Java application experiences intermittent deadlocks after a new feature introduces several shared locks. How would you diagnose the issue and prevent it from recurring?',
+        'performance-profiling'
+
+    UNION ALL
+    SELECT
+        'A Java application experiences intermittent deadlocks after a new feature introduces several shared locks. How would you diagnose the issue and prevent it from recurring?',
+        'security-risk-assessment'
+
+    UNION ALL
+    SELECT
+        'A Java service must process millions of database records within a limited time window. How would you choose between parallel processing, batched queries and asynchronous processing?',
+        'batch-processing'
+
+    UNION ALL
+    SELECT
+        'A Java service must process millions of database records within a limited time window. How would you choose between parallel processing, batched queries and asynchronous processing?',
+        'query-optimization'
+
+    UNION ALL
+    SELECT
+        'A Java service must process millions of database records within a limited time window. How would you choose between parallel processing, batched queries and asynchronous processing?',
+        'performance-trade-offs'
+
+    UNION ALL
+    SELECT
+        'A Java service must process millions of database records within a limited time window. How would you choose between parallel processing, batched queries and asynchronous processing?',
+        'concurrency'
+
+    UNION ALL
+    SELECT
+        'A distributed Java application sometimes processes the same incoming event more than once when consumers restart. How would you design the processing flow to protect data consistency without assuming that delivery occurs exactly once?',
+        'message-processing'
+
+    UNION ALL
+    SELECT
+        'A distributed Java application sometimes processes the same incoming event more than once when consumers restart. How would you design the processing flow to protect data consistency without assuming that delivery occurs exactly once?',
+        'idempotency'
+
+    UNION ALL
+    SELECT
+        'A distributed Java application sometimes processes the same incoming event more than once when consumers restart. How would you design the processing flow to protect data consistency without assuming that delivery occurs exactly once?',
+        'data-consistency'
+
+    UNION ALL
+    SELECT
+        'A distributed Java application sometimes processes the same incoming event more than once when consumers restart. How would you design the processing flow to protect data consistency without assuming that delivery occurs exactly once?',
+        'sql-transactions'
+) AS mapping
+    ON mapping.question_text = iq.text
+JOIN concepts co
+    ON co.name = mapping.concept_name
+WHERE i.interview_name = 'Java Advanced Engineering'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM interview_question_concepts existing
+      WHERE existing.question_id = iq.id
+        AND existing.concept_id = co.id
+  );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# =========================================================
+# C# EASY INTERVIEW
+# 1 interview | 6 questions
+# 1 concept per question
+# Admin ID: 1
+# =========================================================
+
+# =========================================================
+# 1. CREATE INTERVIEW
+# =========================================================
+
+INSERT INTO interviews
+(interview_name, category_id, admin_id, description,
+ difficulty, active, estimated_time_in_minutes)
+SELECT
+    'C# Fundamentals Beginner',
+    c.id,
     1,
-    id,
+    'An introductory C# interview covering core language concepts, dependency injection and basic application development.',
     'easy',
-    'Tell me about your experience building backend applications with Java.',
-    'The candidate should briefly describe their Java backend experience, the systems they worked on, and the main Java frameworks or technologies they used.'
-FROM question_types
-WHERE name = 'Introduction';
+    TRUE,
+    20
+FROM interview_categories c
+WHERE c.name = 'C#'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM interviews existing
+      WHERE existing.interview_name = 'C# Fundamentals Beginner'
+        AND existing.category_id = c.id
+  );
 
+# =========================================================
+# 2. INSERT SIX QUESTIONS
+# =========================================================
 
 INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
+(interview_id, admin_id, type_id, difficulty, text, answer, active)
 SELECT
-    @java_backend_id,
+    i.id,
     1,
-    id,
+    qt.id,
     'easy',
-    'What is an ORM?',
-    'An ORM maps objects in an application to records in a relational database. It allows developers to work with application objects while the ORM handles much of the SQL and persistence logic.'
-FROM question_types
-WHERE name = 'Definition';
+    q.question_text,
+    q.answer_text,
+    TRUE
+FROM interviews i
+JOIN interview_categories c
+    ON c.id = i.category_id
+CROSS JOIN (
+    SELECT
+        'Introduction' AS question_type,
+        'Tell me about your experience learning or developing applications with C#.' AS question_text,
+        'A good answer introduces the candidate, describes their C# learning or development experience, mentions a relevant project and explains their current goals.' AS answer_text
 
-SET @question_id = LAST_INSERT_ID();
+    UNION ALL
 
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name = 'orm';
+    SELECT
+        'Definition',
+        'What is C# and what is it commonly used for?',
+        'C# is a strongly typed, object oriented programming language in the .NET ecosystem. It is commonly used for web applications, desktop software, APIs, cloud services and games.'
 
+    UNION ALL
 
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
+    SELECT
+        'Definition',
+        'What is the difference between a value type and a reference type in C#?',
+        'Value type variables contain their values directly, while reference type variables hold references to objects. Examples of value types include int and bool, while class instances and arrays are reference types.'
+
+    UNION ALL
+
+    SELECT
+        'Conceptual',
+        'What is dependency injection and why is it useful in a C# application?',
+        'Dependency injection provides a class with the services it needs instead of requiring the class to create those services itself. It reduces coupling and improves testability and maintainability.'
+
+    UNION ALL
+
+    SELECT
+        'Implementation',
+        'How would you write a C# method that checks whether an integer is even?',
+        'One valid implementation is bool IsEven(int number) { return number % 2 == 0; }. The modulo operator determines whether the number is divisible by two without a remainder.'
+
+    UNION ALL
+
+    SELECT
+        'Conceptual',
+        'What is the difference between a class and an object in C#?',
+        'A class defines the data and behaviour of a type. An object is an instance of a class created at runtime and can hold its own instance state.'
+) AS q
+    ON TRUE
+JOIN question_types qt
+    ON qt.name = q.question_type
+WHERE i.interview_name = 'C# Fundamentals Beginner'
+  AND c.name = 'C#'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM interview_questions existing
+      WHERE existing.interview_id = i.id
+        AND existing.text = q.question_text
+  );
+
+# =========================================================
+# 3. MAP EACH QUESTION TO ONE EXISTING CONCEPT
+# =========================================================
+
+INSERT INTO interview_question_concepts
+(question_id, concept_id)
 SELECT
-    @java_backend_id,
-    1,
-    id,
-    'intermediate',
-    'Why does a Java Stream pipeline not execute simply because filter and map have been called?',
-    'filter and map are intermediate operations. Streams are lazily evaluated and require a terminal operation such as collect, forEach or count before the pipeline is executed.'
-FROM question_types
-WHERE name = 'Conceptual';
+    iq.id,
+    co.id
+FROM interview_questions iq
+JOIN interviews i
+    ON i.id = iq.interview_id
+JOIN (
+    SELECT
+        'Tell me about your experience learning or developing applications with C#.' AS question_text,
+        'csharp-basics' AS concept_name
 
-SET @question_id = LAST_INSERT_ID();
+    UNION ALL
 
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('java-streams', 'stream-filter', 'stream-map', 'stream-terminal-operations', 'lazy-evaluation');
+    SELECT
+        'What is C# and what is it commonly used for?',
+        'csharp-basics'
+
+    UNION ALL
+
+    SELECT
+        'What is the difference between a value type and a reference type in C#?',
+        'csharp-basics'
+
+    UNION ALL
+
+    SELECT
+        'What is dependency injection and why is it useful in a C# application?',
+        'dependency-injection'
+
+    UNION ALL
+
+    SELECT
+        'How would you write a C# method that checks whether an integer is even?',
+        'csharp-basics'
+
+    UNION ALL
+
+    SELECT
+        'What is the difference between a class and an object in C#?',
+        'csharp-basics'
+) AS mapping
+    ON mapping.question_text = iq.text
+JOIN concepts co
+    ON co.name = mapping.concept_name
+WHERE i.interview_name = 'C# Fundamentals Beginner'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM interview_question_concepts existing
+      WHERE existing.question_id = iq.id
+        AND existing.concept_id = co.id
+  );
 
 
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# =========================================================
+# C# MEDIUM INTERVIEW
+# 1 interview | 7 questions
+# Admin ID: 1
+# =========================================================
+
+# 1. CREATE INTERVIEW
+
+INSERT INTO interviews
+(interview_name, category_id, admin_id, description,
+ difficulty, active, estimated_time_in_minutes)
 SELECT
-    @java_backend_id,
+    'C# Intermediate Development',
+    c.id,
     1,
-    id,
+    'An intermediate C# interview covering dependency injection, asynchronous programming, database access and practical problem solving.',
     'medium',
-    'Implement a Java Stream operation that returns the names of active users.',
-    'The candidate should filter users using the active condition and map each remaining user to its name, followed by a terminal operation such as collect.'
-FROM question_types
-WHERE name = 'Implementation';
+    TRUE,
+    30
+FROM interview_categories c
+WHERE c.name = 'C#'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM interviews existing
+      WHERE existing.interview_name = 'C# Intermediate Development'
+        AND existing.category_id = c.id
+  );
 
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('java-streams', 'stream-filter', 'stream-map', 'stream-collect');
-
+# 2. INSERT QUESTIONS
 
 INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
+(interview_id, admin_id, type_id, difficulty, text, answer, active)
 SELECT
-    @java_backend_id,
+    i.id,
     1,
-    id,
+    qt.id,
     'medium',
-    CONCAT(
-        'What is wrong with this Java stream?',
-        CHAR(10),
-        CHAR(10),
-        'users.stream()',
-        CHAR(10),
-        '    .filter(User::isActive)',
-        CHAR(10),
-        '    .map(User::getName);',
-        CHAR(10),
-        CHAR(10),
-        'What is missing?'
-    ),
-    'The stream has no terminal operation, so the pipeline is not executed and no result is produced. A terminal operation such as collect is required.'
-FROM question_types
-WHERE name = 'Debugging';
+    q.question_text,
+    q.answer_text,
+    TRUE
+FROM interviews i
+JOIN interview_categories c
+    ON c.id = i.category_id
+JOIN (
+    SELECT
+        'Introduction' AS question_type,
+        'Describe a C# application you have worked on and explain how its main components interact.' AS question_text,
+        'A good answer explains the application purpose, its main components, how data moves between them and the candidates own contribution.' AS answer_text
 
-SET @question_id = LAST_INSERT_ID();
+    UNION ALL
 
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('java-streams', 'stream-filter', 'stream-map', 'stream-terminal-operations', 'lazy-evaluation');
+    SELECT
+        'Experience',
+        'Describe a situation where you improved the performance or maintainability of a C# application. How did you evaluate the result?',
+        'A strong answer describes the original problem, evidence used to identify the cause, changes made and how the result was measured. It should also mention testing and possible trade offs.'
 
+    UNION ALL
 
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
+    SELECT
+        'Definition',
+        'What is dependency injection in C# and how does constructor injection differ from creating dependencies inside a class?',
+        'Dependency injection supplies required services from outside a class. Constructor injection makes those dependencies explicit, reduces tight coupling and improves testability compared with creating concrete dependencies internally.'
+
+    UNION ALL
+
+    SELECT
+        'Conceptual',
+        'What is the difference between IEnumerable and IQueryable in C# when working with database data?',
+        'IEnumerable supports iteration over a sequence and commonly performs subsequent operations in application memory. IQueryable builds expression trees that a compatible provider can translate, often into database queries. Execution depends on the provider and where the query is evaluated.'
+
+    UNION ALL
+
+    SELECT
+        'Implementation',
+        'How would you call an external API asynchronously in C# and handle a failed HTTP response?',
+        'A good implementation uses HttpClient with await and an asynchronous request method. It checks the response status, uses EnsureSuccessStatusCode or equivalent handling, catches relevant exceptions and applies suitable cancellation and timeout behaviour.'
+
+    UNION ALL
+
+    SELECT
+        'Debugging',
+        'An ASP.NET Core endpoint becomes slow when it loads a list of records and related data. How would you find the cause and improve performance?',
+        'A strong answer measures request duration, inspects generated SQL and execution plans, checks for excessive queries such as the N plus one problem and reviews indexes and selected columns. It then tests an appropriate query or loading strategy and compares performance under realistic conditions.'
+
+    UNION ALL
+
+    SELECT
+        'Trade-off',
+        'A C# application repeatedly requests the same data from a remote API. How would you decide whether to use caching, reduce duplicate requests or improve the API client design?',
+        'A strong answer examines request frequency, data freshness requirements, latency and rate limits. It considers suitable caching, request deduplication, cancellation and error handling, while accounting for cache invalidation and consistency.'
+) AS q
+    ON 1 = 1
+JOIN question_types qt
+    ON qt.name = q.question_type
+WHERE i.interview_name = 'C# Intermediate Development'
+  AND c.name = 'C#'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM interview_questions existing
+      WHERE existing.interview_id = i.id
+        AND existing.text = q.question_text
+  );
+
+# 3. MAP QUESTIONS TO EXISTING CONCEPTS
+
+INSERT INTO interview_question_concepts
+(question_id, concept_id)
 SELECT
-    @java_backend_id,
+    iq.id,
+    co.id
+FROM interview_questions iq
+JOIN interviews i
+    ON i.id = iq.interview_id
+JOIN (
+    SELECT
+        'Describe a C# application you have worked on and explain how its main components interact.' AS question_text,
+        'csharp-basics' AS concept_name
+
+    UNION ALL
+    SELECT
+        'Describe a C# application you have worked on and explain how its main components interact.',
+        'layered-architecture'
+
+    UNION ALL
+    SELECT
+        'Describe a situation where you improved the performance or maintainability of a C# application. How did you evaluate the result?',
+        'maintainability'
+
+    UNION ALL
+    SELECT
+        'Describe a situation where you improved the performance or maintainability of a C# application. How did you evaluate the result?',
+        'performance-profiling'
+
+    UNION ALL
+    SELECT
+        'What is dependency injection in C# and how does constructor injection differ from creating dependencies inside a class?',
+        'dependency-injection'
+
+    UNION ALL
+    SELECT
+        'What is dependency injection in C# and how does constructor injection differ from creating dependencies inside a class?',
+        'constructor-injection'
+
+    UNION ALL
+    SELECT
+        'What is the difference between IEnumerable and IQueryable in C# when working with database data?',
+        'ienumerable'
+
+    UNION ALL
+    SELECT
+        'What is the difference between IEnumerable and IQueryable in C# when working with database data?',
+        'iqueryable'
+
+    UNION ALL
+    SELECT
+        'What is the difference between IEnumerable and IQueryable in C# when working with database data?',
+        'deferred-execution'
+
+    UNION ALL
+    SELECT
+        'How would you call an external API asynchronously in C# and handle a failed HTTP response?',
+        'async-await'
+
+    UNION ALL
+    SELECT
+        'How would you call an external API asynchronously in C# and handle a failed HTTP response?',
+        'http-client'
+
+    UNION ALL
+    SELECT
+        'How would you call an external API asynchronously in C# and handle a failed HTTP response?',
+        'error-handling'
+
+    UNION ALL
+    SELECT
+        'An ASP.NET Core endpoint becomes slow when it loads a list of records and related data. How would you find the cause and improve performance?',
+        'entity-framework'
+
+    UNION ALL
+    SELECT
+        'An ASP.NET Core endpoint becomes slow when it loads a list of records and related data. How would you find the cause and improve performance?',
+        'n-plus-one'
+
+    UNION ALL
+    SELECT
+        'An ASP.NET Core endpoint becomes slow when it loads a list of records and related data. How would you find the cause and improve performance?',
+        'query-optimization'
+
+    UNION ALL
+    SELECT
+        'A C# application repeatedly requests the same data from a remote API. How would you decide whether to use caching, reduce duplicate requests or improve the API client design?',
+        'api-caching'
+
+    UNION ALL
+    SELECT
+        'A C# application repeatedly requests the same data from a remote API. How would you decide whether to use caching, reduce duplicate requests or improve the API client design?',
+        'duplicate-requests'
+
+    UNION ALL
+    SELECT
+        'A C# application repeatedly requests the same data from a remote API. How would you decide whether to use caching, reduce duplicate requests or improve the API client design?',
+        'api-client'
+) AS mapping
+    ON mapping.question_text = iq.text
+JOIN concepts co
+    ON co.name = mapping.concept_name
+WHERE i.interview_name = 'C# Intermediate Development'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM interview_question_concepts existing
+      WHERE existing.question_id = iq.id
+        AND existing.concept_id = co.id
+  );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  # =========================================================
+# C# HARD INTERVIEW
+# 1 interview | 8 questions
+# 3 to 4 concepts per question
+# Admin ID: 1
+# =========================================================
+
+# =========================================================
+# 1. CREATE INTERVIEW
+# =========================================================
+
+INSERT INTO interviews
+(interview_name, category_id, admin_id, description,
+ difficulty, active, estimated_time_in_minutes)
+SELECT
+    'C# Advanced Engineering',
+    c.id,
     1,
-    id,
+    'An advanced C# interview covering application architecture, concurrency, API reliability, database performance and complex problem solving.',
     'hard',
-    'How would you structure a Spring Boot application that exposes REST endpoints and stores data in SQL?',
-    'The application should separate controllers, business/service logic and persistence. Controllers handle HTTP concerns, services contain business rules, and repositories handle database access through JPA, Hibernate, JDBC or another persistence mechanism.'
-FROM question_types
-WHERE name = 'Architecture';
+    TRUE,
+    45
+FROM interview_categories c
+WHERE c.name = 'C#'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM interviews existing
+      WHERE existing.interview_name = 'C# Advanced Engineering'
+        AND existing.category_id = c.id
+  );
 
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('spring-boot', 'controller-service-repository', 'spring-dependency-injection', 'jpa', 'repository-pattern');
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @java_backend_id,
-    1,
-    id,
-    'medium',
-    'A Spring Boot endpoint becomes slow when loading an entity with several relationships. What would you investigate?',
-    'The candidate should inspect SQL generated by Hibernate and determine whether unnecessary queries are being executed. They should specifically consider N+1 queries, lazy versus eager loading, inefficient joins, large result sets and missing indexes.'
-FROM question_types
-WHERE name = 'Debugging';
-
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('hibernate-query-generation', 'n-plus-one', 'lazy-loading', 'eager-loading', 'sql-indexing', 'sql-joins');
-
+# =========================================================
+# 2. INSERT EIGHT QUESTIONS
+# =========================================================
 
 INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
+(interview_id, admin_id, type_id, difficulty, text, answer, active)
 SELECT
-    @java_backend_id,
+    i.id,
     1,
-    id,
-    'medium',
-    'When would you choose lazy loading over eager loading for a JPA relationship?',
-    'Lazy loading is useful when related data is not always needed because it avoids loading it immediately. Eager loading can be appropriate when the related data is consistently required, but loading too much data can increase query cost.'
-FROM question_types
-WHERE name = 'Trade-off';
-
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('lazy-loading', 'eager-loading', 'performance-trade-offs', 'hibernate-query-generation');
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @java_backend_id,
-    1,
-    id,
-    'medium',
-    'Tell me about a Java backend performance problem you encountered and how you solved it.',
-    'The candidate should describe the performance problem, how they measured or investigated it, the root cause, the change they made and how they verified the result.'
-FROM question_types
-WHERE name = 'Experience';
-
-
--- =========================================================
--- JAVA FULL STACK QUESTIONS
--- =========================================================
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @java_fullstack_id,
-    1,
-    id,
-    'easy',
-    'Tell me about your experience working across the frontend and Java backend of an application.',
-    'The candidate should briefly describe their full stack experience and their responsibilities across frontend, backend and database layers.'
-FROM question_types
-WHERE name = 'Introduction';
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @java_fullstack_id,
-    1,
-    id,
-    'easy',
-    'What is a REST API?',
-    'A REST API is an HTTP-based interface where clients interact with resources through defined endpoints and HTTP methods such as GET, POST, PUT and DELETE.'
-FROM question_types
-WHERE name = 'Definition';
-
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name = 'rest-api';
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @java_fullstack_id,
-    1,
-    id,
-    'intermediate',
-    'Explain how a frontend, Spring Boot API and SQL database typically interact when loading a user profile.',
-    'The frontend sends an HTTP request to a Spring Boot endpoint. The backend validates the request, loads the required data through its persistence layer, maps the result to an API response and returns it to the frontend.'
-FROM question_types
-WHERE name = 'Conceptual';
-
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('request-response-cycle', 'spring-boot', 'database-access', 'dto');
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @java_fullstack_id,
-    1,
-    id,
-    'medium',
-    'Implement the backend flow for creating a user: validate the request, call the service and return an appropriate HTTP response.',
-    'The endpoint should validate the incoming DTO, call the service only when the request is valid, and return a successful response for creation or a 4xx response for invalid input.'
-FROM question_types
-WHERE name = 'Implementation';
-
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('api-validation', 'input-validation', 'dto', 'rest-api');
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @java_fullstack_id,
-    1,
-    id,
-    'medium',
-    CONCAT(
-        'What is wrong with this Java code?',
-        CHAR(10),
-        CHAR(10),
-        'users.stream()',
-        CHAR(10),
-        '    .map(User::getEmail);',
-        CHAR(10),
-        CHAR(10),
-        'How would you fix it?'
-    ),
-    'The stream only defines an intermediate map operation and has no terminal operation, so no result is produced. A terminal operation such as collect is required.'
-FROM question_types
-WHERE name = 'Debugging';
-
-SET @question_id = LAST_INSERT_ID();
-
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('java-streams', 'stream-map', 'stream-terminal-operations', 'lazy-evaluation');
-
-
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
-SELECT
-    @java_fullstack_id,
-    1,
-    id,
+    qt.id,
     'hard',
-    'How would you design a full stack application using Spring Boot, a SQL database and a JavaScript frontend?',
-    'The frontend should communicate with the backend through a defined API contract. Spring Boot should separate controllers, business logic and persistence, while the database should be accessed through a dedicated data-access layer. Authentication and validation should be handled at appropriate boundaries.'
-FROM question_types
-WHERE name = 'Architecture';
+    q.question_text,
+    q.answer_text,
+    TRUE
+FROM interviews i
+JOIN interview_categories c
+    ON c.id = i.category_id
+JOIN (
+    SELECT
+        'Introduction' AS question_type,
+        'Explain how you would design a production grade ASP.NET Core application that remains maintainable and responsive under heavy traffic.' AS question_text,
+        'A strong answer discusses layered architecture, dependency injection, efficient database access, caching, observability, resilience and performance testing. The candidate should explain trade offs and how the design would be monitored in production.' AS answer_text
 
-SET @question_id = LAST_INSERT_ID();
+    UNION ALL
 
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('full-stack-architecture', 'spring-boot', 'rest-api', 'layered-architecture', 'sql-data-access', 'api-contracts');
+    SELECT
+        'Experience',
+        'Describe a difficult C# production issue you investigated. How did you identify the root cause, choose a solution and verify that the issue was resolved?',
+        'A strong answer explains the symptoms, evidence collected, root cause, alternative solutions, implementation and measurable outcome. It should cover regression testing and any remaining operational risks.'
 
+    UNION ALL
+
+    SELECT
+        'Architecture',
+        'How would you structure a C# application so that business rules remain independent of database technology and external services?',
+        'A strong answer separates domain logic from infrastructure, defines suitable interfaces, applies dependency inversion and injects implementations. It also considers transaction boundaries, testing, maintainability and whether each abstraction provides real value.'
+
+    UNION ALL
+
+    SELECT
+        'Conceptual',
+        'Explain how async and await affect execution in C# and why asynchronous code does not automatically make CPU intensive work faster.',
+        'Async and await allow asynchronous operations to be composed without blocking a thread while waiting for supported operations to complete. They are especially useful for I O bound work. CPU intensive work still consumes processing capacity and may require measured parallel execution. The answer should address exception propagation, cancellation and resource limits.'
+
+    UNION ALL
+
+    SELECT
+        'Implementation',
+        'How would you implement a reliable background job processor in C# that limits concurrent work, handles failures and shuts down safely?',
+        'A strong solution uses a bounded queue or suitable channel, controlled worker concurrency, cancellation tokens, explicit exception handling and graceful shutdown. It should also discuss retry limits, poison messages, resource cleanup, back pressure and operational monitoring.'
+
+    UNION ALL
+
+    SELECT
+        'Debugging',
+        'An ASP.NET Core API experiences intermittent timeouts under load even though individual database queries appear fast. How would you investigate and resolve the issue?',
+        'A strong answer correlates request traces, application logs, dependency timings, thread pool activity and connection pool usage. It investigates blocking calls, resource exhaustion, excessive concurrency and downstream latency. Improvements should be validated with load tests and measurements rather than assumptions.'
+
+    UNION ALL
+
+    SELECT
+        'Trade-off',
+        'A C# service must retrieve and process millions of database records within a fixed time window. How would you choose between loading all records, using pagination or processing batches?',
+        'A strong answer compares memory use, query cost, round trips, consistency, transaction duration and recovery requirements. Pagination or batching can control resource consumption, while streaming may reduce memory pressure. The design should account for ordering, concurrent updates and realistic performance measurements.'
+
+    UNION ALL
+
+    SELECT
+        'Debugging',
+        'A distributed application sometimes processes the same event more than once after a consumer restarts. How would you prevent duplicate business operations while preserving reliable message delivery?',
+        'A strong answer assumes that message delivery can repeat. It uses stable event identifiers, durable deduplication, idempotent business operations and appropriate transaction boundaries. It also addresses concurrent consumers, retry policies and recovery after partial failure.'
+) AS q
+    ON 1 = 1
+JOIN question_types qt
+    ON qt.name = q.question_type
+WHERE i.interview_name = 'C# Advanced Engineering'
+  AND c.name = 'C#'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM interview_questions existing
+      WHERE existing.interview_id = i.id
+        AND existing.text = q.question_text
+  );
+
+# =========================================================
+# 3. MAP QUESTIONS TO EXISTING CONCEPTS
+# Each question receives 3 or 4 concepts
+# =========================================================
+
+INSERT INTO interview_question_concepts
+(question_id, concept_id)
+SELECT
+    iq.id,
+    co.id
+FROM interview_questions iq
+JOIN interviews i
+    ON i.id = iq.interview_id
+JOIN (
+    SELECT
+        'Explain how you would design a production grade ASP.NET Core application that remains maintainable and responsive under heavy traffic.' AS question_text,
+        'layered-architecture' AS concept_name
+
+    UNION ALL
+    SELECT
+        'Explain how you would design a production grade ASP.NET Core application that remains maintainable and responsive under heavy traffic.',
+        'dependency-injection'
+
+    UNION ALL
+    SELECT
+        'Explain how you would design a production grade ASP.NET Core application that remains maintainable and responsive under heavy traffic.',
+        'performance-profiling'
+
+    UNION ALL
+    SELECT
+        'Explain how you would design a production grade ASP.NET Core application that remains maintainable and responsive under heavy traffic.',
+        'request-tracing'
+
+    UNION ALL
+    SELECT
+        'Describe a difficult C# production issue you investigated. How did you identify the root cause, choose a solution and verify that the issue was resolved?',
+        'error-handling'
+
+    UNION ALL
+    SELECT
+        'Describe a difficult C# production issue you investigated. How did you identify the root cause, choose a solution and verify that the issue was resolved?',
+        'performance-profiling'
+
+    UNION ALL
+    SELECT
+        'Describe a difficult C# production issue you investigated. How did you identify the root cause, choose a solution and verify that the issue was resolved?',
+        'network-debugging'
+
+    UNION ALL
+    SELECT
+        'How would you structure a C# application so that business rules remain independent of database technology and external services?',
+        'layered-architecture'
+
+    UNION ALL
+    SELECT
+        'How would you structure a C# application so that business rules remain independent of database technology and external services?',
+        'dependency-injection'
+
+    UNION ALL
+    SELECT
+        'How would you structure a C# application so that business rules remain independent of database technology and external services?',
+        'loose-coupling'
+
+    UNION ALL
+    SELECT
+        'How would you structure a C# application so that business rules remain independent of database technology and external services?',
+        'testability'
+
+    UNION ALL
+    SELECT
+        'Explain how async and await affect execution in C# and why asynchronous code does not automatically make CPU intensive work faster.',
+        'async-await'
+
+    UNION ALL
+    SELECT
+        'Explain how async and await affect execution in C# and why asynchronous code does not automatically make CPU intensive work faster.',
+        'concurrency'
+
+    UNION ALL
+    SELECT
+        'Explain how async and await affect execution in C# and why asynchronous code does not automatically make CPU intensive work faster.',
+        'network-performance'
+
+    UNION ALL
+    SELECT
+        'How would you implement a reliable background job processor in C# that limits concurrent work, handles failures and shuts down safely?',
+        'async-await'
+
+    UNION ALL
+    SELECT
+        'How would you implement a reliable background job processor in C# that limits concurrent work, handles failures and shuts down safely?',
+        'message-processing'
+
+    UNION ALL
+    SELECT
+        'How would you implement a reliable background job processor in C# that limits concurrent work, handles failures and shuts down safely?',
+        'error-handling'
+
+    UNION ALL
+    SELECT
+        'How would you implement a reliable background job processor in C# that limits concurrent work, handles failures and shuts down safely?',
+        'concurrency'
+
+    UNION ALL
+    SELECT
+        'An ASP.NET Core API experiences intermittent timeouts under load even though individual database queries appear fast. How would you investigate and resolve the issue?',
+        'request-tracing'
+
+    UNION ALL
+    SELECT
+        'An ASP.NET Core API experiences intermittent timeouts under load even though individual database queries appear fast. How would you investigate and resolve the issue?',
+        'performance-profiling'
+
+    UNION ALL
+    SELECT
+        'An ASP.NET Core API experiences intermittent timeouts under load even though individual database queries appear fast. How would you investigate and resolve the issue?',
+        'network-performance'
+
+    UNION ALL
+    SELECT
+        'An ASP.NET Core API experiences intermittent timeouts under load even though individual database queries appear fast. How would you investigate and resolve the issue?',
+        'query-optimization'
+
+    UNION ALL
+    SELECT
+        'A C# service must retrieve and process millions of database records within a fixed time window. How would you choose between loading all records, using pagination or processing batches?',
+        'batch-processing'
+
+    UNION ALL
+    SELECT
+        'A C# service must retrieve and process millions of database records within a fixed time window. How would you choose between loading all records, using pagination or processing batches?',
+        'query-optimization'
+
+    UNION ALL
+    SELECT
+        'A C# service must retrieve and process millions of database records within a fixed time window. How would you choose between loading all records, using pagination or processing batches?',
+        'performance-trade-offs'
+
+    UNION ALL
+    SELECT
+        'A C# service must retrieve and process millions of database records within a fixed time window. How would you choose between loading all records, using pagination or processing batches?',
+        'data-consistency'
+
+    UNION ALL
+    SELECT
+        'A distributed application sometimes processes the same event more than once after a consumer restarts. How would you prevent duplicate business operations while preserving reliable message delivery?',
+        'message-processing'
+
+    UNION ALL
+    SELECT
+        'A distributed application sometimes processes the same event more than once after a consumer restarts. How would you prevent duplicate business operations while preserving reliable message delivery?',
+        'idempotency'
+
+    UNION ALL
+    SELECT
+        'A distributed application sometimes processes the same event more than once after a consumer restarts. How would you prevent duplicate business operations while preserving reliable message delivery?',
+        'data-consistency'
+
+    UNION ALL
+    SELECT
+        'A distributed application sometimes processes the same event more than once after a consumer restarts. How would you prevent duplicate business operations while preserving reliable message delivery?',
+        'sql-transactions'
+) AS mapping
+    ON mapping.question_text = iq.text
+JOIN concepts co
+    ON co.name = mapping.concept_name
+WHERE i.interview_name = 'C# Advanced Engineering'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM interview_question_concepts existing
+      WHERE existing.question_id = iq.id
+        AND existing.concept_id = co.id
+  );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  # =========================================================
+# CYBERSECURITY EASY INTERVIEW
+# 1 interview | 6 questions
+# 1 concept per question
+# Admin ID: 1
+# =========================================================
+
+# =========================================================
+# 1. CREATE INTERVIEW
+# =========================================================
+
+INSERT INTO interviews
+(interview_name, category_id, admin_id, description,
+ difficulty, active, estimated_time_in_minutes)
+SELECT
+    'Cybersecurity Fundamentals Beginner',
+    c.id,
+    1,
+    'An introductory cybersecurity interview covering security principles, common threats, access control and basic defensive practices.',
+    'easy',
+    TRUE,
+    20
+FROM interview_categories c
+WHERE c.name = 'Cybersecurity'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM interviews existing
+      WHERE existing.interview_name = 'Cybersecurity Fundamentals Beginner'
+        AND existing.category_id = c.id
+  );
+
+# =========================================================
+# 2. INSERT SIX QUESTIONS
+# =========================================================
 
 INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
+(interview_id, admin_id, type_id, difficulty, text, answer, active)
 SELECT
-    @java_fullstack_id,
+    i.id,
     1,
-    id,
-    'medium',
-    'Would you return JPA entities directly from your REST API or map them to DTOs? Explain the trade-off.',
-    'Returning entities is simpler for small applications but tightly couples the API to the persistence model. DTOs add mapping work but provide better control over the API contract and prevent internal entity changes from automatically affecting clients.'
-FROM question_types
-WHERE name = 'Trade-off';
+    qt.id,
+    'easy',
+    q.question_text,
+    q.answer_text,
+    TRUE
+FROM interviews i
+JOIN interview_categories c
+    ON c.id = i.category_id
+JOIN (
+    SELECT
+        'Introduction' AS question_type,
+        'Introduce yourself and explain why cybersecurity interests you.' AS question_text,
+        'A good answer introduces the candidate, explains their interest in protecting systems and data, and mentions relevant learning, projects or security goals.' AS answer_text
 
-SET @question_id = LAST_INSERT_ID();
+    UNION ALL
 
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name IN ('dto', 'entity-exposure', 'domain-model-separation', 'api-contracts', 'performance-trade-offs');
+    SELECT
+        'Definition',
+        'What is cybersecurity and what is its main purpose?',
+        'Cybersecurity protects systems, networks, applications and data against unauthorised access, attacks, damage and disruption.'
 
+    UNION ALL
 
-INSERT INTO interview_questions
-(interview_id, admin_id, type_id, difficulty, text, answer)
+    SELECT
+        'Definition',
+        'What is the CIA triad in cybersecurity?',
+        'The CIA triad consists of confidentiality, integrity and availability. Confidentiality limits access to authorised parties, integrity protects the accuracy of data, and availability ensures systems and data can be accessed when needed.'
+
+    UNION ALL
+
+    SELECT
+        'Conceptual',
+        'What is the difference between authentication and authorization?',
+        'Authentication verifies who a user or system is. Authorization determines which resources or actions that authenticated identity is permitted to access.'
+
+    UNION ALL
+
+    SELECT
+        'Conceptual',
+        'Why is the principle of least privilege important when assigning user permissions?',
+        'Least privilege gives each user or service only the permissions required for its tasks. This reduces the impact of compromised accounts, mistakes and unauthorised actions.'
+
+    UNION ALL
+
+    SELECT
+        'Implementation',
+        'What basic steps would you take to secure an account against unauthorised access?',
+        'A good answer includes using a strong unique password, enabling multi factor authentication, limiting login attempts where appropriate, protecting recovery methods and monitoring suspicious activity.'
+) AS q
+    ON 1 = 1
+JOIN question_types qt
+    ON qt.name = q.question_type
+WHERE i.interview_name = 'Cybersecurity Fundamentals Beginner'
+  AND c.name = 'Cybersecurity'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM interview_questions existing
+      WHERE existing.interview_id = i.id
+        AND existing.text = q.question_text
+  );
+
+# =========================================================
+# 3. MAP EACH QUESTION TO ONE EXISTING CONCEPT
+# =========================================================
+
+INSERT INTO interview_question_concepts
+(question_id, concept_id)
 SELECT
-    @java_fullstack_id,
-    1,
-    id,
-    'medium',
-    'Describe a full stack feature you have implemented using Java and a frontend framework.',
-    'The candidate should describe a specific feature and explain their contribution across the frontend, API/backend and persistence layers. They should mention the main technical decisions or challenges involved.'
-FROM question_types
-WHERE name = 'Experience';
+    iq.id,
+    co.id
+FROM interview_questions iq
+JOIN interviews i
+    ON i.id = iq.interview_id
+JOIN (
+    SELECT
+        'Introduce yourself and explain why cybersecurity interests you.' AS question_text,
+        'cybersecurity-basics' AS concept_name
 
-SET @question_id = LAST_INSERT_ID();
+    UNION ALL
 
-INSERT INTO interview_question_concepts (question_id, concept_id)
-SELECT @question_id, id
-FROM concepts
-WHERE name = 'full-stack-development';
+    SELECT
+        'What is cybersecurity and what is its main purpose?',
+        'cybersecurity-basics'
+
+    UNION ALL
+
+    SELECT
+        'What is the CIA triad in cybersecurity?',
+        'cia-triad'
+
+    UNION ALL
+
+    SELECT
+        'What is the difference between authentication and authorization?',
+        'authentication'
+
+    UNION ALL
+
+    SELECT
+        'Why is the principle of least privilege important when assigning user permissions?',
+        'least-privilege'
+
+    UNION ALL
+
+    SELECT
+        'What basic steps would you take to secure an account against unauthorised access?',
+        'multi-factor-authentication'
+) AS mapping
+    ON mapping.question_text = iq.text
+JOIN concepts co
+    ON co.name = mapping.concept_name
+WHERE i.interview_name = 'Cybersecurity Fundamentals Beginner'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM interview_question_concepts existing
+      WHERE existing.question_id = iq.id
+        AND existing.concept_id = co.id
+  );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 

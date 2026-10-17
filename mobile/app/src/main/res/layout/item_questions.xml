@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/div_q_row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:background="@drawable/bg_rounded"
+    android:padding="18dp">
+
+    <!-- Question Number Badge -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/div_qnum_badge"
+        android:layout_width="39dp"
+        android:layout_height="39dp"
+        android:background="@drawable/bg_circle_purple_light"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_q_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:text="1"
+            android:textColor="#FF6C63D6"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Question Text -->
+    <TextView
+        android:id="@+id/tv_question_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="12dp"
+        android:fontFamily="sans-serif"
+        android:text="Tell me about yourself and your technical background."
+        android:textColor="#FF1C1C28"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/tv_score"
+        app:layout_constraintStart_toEndOf="@id/div_qnum_badge"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Question Score -->
+    <TextView
+        android:id="@+id/tv_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:text="5/5"
+        android:textColor="#FF08B425"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Duration Value -->
+    <TextView
+        android:id="@+id/tv_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:fontFamily="sans-serif"
+        android:text="⏱ 01:24"
+        android:textColor="#FF7A7A86"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_score" />
+
+    <!-- Tag List Container -->
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroupTags"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toStartOf="@id/tv_duration"
+        app:layout_constraintStart_toStartOf="@id/tv_question_text"
+        app:layout_constraintTop_toBottomOf="@id/tv_question_text" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

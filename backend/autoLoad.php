@@ -2,6 +2,7 @@
     //load individual files
     require_once __DIR__ . '/exceptions/Exceptions.php';
     require_once __DIR__ . '/Router.php';
+    require_once __DIR__ . '/Container.php';
 
     //autoload when needed in folder
     spl_autoload_register(function ($class) {
@@ -11,7 +12,8 @@
             'services',
             'repositories',
             'middleware',
-            'helpers'
+            'helpers',
+            'builders'
         ];
 
         //go through each file and include them

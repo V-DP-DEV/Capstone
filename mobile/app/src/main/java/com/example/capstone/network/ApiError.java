@@ -16,4 +16,8 @@ public class ApiError {
   public Map<String,String> getDetails(){
     return details;
   }
+  //400 is both normal validaiton and field_validation_error for multiple field errors
+  public boolean isFieldValidationError(){
+    return "FIELD_VALIDATION_ERROR".equals(code);
+  }
 }

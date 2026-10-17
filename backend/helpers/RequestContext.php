@@ -1,22 +1,22 @@
 <?php
     //used to store data to persist over request after middleware worked
     class RequestContext{
-       private static ?int $userId = null;
-        private static ?string $role = null;
+       private ?int $userId = null;
+        private ?string $role = null;
 
         //set the user
-        public static function setUser(int $userId,string $role){
-            self::$userId = $userId;
-            self::$role = $role;
+        public function setUser(int $userId,string $role){
+            $this->userId = $userId;
+            $this->role = $role;
         }
 
         //getters
-        public static function getUserId():int{
-            return self::$userId;
+        public function getUserId():int{
+            return $this->userId;
         }
 
-        public static function getRole():string{
-            return self::$role;
+        public function getRole():string{
+            return $this->role;
         } 
     }
 ?>

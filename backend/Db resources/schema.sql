@@ -7,6 +7,8 @@ CREATE TABLE users (
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     role ENUM('USER', 'ADMIN') NOT NULL DEFAULT 'USER',
+    firstname varchar(255) NOT NULL,
+    surname varchar(255) NOT NULL,
 
     CONSTRAINT uk_users_email
         UNIQUE (email)
@@ -186,16 +188,23 @@ CREATE TABLE interview_user_attempts (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT UNSIGNED NOT NULL,
     interview_id BIGINT UNSIGNED NOT NULL,
-    completed_at DATETIME NOT NULL,
-    score DECIMAL(5,2) NOT NULL,
+    completed_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    analysed BOOLEAN NOT NULL DEFAULT FALSE,
+    reviewed BOOLEAN NOT NULL DEFAULT FALSE,
+    score_percentage DECIMAL(5,2),
+    status ENUM('NOT_REQUESTED', 'PROCESSING', 'COMPLETED', 'FAILED') NOT NULL DEFAULT 'NOT_REQUESTED',
 
     CONSTRAINT fk_interview_user_attempts_user
         FOREIGN KEY (user_id)
-        REFERENCES users(id),
+        REFERENCES users(id)
+        ON DELETE CASCADE,
 
     CONSTRAINT fk_interview_user_attempts_interview
         FOREIGN KEY (interview_id)
-        REFERENCES interviews(id)
+        REFERENCES interviews(id),
+
+    CONSTRAINT uk_interview_user_attempt
+        UNIQUE (user_id, interview_id)
 );
 
 
@@ -205,21 +214,22 @@ CREATE TABLE interview_user_attempts (
 
 CREATE TABLE interview_question_attempts (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    user_attempt_id BIGINT UNSIGNED NOT NULL,
+    interview_attempt_id BIGINT UNSIGNED NOT NULL,
     question_id BIGINT UNSIGNED NOT NULL,
     answer TEXT NOT NULL,
-    time_taken INT UNSIGNED NOT NULL,
+    seconds_spent INT UNSIGNED NOT NULL,
 
     CONSTRAINT fk_interview_question_attempts_user_attempt
-        FOREIGN KEY (user_attempt_id)
-        REFERENCES interview_user_attempts(id),
+        FOREIGN KEY (interview_attempt_id)
+        REFERENCES interview_user_attempts(id)
+        ON DELETE CASCADE,
 
     CONSTRAINT fk_interview_question_attempts_question
         FOREIGN KEY (question_id)
         REFERENCES interview_questions(id),
 
     CONSTRAINT uk_interview_question_attempts_attempt_question
-        UNIQUE (user_attempt_id, question_id)
+        UNIQUE (interview_attempt_id, question_id)
 );
 
 
@@ -227,7 +237,7 @@ CREATE TABLE interview_question_attempts (
 -- QUESTION FEEDBACKS
 -- =========================================================
 
-CREATE TABLE question_feedbacks (
+CREATE TABLE question_concept_scores (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     question_attempt_id BIGINT UNSIGNED NOT NULL,
     concept_id BIGINT UNSIGNED NOT NULL,
@@ -235,7 +245,8 @@ CREATE TABLE question_feedbacks (
 
     CONSTRAINT fk_question_feedbacks_question_attempt
         FOREIGN KEY (question_attempt_id)
-        REFERENCES interview_question_attempts(id),
+        REFERENCES interview_question_attempts(id)
+        ON DELETE CASCADE,
 
     CONSTRAINT fk_question_feedbacks_concept
         FOREIGN KEY (concept_id)
@@ -250,23 +261,24 @@ CREATE TABLE question_feedbacks (
 -- COMPETENCY BREAKDOWN SCORES
 -- =========================================================
 
-CREATE TABLE competency_breakdown_scores (
+CREATE TABLE interview_competency_breakdown_feedbacks (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    attempt_id BIGINT UNSIGNED NOT NULL,
+    interview_attempt_id BIGINT UNSIGNED NOT NULL,
     competency_breakdown_id BIGINT UNSIGNED NOT NULL,
     strength TEXT NOT NULL,
-    improvements TEXT NOT NULL,
+    improvement TEXT NOT NULL,
 
     CONSTRAINT fk_competency_breakdown_scores_attempt
-        FOREIGN KEY (attempt_id)
-        REFERENCES interview_user_attempts(id),
+        FOREIGN KEY (interview_attempt_id)
+        REFERENCES interview_user_attempts(id)
+        ON DELETE CASCADE,
 
     CONSTRAINT fk_competency_breakdown_scores_competency_breakdown
         FOREIGN KEY (competency_breakdown_id)
         REFERENCES competency_breakdowns(id),
 
     CONSTRAINT uk_competency_breakdown_scores_attempt_breakdown
-        UNIQUE (attempt_id, competency_breakdown_id)
+        UNIQUE (interview_attempt_id, competency_breakdown_id)
 );
 
 
@@ -282,7 +294,8 @@ CREATE TABLE question_competency_breakdown_scores (
 
     CONSTRAINT fk_question_competency_breakdown_scores_question_attempt
         FOREIGN KEY (question_attempt_id)
-        REFERENCES interview_question_attempts(id),
+        REFERENCES interview_question_attempts(id)
+        ON DELETE CASCADE,
 
     CONSTRAINT fk_question_competency_breakdown_scores_competency_breakdown
         FOREIGN KEY (competency_breakdown_id)
@@ -317,8 +330,35 @@ CREATE TABLE auth_tokens (
     CONSTRAINT fk_auth_tokens_user
         FOREIGN KEY (user_id)
         REFERENCES users(id)
+        ON DELETE CASCADE
 );
 
+
+-- =========================================================
+-- REFRESH TOKENS
+-- =========================================================
+
+CREATE TABLE refresh_tokens (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT UNSIGNED NOT NULL,
+
+    token_hash CHAR(64) NOT NULL,
+
+    device_id VARCHAR(255) NULL,
+    device_name VARCHAR(255) NULL,
+
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expires_at DATETIME NOT NULL,
+    revoked_at DATETIME NULL,
+
+    CONSTRAINT uk_refresh_tokens_token_hash
+        UNIQUE (token_hash),
+
+    CONSTRAINT fk_refresh_tokens_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE
+);
 
 -- =========================================================
 -- AUTH LOGS
@@ -334,11 +374,13 @@ CREATE TABLE auth_logs (
 
     CONSTRAINT fk_auth_log_user
         FOREIGN KEY (user_id)
-        REFERENCES users(id),
+        REFERENCES users(id)
+        ON DELETE SET NULL,
 
     CONSTRAINT fk_auth_log_token
         FOREIGN KEY (token_id)
         REFERENCES auth_tokens(id)
+        ON DELETE SET NULL
 );
 
 
@@ -348,14 +390,15 @@ CREATE TABLE auth_logs (
 
 CREATE TABLE audit_logs (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    admin_id BIGINT UNSIGNED NOT NULL,
+    user_id BIGINT UNSIGNED NULL,
     action VARCHAR(100) NOT NULL,
     ip_address VARCHAR(45) NOT NULL,
     entity_type VARCHAR(100) NOT NULL,
     entity_id BIGINT UNSIGNED NOT NULL,
     at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_audit_logs_admin
-        FOREIGN KEY (admin_id)
+    CONSTRAINT fk_audit_logs_user
+        FOREIGN KEY (user_id)
         REFERENCES users(id)
+        ON DELETE SET NULL
 );
