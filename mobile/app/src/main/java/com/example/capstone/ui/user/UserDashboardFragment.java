@@ -46,6 +46,9 @@ public class UserDashboardFragment extends Fragment {
     binding.btnTipsLibrary.setOnClickListener(v ->
             Navigation.findNavController(v).navigate(R.id.action_userDashboardFragment_to_tipsLibraryFragment)
     );
+    binding.btnViewInterviews.setOnClickListener(v ->
+            Navigation.findNavController(v).navigate(R.id.action_userDashboardFragment_to_interviewHistoryFragment)
+    );
   }
 
   @Override
