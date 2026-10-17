@@ -82,7 +82,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/bg_rounded"
-                android:backgroundTint="#FF6C63D6"
+                android:backgroundTint="@color/color_purple_primary"
                 android:fontFamily="sans-serif-medium"
                 android:gravity="center"
                 android:text="All"

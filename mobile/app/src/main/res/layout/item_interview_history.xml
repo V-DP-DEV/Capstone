@@ -37,27 +37,25 @@
             android:layout_marginStart="8dp"
             android:fontFamily="sans-serif-medium"
             android:text="Hard"
-            android:textColor="#FFE49596"
+            android:textColor="@color/red"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/tv_interview_name"
-            app:layout_constraintEnd_toStartOf="@id/tv_chevron"
+            app:layout_constraintEnd_toStartOf="@id/btn_options"
             app:layout_constraintTop_toTopOf="@id/tv_interview_name" />
 
-        <!-- Chevron Arrow -->
-        <TextView
-            android:id="@+id/tv_chevron"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:fontFamily="sans-serif-medium"
-            android:text="›"
-            android:textColor="#FFC9C6EF"
-            android:textSize="22sp"
-            android:textStyle="bold"
+        <!-- Options / Dropdown Menu Button -->
+        <ImageButton
+            android:id="@+id/btn_options"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Options menu"
+            android:src="@drawable/ic_more_vert"
             app:layout_constraintBottom_toBottomOf="@id/tv_interview_name"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_interview_name" />
+            app:layout_constraintTop_toTopOf="@id/tv_interview_name"
+            app:tint="#FF312CAA" />
 
         <!-- Score Row -->
         <LinearLayout

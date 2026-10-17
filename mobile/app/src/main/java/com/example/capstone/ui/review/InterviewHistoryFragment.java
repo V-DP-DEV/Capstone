@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,7 +19,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.capstone.R;
 import com.example.capstone.adapter.InterviewHistoryAdapter;
+import com.example.capstone.domainModels.UserInterviewAttemptSummary;
 import com.example.capstone.viewmodel.HistoryViewModel;
+import com.example.capstone.viewmodel.HistoryViewModelFactory;
 
 import java.util.ArrayList;
 
@@ -36,8 +39,9 @@ public class InterviewHistoryFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_interview_history, container, false);
 
-        // Scope HistoryViewModel to requireActivity() so it is shared with the Review screen
-        historyViewModel = new ViewModelProvider(requireActivity()).get(HistoryViewModel.class);
+        // Clean: Fragment only initializes the factory and ViewModel provider
+        HistoryViewModelFactory factory = new HistoryViewModelFactory(requireContext());
+        historyViewModel = new ViewModelProvider(requireActivity(), factory).get(HistoryViewModel.class);
 
         recyclerView = view.findViewById(R.id.rv_interview_history);
         tabAll = view.findViewById(R.id.tab_all);
@@ -57,12 +61,18 @@ public class InterviewHistoryFragment extends Fragment {
 
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new InterviewHistoryAdapter(new ArrayList<>(), new InterviewHistoryAdapter.OnItemClickListener() {
+            @Override
+            public void onInterviewClick(UserInterviewAttemptSummary summary) {
+                historyViewModel.loadAttemptDetails((int) summary.getId());
+                Navigation.findNavController(requireView()).navigate(R.id.action_history_to_review);
+            }
 
-        adapter = new InterviewHistoryAdapter(new ArrayList<>(), attempt -> {
-            historyViewModel.setSelectedAttempt(attempt);
-            Navigation.findNavController(getView()).navigate(R.id.action_history_to_review);
+            @Override
+            public void onDeleteClick(UserInterviewAttemptSummary summary, int position) {
+                historyViewModel.deleteAttempt((int) summary.getId());
+            }
         });
-
         recyclerView.setAdapter(adapter);
     }
 
@@ -70,6 +80,18 @@ public class InterviewHistoryFragment extends Fragment {
         historyViewModel.getHistoryList().observe(getViewLifecycleOwner(), attempts -> {
             if (attempts != null) {
                 adapter.updateData(attempts);
+            }
+        });
+
+        historyViewModel.getError().observe(getViewLifecycleOwner(), errorMsg -> {
+            if (errorMsg != null && !errorMsg.isEmpty()) {
+                Toast.makeText(getContext(), errorMsg, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        historyViewModel.getDeleteSuccess().observe(getViewLifecycleOwner(), success -> {
+            if (success != null && success) {
+                Toast.makeText(getContext(), "Interview attempt deleted", Toast.LENGTH_SHORT).show();
             }
         });
     }
