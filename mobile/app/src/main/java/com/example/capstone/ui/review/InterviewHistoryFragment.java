@@ -25,6 +25,10 @@ import com.example.capstone.viewmodel.ViewModelFactory;
 
 import java.util.ArrayList;
 
+/**
+ * Fragment responsible for displaying the user's interview history, tab-based filtering,
+ * and navigating to detailed review screens or initiating attempt deletion.
+ */
 public class InterviewHistoryFragment extends Fragment {
 
     private RecyclerView recyclerView;
