@@ -11,9 +11,12 @@
         return $this->interviewRepository->getAllInterviewCategories();
     }
 
-    public function getInterview(int $id){
+    public function getInterview(?int $id){
         //checks what role user is to retrieve the right data
         //no further checks needed
+        if(empty($id)){
+            throw new ValidationException("Id not specified");
+        }
         if($this->requestContext->getRole() === 'USER'){
             $interview = $this->interviewRepository->getUserInterview($id);
             $questions = $this->interviewRepository->getUserInterviewQuestions($id);

@@ -1,0 +1,5 @@
+<?php
+    interface IAnalyticsRepository{
+        public function getCompetenciesAnalytics(SortOptions $sortOptions,int $last,int $userId):array;
+        public function getConceptsAnalytics(SortOptions $sortOptions,int $last,int $userId):array;
+    }
