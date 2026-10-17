@@ -21,7 +21,7 @@ import com.example.capstone.R;
 import com.example.capstone.adapter.InterviewHistoryAdapter;
 import com.example.capstone.domainModels.UserInterviewAttemptSummary;
 import com.example.capstone.viewmodel.HistoryViewModel;
-import com.example.capstone.viewmodel.HistoryViewModelFactory;
+import com.example.capstone.viewmodel.ViewModelFactory;
 
 import java.util.ArrayList;
 
@@ -39,9 +39,12 @@ public class InterviewHistoryFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_interview_history, container, false);
 
-        // Clean: Fragment only initializes the factory and ViewModel provider
-        HistoryViewModelFactory factory = new HistoryViewModelFactory(requireContext());
-        historyViewModel = new ViewModelProvider(requireActivity(), factory).get(HistoryViewModel.class);
+        // Clean Architecture: Fragment is completely decoupled from network/data layers.
+        ViewModelFactory<HistoryViewModel> factory = new ViewModelFactory<>(() ->
+                HistoryViewModel.create(requireContext())
+        );
+
+        historyViewModel = new ViewModelProvider(this, factory).get(HistoryViewModel.class);
 
         recyclerView = view.findViewById(R.id.rv_interview_history);
         tabAll = view.findViewById(R.id.tab_all);
@@ -64,8 +67,9 @@ public class InterviewHistoryFragment extends Fragment {
         adapter = new InterviewHistoryAdapter(new ArrayList<>(), new InterviewHistoryAdapter.OnItemClickListener() {
             @Override
             public void onInterviewClick(UserInterviewAttemptSummary summary) {
-                historyViewModel.loadAttemptDetails((int) summary.getId());
-                Navigation.findNavController(requireView()).navigate(R.id.action_history_to_review);
+                Bundle args = new Bundle();
+                args.putLong("attempt_id", summary.getId());
+                Navigation.findNavController(requireView()).navigate(R.id.action_history_to_review, args);
             }
 
             @Override
