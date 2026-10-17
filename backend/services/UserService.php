@@ -2,7 +2,7 @@
     class UserService{
         public function __construct(private UserRepository $userRepository, private RequestContext $requestContext,private Log $log){}
 
-        public function deleteUser($data){
+        public function deleteUser(mixed $data){
             //checks password in db
             $password = $this->userRepository->getPassword($this->requestContext->getUserId());
             //if not found throw error
@@ -18,7 +18,7 @@
             $this->log->tryAuditLog($this->requestContext->getUserId(),'DELETE_ACCOUNT_ATTEMPT','user',$this->requestContext->getUserId());
         }
 
-        public function changePassword($data){
+        public function changePassword(mixed $data){
             //if password empty add error
             if (strlen($data['newPassword']) < 8) {
                 $fieldErrors['newPassword'] = "Password must be at least 8 characters";

@@ -10,7 +10,7 @@
             private Db $db
         ){}
 
-        public function login($data){
+        public function login(mixed $data){
             //define field errors
             $fieldErrors = [];
             //if email empty add error
@@ -55,7 +55,7 @@
             return ['token'=>$token,'tokenExpiresAt'=>TimeUtil::toMillis($expiresAt),'refreshToken'=>$refreshToken,'refreshTokenExpiresAt'=>TimeUtil::toMillis($refreshExpiresAt),'userRole'=>$user['role'] ];
         }
 
-        public function logout($token){
+        public function logout(?string $token){
             //if no token return
             if(!$token){
                 return;
@@ -76,7 +76,7 @@
             $this->log->tryAuthLog($dbToken['user_id'],'LOGOUT',$dbToken['id']);
         }
 
-        public function logoutAllDevices($token){
+        public function logoutAllDevices(?string $token){
             //if no token return
             if(!$token){
                 return;
@@ -100,7 +100,7 @@
             $this->log->tryAuthLog($dbToken['user_id'],'LOGOUT_ALL',$dbToken['id']);
         }
 
-        public function refresh($refreshToken){
+        public function refresh(string $refreshToken){
             //hash the token
             $refreshTokenHash = Token::hashToken($refreshToken);
             //find token in db
@@ -151,7 +151,7 @@
             return ['token'=>$token,'tokenExpiresAt'=>TimeUtil::toMillis($expiresAt),'refreshToken'=>$newRefreshToken,'refreshTokenExpiresAt'=>TimeUtil::toMillis($newRefreshExpiresAt),'userRole'=>$user['role'] ];
         }
 
-        public function signup($data){
+        public function signup(mixed $data){
             //define field errors
             $fieldErrors = [];
             //if email empty add error

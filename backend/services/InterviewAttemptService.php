@@ -4,7 +4,7 @@
 
         }
 
-        public function submitAttempt($interviewId,$answers){
+        public function submitAttempt(int $interviewId,mixed $answers){
             //gets question ids and does validation checks
             $questionIds = array_column($answers, 'id');
             //check if duplicates
@@ -64,7 +64,7 @@
             return $attempts;
         }
 
-        public function getAttempt($id){
+        public function getAttempt(int $id){
             //get attempt as base for to return
             $attempt = $this->interviewAttemptRepository->getAttemptDetails($id);
             //check if exists otherwise throw exception
@@ -149,7 +149,7 @@
             return $attempt;
         }
 
-        public function deleteAttempt($id){
+        public function deleteAttempt(int $id){
             //gets attempt
             $attempt = $this->interviewAttemptRepository->getAttempt($id);
             //check if exists and belongs to user

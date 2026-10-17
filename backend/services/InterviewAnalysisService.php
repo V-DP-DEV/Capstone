@@ -4,7 +4,7 @@
 
         }
 
-        public function analysis($attemptId){
+        public function analysis(int $attemptId){
             //get attempt
             $attempt  =$this->interviewAttemptRepository->getAttempt($attemptId);
             //do validation checks
