@@ -4,7 +4,10 @@
 
         }
 
-        public function analysis($attemptId){
+        public function analysis(?int $attemptId){
+            if(empty($attemptId)){
+                throw new ValidationException("No attempt id was provided");
+            }
             //get attempt
             $attempt  =$this->interviewAttemptRepository->getAttempt($attemptId);
             //do validation checks
