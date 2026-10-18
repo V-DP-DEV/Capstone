@@ -46,7 +46,7 @@
         app:layout_constraintTop_toBottomOf="@id/card_status"
         android:layout_marginTop="4dp" />
 
-    <!-- Metric 1: Clarity (Pink Indicator) -->
+    <!-- Metric 1: Clarity -->
     <TextView
         android:id="@+id/label_clarity"
         android:layout_width="wrap_content"
@@ -58,16 +58,6 @@
         android:layout_marginStart="120dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <View
-        android:id="@+id/indicator_clarity"
-        android:layout_width="16dp"
-        android:layout_height="8dp"
-        android:layout_marginTop="2dp"
-        android:background="@drawable/bg_tab_sub"
-        android:backgroundTint="#FFE49596"
-        app:layout_constraintStart_toStartOf="@id/label_clarity"
-        app:layout_constraintTop_toBottomOf="@id/label_clarity" />
 
     <TextView
         android:id="@+id/value_clarity"
@@ -81,7 +71,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Metric 2: Structure (Orange Indicator) -->
+    <View
+        android:id="@+id/indicator_clarity"
+        android:layout_width="0dp"
+        android:layout_height="6dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/bg_indicator_green"
+        app:layout_constraintStart_toStartOf="@id/label_clarity"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/label_clarity" />
+
+    <!-- Metric 2: Structure -->
     <TextView
         android:id="@+id/label_structure"
         android:layout_width="wrap_content"
@@ -91,19 +91,9 @@
         android:textColor="#FF000000"
         android:textSize="14sp"
         android:layout_marginStart="120dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/indicator_clarity" />
-
-    <View
-        android:id="@+id/indicator_structure"
-        android:layout_width="16dp"
-        android:layout_height="8dp"
-        android:layout_marginTop="2dp"
-        android:background="@drawable/bg_tab_sub"
-        android:backgroundTint="#FFF7A93B"
-        app:layout_constraintStart_toStartOf="@id/label_structure"
-        app:layout_constraintTop_toBottomOf="@id/label_structure" />
 
     <TextView
         android:id="@+id/value_structure"
@@ -117,7 +107,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/label_structure" />
 
-    <!-- Metric 3: Vocabulary (Green Bar Indicator) -->
+    <View
+        android:id="@+id/indicator_structure"
+        android:layout_width="0dp"
+        android:layout_height="6dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/bg_indicator_green"
+        app:layout_constraintStart_toStartOf="@id/label_structure"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/label_structure" />
+
+    <!-- Metric 3: Vocabulary -->
     <TextView
         android:id="@+id/label_vocabulary"
         android:layout_width="wrap_content"
@@ -127,19 +127,9 @@
         android:textColor="#FF000000"
         android:textSize="14sp"
         android:layout_marginStart="120dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/indicator_structure" />
-
-    <View
-        android:id="@+id/indicator_vocabulary"
-        android:layout_width="0dp"
-        android:layout_height="6dp"
-        android:layout_marginTop="4dp"
-        android:background="@drawable/bg_indicator_green"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/label_vocabulary"
-        app:layout_constraintTop_toBottomOf="@id/label_vocabulary" />
 
     <TextView
         android:id="@+id/value_vocabulary"
@@ -152,5 +142,15 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/label_vocabulary" />
+
+    <View
+        android:id="@+id/indicator_vocabulary"
+        android:layout_width="0dp"
+        android:layout_height="6dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/bg_indicator_green"
+        app:layout_constraintStart_toStartOf="@id/label_vocabulary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/label_vocabulary" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

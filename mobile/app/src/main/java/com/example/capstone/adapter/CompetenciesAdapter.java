@@ -132,15 +132,18 @@ public class CompetenciesAdapter extends RecyclerView.Adapter<CompetenciesAdapte
             int dynamicColor = getColorForPercentage(percentage);
             indicator.setBackgroundTintList(ColorStateList.valueOf(dynamicColor));
 
-            // 2. Adjust Width dynamically
+            // 2. Adjust Width dynamically as a percentage progress bar
             ViewGroup.LayoutParams params = indicator.getLayoutParams();
             if (params instanceof ConstraintLayout.LayoutParams) {
                 ConstraintLayout.LayoutParams constraintParams = (ConstraintLayout.LayoutParams) params;
+
+                // CRITICAL: Tell ConstraintLayout to use percentage mode
+                constraintParams.matchConstraintDefaultWidth = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT_PERCENT;
+
                 // Normalize percentage between 0.05 (5% minimum visible width) and 1.0 (100%)
                 float ratio = (float) Math.max(0.05, Math.min(1.0, percentage / 100.0));
-
                 constraintParams.matchConstraintPercentWidth = ratio;
-                constraintParams.width = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT;
+
                 indicator.setLayoutParams(constraintParams);
             }
         }
