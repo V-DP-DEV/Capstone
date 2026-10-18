@@ -68,6 +68,7 @@
                 $id = $attempt['interview_id'];
 
                 $attempt['questionTypes'] =$typesByInterview[$id] ?? [];
+                $attempt['completedAt'] = TimeUtil::toMillis($attempt['completedAt']);
                 unset($attempt);
             }
             return $attempts;
@@ -158,6 +159,7 @@
                 $attempt['competencies'] = $competencies;
             }   
 
+            $attempt['completedAt'] = TimeUtil::toMillis($attempt['completedAt']);
             return $attempt;
         }
 
