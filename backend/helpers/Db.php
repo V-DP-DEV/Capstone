@@ -17,11 +17,27 @@
             return $this->conn;
         }
 
+        private function bindParams(PDOStatement $stmt, array $params): void
+        {
+            foreach ($params as $index => $value) {
+                $type = match (true) {
+                    is_int($value)  => PDO::PARAM_INT,
+                    is_bool($value) => PDO::PARAM_BOOL,
+                    is_null($value) => PDO::PARAM_NULL,
+                    default         => PDO::PARAM_STR
+                };
+
+                $stmt->bindValue($index + 1, $value, $type);
+            }
+        }
+
         public function queryOne($sql,$params = []){
             //connect to db, and prepare sql
             $stmt = $this->connect()->prepare($sql);
+            $this->bindParams($stmt,$params);
+            $stmt->execute();
             //add params to prevent sql injection
-            $stmt->execute($params);
+            //$stmt->execute($params);
             //fetch only one record
             return $stmt->fetch(PDO::FETCH_ASSOC);
         }
@@ -29,8 +45,10 @@
         public function queryAll($sql,$params = []){
             //connect to db, and prepare sql
             $stmt = $this->connect()->prepare($sql);
+            $this->bindParams($stmt,$params);
+            $stmt->execute();
             //add params to prevent sql injection
-            $stmt->execute($params);
+            //$stmt->execute($params);
             //fetch all records
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
