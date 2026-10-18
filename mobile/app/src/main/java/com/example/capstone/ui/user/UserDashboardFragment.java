@@ -35,21 +35,41 @@ public class UserDashboardFragment extends Fragment {
     View bottomBar = view.findViewById(R.id.bottom_nav_container);
     BottomNavHelper.setupNavListeners(this, bottomBar);
 
-    binding.btnStartMockInterview.setOnClickListener(v ->
-            Navigation.findNavController(v).navigate(R.id.action_userDashboardFragment_to_selectDifficultyFragment)
-    );
+    View navHome = binding.bottomNavContainer.getRoot().findViewById(R.id.nav_home);
+    if (navHome != null) {
+      navHome.setOnClickListener(v -> {
+        Navigation.findNavController(v).navigate(R.id.userDashboardFragment);
+      });
+    }
 
-    binding.btnStartInterview.setOnClickListener(v ->
-            Navigation.findNavController(v).navigate(R.id.action_userDashboardFragment_to_selectDifficultyFragment)
-    );
+    // Bottom Nav: Settings -> User Profile
+    View navSettings = binding.bottomNavContainer.getRoot().findViewById(R.id.nav_settings);
+    if (navSettings != null) {
+      navSettings.setOnClickListener(v -> {
+        Navigation.findNavController(v).navigate(R.id.userProfileFragment);
+      });
+    }
 
-    binding.btnTipsLibrary.setOnClickListener(v ->
-            Navigation.findNavController(v).navigate(R.id.action_userDashboardFragment_to_tipsLibraryFragment)
-    );
-    binding.btnViewInterviews.setOnClickListener(v ->
-            Navigation.findNavController(v).navigate(R.id.action_userDashboardFragment_to_interviewHistoryFragment)
-    );
+    // Bottom Nav: Analytics -> Interview History
+    View navAnalytics = binding.bottomNavContainer.getRoot().findViewById(R.id.nav_analytics);
+    if (navAnalytics != null) {
+      navAnalytics.setOnClickListener(v -> {
+        Navigation.findNavController(v).navigate(R.id.interviewHistoryFragment);
+      });
+    }
+
+    // Bottom Nav: Presentation -> Tips & Library
+
+
+    // Bottom Nav: Profile -> User Profile Page
+    View navProfile = binding.bottomNavContainer.getRoot().findViewById(R.id.nav_profile);
+    if (navProfile != null) {
+      navProfile.setOnClickListener(v -> {
+        // Already on profile page
+      });
+    }
   }
+
 
   @Override
   public void onDestroyView() {
