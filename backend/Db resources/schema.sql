@@ -9,6 +9,7 @@ CREATE TABLE users (
     role ENUM('USER', 'ADMIN') NOT NULL DEFAULT 'USER',
     firstname varchar(255) NOT NULL,
     surname varchar(255) NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT uk_users_email
         UNIQUE (email)
