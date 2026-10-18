@@ -1,4 +1,3 @@
-
 package com.example.capstone.viewmodel;
 
 import androidx.lifecycle.LiveData;
@@ -65,41 +64,30 @@ public class SetupViewModel extends ViewModel {
                 new ApiCallback<List<InterviewCategory>>() {
 
                     @Override
-                    public void onSuccess(
-                            ApiResponse<List<InterviewCategory>> response) {
+                    public void onSuccess(ApiResponse<List<InterviewCategory>> response) {
                         loading.setValue(false);
-
                         if (response != null && response.getData() != null) {
                             categories.setValue(response.getData());
                         } else {
-                            error.setValue(
-                                    "Unable to load interview categories.");
+                            error.setValue("Unable to load interview categories.");
                         }
                     }
 
                     @Override
                     public void onGeneralError(Exception e) {
                         loading.setValue(false);
-                        error.setValue(
-                                "Something went wrong while loading categories.");
+                        error.setValue("Something went wrong while loading categories.");
                     }
 
                     @Override
-                    public void onHttpError(
-                            ApiResponse<List<InterviewCategory>> response) {
+                    public void onHttpError(ApiResponse<List<InterviewCategory>> response) {
                         loading.setValue(false);
-                        error.setValue(getErrorMessage(
-                                response,
-                                "Unable to load interview categories."));
+                        error.setValue(getErrorMessage(response, "Unable to load interview categories."));
                     }
                 });
     }
 
-    public void loadInterviews(
-            long categoryId,
-            String name,
-            String difficulty) {
-
+    public void loadInterviews(long categoryId, String name, String difficulty) {
         error.setValue(null);
         loading.setValue(true);
 
@@ -110,33 +98,26 @@ public class SetupViewModel extends ViewModel {
                 new ApiCallback<List<UserInterviewSummary>>() {
 
                     @Override
-                    public void onSuccess(
-                            ApiResponse<List<UserInterviewSummary>> response) {
+                    public void onSuccess(ApiResponse<List<UserInterviewSummary>> response) {
                         loading.setValue(false);
-
                         if (response != null && response.getData() != null) {
                             interviews.setValue(response.getData());
                         } else {
                             interviews.setValue(new ArrayList<>());
-                            error.setValue(
-                                    "No interview data was returned.");
+                            error.setValue("No interview data was returned.");
                         }
                     }
 
                     @Override
                     public void onGeneralError(Exception e) {
                         loading.setValue(false);
-                        error.setValue(
-                                "Something went wrong while loading interviews.");
+                        error.setValue("Something went wrong while loading interviews.");
                     }
 
                     @Override
-                    public void onHttpError(
-                            ApiResponse<List<UserInterviewSummary>> response) {
+                    public void onHttpError(ApiResponse<List<UserInterviewSummary>> response) {
                         loading.setValue(false);
-                        error.setValue(getErrorMessage(
-                                response,
-                                "Unable to load interviews."));
+                        error.setValue(getErrorMessage(response, "Unable to load interviews."));
                     }
                 });
     }
@@ -153,17 +134,13 @@ public class SetupViewModel extends ViewModel {
         error.setValue(null);
     }
 
-    private String getErrorMessage(
-            ApiResponse<?> response,
-            String fallbackMessage) {
-
+    private String getErrorMessage(ApiResponse<?> response, String fallbackMessage) {
         if (response != null
                 && response.getError() != null
                 && response.getError().getMessage() != null
                 && !response.getError().getMessage().trim().isEmpty()) {
             return response.getError().getMessage();
         }
-
         return fallbackMessage;
     }
 }

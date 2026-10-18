@@ -1,3 +1,4 @@
+
 package com.example.capstone.service;
 
 import com.example.capstone.domainModels.UserInterviewAttempt;
@@ -16,50 +17,137 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 public class InterviewAttemptsService {
+
   private final ApiClient apiClient;
 
-  public InterviewAttemptsService(ApiClient apiClient){
+  public InterviewAttemptsService(ApiClient apiClient) {
     this.apiClient = apiClient;
   }
 
-  public void deleteAllInterviewAttempts(ApiCallback<Void> callback){
+  // DELETE: Delete all interview attempts
+  public void deleteAllInterviewAttempts(
+          ApiCallback<Void> callback) {
 
+    ApiRequest request = new ApiRequest(
+            "interviewAttempt/deleteAttempts"
+    );
+
+    request.setMethodDELETE();
+    request.setRequiresAuthentication(true);
+
+    apiClient.execute(request, Void.class, callback);
   }
 
-  public void deleteInterviewAttempt(DeleteAttemptRequest deleteAttemptRequest, ApiCallback<Void> callback){
+  // DELETE: Delete one interview attempt
+  public void deleteInterviewAttempt(
+          DeleteAttemptRequest deleteAttemptRequest,
+          ApiCallback<Void> callback) {
 
+    ApiRequest request = new ApiRequest(
+            "interviewAttempt/deleteAttempt"
+    );
+
+    request.setMethodDELETE();
+    request.setRequiresAuthentication(true);
+    request.setBody(deleteAttemptRequest);
+
+    apiClient.execute(request, Void.class, callback);
   }
 
+  // POST: Submit interview attempt
   public void submitInterviewAttempt(
           SubmitInterviewAttemptRequest attemptRequest,
-          ApiCallback<SubmitAttemptResponse> callback
-  ) {
-    ApiRequest request =
-            new ApiRequest("interviewAttempt/submitAttempt");
+          ApiCallback<SubmitAttemptResponse> callback) {
+
+    ApiRequest request = new ApiRequest(
+            "interviewAttempt/submitAttempt"
+    );
 
     request.setMethodPost();
     request.setRequiresAuthentication(true);
     request.setBody(attemptRequest);
 
-    apiClient.execute(request, SubmitAttemptResponse.class, callback);
+    apiClient.execute(
+            request,
+            SubmitAttemptResponse.class,
+            callback
+    );
   }
 
-  public void requestAnalysis(AnalyseRequest analyseRequest, ApiCallback<Void> callback){
-
-  }
-  public void getInterviewAttempt(int interviewAttemptId, ApiCallback<UserInterviewAttempt> callback) {
-
-  }
-
-  public void getInterviewAttempts(String Sortby, String SortOrder, ApiCallback<List<UserInterviewAttemptSummary>> callback) {
-    //add specifics
-    ApiRequest request = new ApiRequest("");
-    Type type = new TypeToken<List<UserInterviewAttemptSummary>>() {}.getType();
-
-    apiClient.execute(request,type,callback);
+  // Awaiting backend endpoint confirmation
+  public void requestAnalysis(
+          AnalyseRequest analyseRequest,
+          ApiCallback<Void> callback) {
+    ApiRequest request = new ApiRequest("interviewAttempt/analyse");
+    request.setMethodPost();
+    request.setBody(analyseRequest);
+    request.setRequiresAuthentication(true);
+    apiClient.execute(request,Void.class, callback);
   }
 
-  public void setToReviewed(SetAttemptToReviewedRequest setAttemptToReviewedRequest, ApiCallback<Void> callback){
+  // GET: Retrieve a specific interview attempt
+  public void getInterviewAttempt(
+          int interviewAttemptId,
+          ApiCallback<UserInterviewAttempt> callback) {
 
+    ApiRequest request = new ApiRequest(
+            "interviewAttempt/getAttempt"
+    );
+
+    request.setMethodGET();
+    request.setRequiresAuthentication(true);
+    request.addParams(
+            "id",
+            String.valueOf(interviewAttemptId)
+    );
+
+    apiClient.execute(
+            request,
+            UserInterviewAttempt.class,
+            callback
+    );
+  }
+
+  // GET: Retrieve interview attempts with sorting
+  public void getInterviewAttempts(
+          String sortBy,
+          String sortOrder,
+          ApiCallback<List<UserInterviewAttemptSummary>> callback) {
+
+    ApiRequest request = new ApiRequest(
+            "interviewAttempt/getAttempts"
+    );
+
+    request.setMethodGET();
+    request.setRequiresAuthentication(true);
+
+    if (sortBy != null && !sortBy.isEmpty()) {
+      request.addParams("sortBy", sortBy);
+    }
+
+    if (sortOrder != null && !sortOrder.isEmpty()) {
+      request.addParams("sortOrder", sortOrder);
+    }
+
+    Type type = new TypeToken<
+            List<UserInterviewAttemptSummary>>() {}.getType();
+
+    apiClient.execute(request, type, callback);
+  }
+
+  // PATCH: Mark an attempt as reviewed
+  public void setToReviewed(
+          SetAttemptToReviewedRequest setAttemptToReviewedRequest,
+          ApiCallback<Void> callback) {
+
+    ApiRequest request = new ApiRequest(
+            "interviewAttempt/setToReviewed"
+    );
+
+    request.setMethodPATCH();
+    request.setRequiresAuthentication(true);
+    request.setBody(setAttemptToReviewedRequest);
+
+    apiClient.execute(request, Void.class, callback);
   }
 }

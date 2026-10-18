@@ -5,6 +5,18 @@ import java.util.List;
 public class UserInterviewAttemptSummary {
   private String name;
   private long id;
+  private String difficulty;
+  private long completedAt;
+
+  // Stored as ints to match backend 0/1 numbers, preventing Gson crash
+  private int analysed;
+  private int completedInTime;
+  private int reviewed;
+
+  private String analysedStatus;
+  private long totalSecondsSpent;
+  private long estimatedMinutes;
+  private List<String> questionTypes;
 
   public String getName() {
     return name;
@@ -38,19 +50,20 @@ public class UserInterviewAttemptSummary {
     this.completedAt = completedAt;
   }
 
+  // Expose as boolean for the rest of your app
   public boolean isAnalysed() {
-    return analysed;
+    return analysed == 1;
   }
 
   public void setAnalysed(boolean analysed) {
-    this.analysed = analysed;
+    this.analysed = analysed ? 1 : 0;
   }
 
-  public boolean isAnalysedStatus() {
+  public String getAnalysedStatus() {
     return analysedStatus;
   }
 
-  public void setAnalysedStatus(boolean analysedStatus) {
+  public void setAnalysedStatus(String analysedStatus) {
     this.analysedStatus = analysedStatus;
   }
 
@@ -70,12 +83,13 @@ public class UserInterviewAttemptSummary {
     this.estimatedMinutes = estimatedMinutes;
   }
 
+  // Expose as boolean for the rest of your app
   public boolean isCompletedInTime() {
-    return completedInTime;
+    return completedInTime == 1;
   }
 
   public void setCompletedInTime(boolean completedInTime) {
-    this.completedInTime = completedInTime;
+    this.completedInTime = completedInTime ? 1 : 0;
   }
 
   public List<String> getQuestionTypes() {
@@ -86,22 +100,12 @@ public class UserInterviewAttemptSummary {
     this.questionTypes = questionTypes;
   }
 
+  // Expose as boolean for the rest of your app
   public boolean isReviewed() {
-    return reviewed;
+    return reviewed == 1;
   }
 
   public void setReviewed(boolean reviewed) {
-    this.reviewed = reviewed;
+    this.reviewed = reviewed ? 1 : 0;
   }
-
-  private String difficulty;
-  private long completedAt;
-  private boolean analysed;
-  private boolean analysedStatus;
-  private long totalSecondsSpent;
-  private long estimatedMinutes;
-  private boolean completedInTime;
-
-  private boolean reviewed;
-  private List<String> questionTypes;
 }
