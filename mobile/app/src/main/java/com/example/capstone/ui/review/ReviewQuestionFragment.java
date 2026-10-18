@@ -10,14 +10,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.capstone.AppContainer;
+import com.example.capstone.MyApplication;
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentReviewQuestionBinding;
 import com.example.capstone.domainModels.UserConceptScores;
 import com.example.capstone.domainModels.UserQuestionAttempt;
+import com.example.capstone.repository.IInterviewAttemptsRepository;
 import com.example.capstone.ui.components.BottomNavHelper;
+import com.example.capstone.viewmodel.ReviewViewModel;
+import com.example.capstone.viewmodel.ViewModelFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +34,7 @@ public class ReviewQuestionFragment extends Fragment {
     private FragmentReviewQuestionBinding binding;
     private List<UserQuestionAttempt> reviewQuestionsList = new ArrayList<>();
     private int currentReviewIndex = 0;
+    private ReviewViewModel viewModel;
 
     @Nullable
     @Override
@@ -47,9 +54,45 @@ public class ReviewQuestionFragment extends Fragment {
         View bottomBar = view.findViewById(R.id.bottom_nav_container);
         BottomNavHelper.setupNavListeners(this, bottomBar);
 
-        if (!reviewQuestionsList.isEmpty()) {
-            displayQuestionReview(currentReviewIndex);
-        }
+        MyApplication app =
+            (MyApplication) requireActivity().getApplication();
+
+        AppContainer container = app.getAppContainer();
+
+        IInterviewAttemptsRepository interviewAttemptsRepository = container.interviewAttemptsRepository;
+
+        // Create ViewModel factory
+        ViewModelFactory<ReviewViewModel> factory =
+            new ViewModelFactory<>(
+                () -> new ReviewViewModel(interviewAttemptsRepository)
+            );
+
+        // Create ViewModel
+        viewModel = new ViewModelProvider(requireActivity(), factory)
+            .get(ReviewViewModel.class);
+
+        reviewQuestionsList = viewModel.getQuestions();
+
+        viewModel.getCurrentQuestionIndex().observe(getViewLifecycleOwner(), index->{
+            if(index>= 0){
+                System.out.println(currentReviewIndex);
+                displayQuestionReview(index);
+            }
+        });
+
+        binding.btnNextQuestion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewModel.moveToNextQuestion();
+            }
+        });
+
+        binding.btnPrevQuestion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewModel.moveToPreviousQuestion();
+            }
+        });
     }
 
     private void displaySessionMetadata() {
