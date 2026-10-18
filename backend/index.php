@@ -13,6 +13,7 @@
     $container->bind(IInterviewAttemptRepository::class, InterviewAttemptRepository::class);
     $container->bind(InterviewEvaluationBuilder::class,InterviewEvaluationBuilder::class);
     $container->bind(OpenAIService::class, OpenAIService::class);
+    $container->bind(IAnalyticsRepository::class, AnalyticsRepository::class);
     
 
     //load config values into the class
