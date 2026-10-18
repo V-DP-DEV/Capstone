@@ -1,5 +1,6 @@
 package com.example.capstone.repository;
 
+import com.example.capstone.domainModels.User;
 import com.example.capstone.model.request.ChangePasswordRequest;
 import com.example.capstone.model.request.DeleteAccountRequest;
 import com.example.capstone.model.request.UpdateUserRequest;
@@ -22,5 +23,9 @@ public class UserRepository implements IUserRepository{
 
   public void updateAccount(UpdateUserRequest updateUserRequest, ApiCallback<Void> callback){
     userService.updateAccount(updateUserRequest,callback);
+  }
+
+  public void getProfile(ApiCallback<User> callback){
+    userService.getProfile(callback);
   }
 }
