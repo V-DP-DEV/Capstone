@@ -156,7 +156,7 @@
                     ];
                 }
                 //when all competencies are mapped add to attempt
-                $attempt['competencies'] = $competencies;
+                $attempt['competencyFeedbacks'] = array_values($competencies);
             }   
 
             $attempt['completedAt'] = TimeUtil::toMillis($attempt['completedAt']);
