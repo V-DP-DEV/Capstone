@@ -2,6 +2,12 @@
     class AnalyticsRepository implements IAnalyticsRepository{
         public function __construct(private Db $db){}
         public function getCompetenciesAnalytics(SortOptions $sortOptions,int $last,int $userId):array|false{
+            $sortCollumns = [
+                'percentage' => 'competency_percentage',
+            ];
+
+            $sortCollumn = $sortOptions->mapField($sortCollumns);
+        
             $query = "WITH filteredInterviews as (
                         SELECT *
                         FROM interview_user_attempts iua
@@ -33,19 +39,20 @@
                         ON b.competency_id  = c.id
                         GROUP BY b.competency_id
                     )
-                    SELECT cs.competency_score,
+                    SELECT cs.competency_score as competency_percentage,
                     cs.competency_id as competency_id,
-                    bs.competency_breakdown_score,
+                    bs.competency_breakdown_score as competency_breakdown_percentage,
                     cs.name as competency_name,
                     bs.name as competency_breakdown_name
                     FROM competency_scores cs
                     JOIN breakdown_scores bs
-                    ON bs.competency_id = cs.competency_id;";
+                    ON bs.competency_id = cs.competency_id
+                    ORDER BY ". $sortCollumn . " ". $sortOptions->direction .";";
             return $this->db->queryAll($query,[$userId,$last]);
         }
         public function getConceptsAnalytics(SortOptions $sortOptions,int $last,int $userId):array|false{
             $sortCollumns = [
-                'score' => 'score',
+                'percentage' => 'percentage',
             ];
 
             $sortCollumn = $sortOptions->mapField($sortCollumns);
@@ -66,7 +73,8 @@
                     ON qcs.question_attempt_id = iqa.id
                     JOIN concepts c
                     ON c.id = qcs.concept_id
-                    GROUP BY qcs.concept_id;";
+                    GROUP BY qcs.concept_id
+                    ORDER BY ". $sortCollumn . " ". $sortOptions->direction .";";
             //return [$query,[$userId,$last]];
             //$userId,$last
             
