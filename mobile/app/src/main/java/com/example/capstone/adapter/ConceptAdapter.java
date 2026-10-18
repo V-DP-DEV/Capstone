@@ -1,5 +1,6 @@
 package com.example.capstone.adapter;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +47,6 @@ public class ConceptAdapter extends RecyclerView.Adapter<ConceptAdapter.ViewHold
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Mapped directly to your XML layout IDs
             tvSkillName = itemView.findViewById(R.id.tv_skill_name);
             tvTotalCount = itemView.findViewById(R.id.tv_total_count);
             tvPercentage = itemView.findViewById(R.id.tv_percentage);
@@ -60,7 +60,25 @@ public class ConceptAdapter extends RecyclerView.Adapter<ConceptAdapter.ViewHold
                 tvTotalCount.setText(String.format("Total %d", item.getTimesTested()));
             }
             if (tvPercentage != null) {
-                tvPercentage.setText(String.format("%.0f%%", item.getPercentage()));
+                double percentage = item.getPercentage();
+                tvPercentage.setText(String.format("%.0f%%", percentage));
+                // Dynamically color-code the percentage text based on score
+                tvPercentage.setTextColor(getColorForPercentage(percentage));
+            }
+        }
+
+        /**
+         * Returns Red for very low marks (< 40%),
+         * Orange for mid-range (40% - 69%),
+         * Green for higher marks (>= 70%).
+         */
+        private int getColorForPercentage(double percentage) {
+            if (percentage < 40.0) {
+                return Color.parseColor("#FFEF5350"); // Red
+            } else if (percentage < 70.0) {
+                return Color.parseColor("#FFF7A93B"); // Orange
+            } else {
+                return Color.parseColor("#FF08B425"); // Green
             }
         }
     }

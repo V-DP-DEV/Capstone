@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.capstone.R;
@@ -47,8 +46,18 @@ public class CompetenciesAdapter extends RecyclerView.Adapter<CompetenciesAdapte
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvCardTitle, tvCardStatus, tvCardPercentageMain;
-        TextView tvValueClarity, tvValueStructure, tvValueVocabulary;
-        View indicatorClarity, indicatorStructure, indicatorVocabulary;
+
+        // Metric Container 1
+        TextView tvLabelClarity, tvValueClarity;
+        View indicatorClarity;
+
+        // Metric Container 2
+        TextView tvLabelStructure, tvValueStructure;
+        View indicatorStructure;
+
+        // Metric Container 3
+        TextView tvLabelVocabulary, tvValueVocabulary;
+        View indicatorVocabulary;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -56,12 +65,19 @@ public class CompetenciesAdapter extends RecyclerView.Adapter<CompetenciesAdapte
             tvCardStatus = itemView.findViewById(R.id.card_status);
             tvCardPercentageMain = itemView.findViewById(R.id.card_percentage_main);
 
+            // Container 1 views
+            tvLabelClarity = itemView.findViewById(R.id.label_clarity);
             tvValueClarity = itemView.findViewById(R.id.value_clarity);
-            tvValueStructure = itemView.findViewById(R.id.value_structure);
-            tvValueVocabulary = itemView.findViewById(R.id.value_vocabulary);
-
             indicatorClarity = itemView.findViewById(R.id.indicator_clarity);
+
+            // Container 2 views
+            tvLabelStructure = itemView.findViewById(R.id.label_structure);
+            tvValueStructure = itemView.findViewById(R.id.value_structure);
             indicatorStructure = itemView.findViewById(R.id.indicator_structure);
+
+            // Container 3 views
+            tvLabelVocabulary = itemView.findViewById(R.id.label_vocabulary);
+            tvValueVocabulary = itemView.findViewById(R.id.value_vocabulary);
             indicatorVocabulary = itemView.findViewById(R.id.indicator_vocabulary);
         }
 
@@ -71,29 +87,38 @@ public class CompetenciesAdapter extends RecyclerView.Adapter<CompetenciesAdapte
             }
             if (tvCardPercentageMain != null) {
                 tvCardPercentageMain.setText(String.format("%.0f%%", item.getPercentage()));
-                // Optionally color-code main card percentage too if desired:
                 tvCardPercentageMain.setTextColor(getColorForPercentage(item.getPercentage()));
             }
 
-            // Populate breakdown metrics and apply dynamic color coding
-            if (item.getCompetenciesBreakdownAnalysisList() != null) {
-                for (CompetenciesBreakdownAnalysis breakdown : item.getCompetenciesBreakdownAnalysisList()) {
-                    if (breakdown.getName() == null) continue;
-                    String name = breakdown.getName().toLowerCase();
-                    double percentage = breakdown.getPercentage();
-                    String formattedVal = String.format("%.0f%%", percentage);
-                    int dynamicColor = getColorForPercentage(percentage);
-                    ColorStateList colorTint = ColorStateList.valueOf(dynamicColor);
+            List<CompetenciesBreakdownAnalysis> breakdowns = item.getCompetenciesBreakdownAnalysisList();
+            if (breakdowns != null) {
+                // Populate Container 1 (Index 0)
+                if (breakdowns.size() > 0) {
+                    CompetenciesBreakdownAnalysis b0 = breakdowns.get(0);
+                    if (tvLabelClarity != null && b0.getName() != null) tvLabelClarity.setText(b0.getName());
+                    if (tvValueClarity != null) tvValueClarity.setText(String.format("%.0f%%", b0.getPercentage()));
+                    if (indicatorClarity != null) {
+                        indicatorClarity.setBackgroundTintList(ColorStateList.valueOf(getColorForPercentage(b0.getPercentage())));
+                    }
+                }
 
-                    if (name.contains("clarity")) {
-                        if (tvValueClarity != null) tvValueClarity.setText(formattedVal);
-                        if (indicatorClarity != null) indicatorClarity.setBackgroundTintList(colorTint);
-                    } else if (name.contains("structure")) {
-                        if (tvValueStructure != null) tvValueStructure.setText(formattedVal);
-                        if (indicatorStructure != null) indicatorStructure.setBackgroundTintList(colorTint);
-                    } else if (name.contains("vocabulary")) {
-                        if (tvValueVocabulary != null) tvValueVocabulary.setText(formattedVal);
-                        if (indicatorVocabulary != null) indicatorVocabulary.setBackgroundTintList(colorTint);
+                // Populate Container 2 (Index 1)
+                if (breakdowns.size() > 1) {
+                    CompetenciesBreakdownAnalysis b1 = breakdowns.get(1);
+                    if (tvLabelStructure != null && b1.getName() != null) tvLabelStructure.setText(b1.getName());
+                    if (tvValueStructure != null) tvValueStructure.setText(String.format("%.0f%%", b1.getPercentage()));
+                    if (indicatorStructure != null) {
+                        indicatorStructure.setBackgroundTintList(ColorStateList.valueOf(getColorForPercentage(b1.getPercentage())));
+                    }
+                }
+
+                // Populate Container 3 (Index 2)
+                if (breakdowns.size() > 2) {
+                    CompetenciesBreakdownAnalysis b2 = breakdowns.get(2);
+                    if (tvLabelVocabulary != null && b2.getName() != null) tvLabelVocabulary.setText(b2.getName());
+                    if (tvValueVocabulary != null) tvValueVocabulary.setText(String.format("%.0f%%", b2.getPercentage()));
+                    if (indicatorVocabulary != null) {
+                        indicatorVocabulary.setBackgroundTintList(ColorStateList.valueOf(getColorForPercentage(b2.getPercentage())));
                     }
                 }
             }
