@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.capstone.R;
@@ -124,6 +125,25 @@ public class CompetenciesAdapter extends RecyclerView.Adapter<CompetenciesAdapte
             }
         }
 
+        private void applyDynamicIndicator(View indicator, double percentage) {
+            if (indicator == null) return;
+
+            // 1. Update Color Tint
+            int dynamicColor = getColorForPercentage(percentage);
+            indicator.setBackgroundTintList(ColorStateList.valueOf(dynamicColor));
+
+            // 2. Adjust Width dynamically
+            ViewGroup.LayoutParams params = indicator.getLayoutParams();
+            if (params instanceof ConstraintLayout.LayoutParams) {
+                ConstraintLayout.LayoutParams constraintParams = (ConstraintLayout.LayoutParams) params;
+                // Normalize percentage between 0.05 (5% minimum visible width) and 1.0 (100%)
+                float ratio = (float) Math.max(0.05, Math.min(1.0, percentage / 100.0));
+
+                constraintParams.matchConstraintPercentWidth = ratio;
+                constraintParams.width = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT;
+                indicator.setLayoutParams(constraintParams);
+            }
+        }
         /**
          * Returns Red for very low marks (< 40%),
          * Orange for mid-range (40% - 69%),
