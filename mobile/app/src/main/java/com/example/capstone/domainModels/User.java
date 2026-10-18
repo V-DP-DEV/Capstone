@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class User implements Serializable {
 
-    private long userId;
+    private long id;
     private String email;
     private String firstName;
     private String surname;
@@ -15,7 +15,7 @@ public class User implements Serializable {
     }
 
     public User(long userId, String email, String firstName, String surname, UserRole role, long createdAt) {
-        this.userId = userId;
+        this.id = userId;
         this.email = email;
         this.firstName = firstName;
         this.surname = surname;
@@ -23,8 +23,8 @@ public class User implements Serializable {
         this.createdAt = createdAt;
     }
 
-    public long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
+    public long getUserId() { return id; }
+    public void setUserId(Long userId) { this.id = userId; }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }

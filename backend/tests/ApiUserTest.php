@@ -73,6 +73,18 @@ class ApiUserTest extends ApiTestCase
         $this->assertSame(401, $response['status']);
     }
         
-    
-    
+    public function testGetProfile():void
+    {
+        $token = $this->loginAsUser();
+
+        $response = $this->http->request(
+            'GET',
+            '/user/getProfile',
+            null,
+            $token
+        );
+
+        print_r($response);
+        $this->assertSame(200, $response['status']);
+    }
 }
