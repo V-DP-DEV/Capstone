@@ -35,7 +35,7 @@
   <style name="TextStyle_32sp">
     <item name="android:textSize">32sp</item>
     <item name="android:textColor">@color/black</item>
-    <item name="android:fontFamily">inter</item>
+    <item name="android:fontFamily">sans-serif</item>
   </style>
 
   <style name="Theme.Capstone" parent="Base.Theme.Capstone" />
