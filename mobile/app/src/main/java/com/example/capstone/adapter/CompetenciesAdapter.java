@@ -1,5 +1,6 @@
 package com.example.capstone.adapter;
 
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,16 +83,17 @@ public class CompetenciesAdapter extends RecyclerView.Adapter<CompetenciesAdapte
                     double percentage = breakdown.getPercentage();
                     String formattedVal = String.format("%.0f%%", percentage);
                     int dynamicColor = getColorForPercentage(percentage);
+                    ColorStateList colorTint = ColorStateList.valueOf(dynamicColor);
 
                     if (name.contains("clarity")) {
                         if (tvValueClarity != null) tvValueClarity.setText(formattedVal);
-                        if (indicatorClarity != null) indicatorClarity.setBackgroundColor(dynamicColor);
+                        if (indicatorClarity != null) indicatorClarity.setBackgroundTintList(colorTint);
                     } else if (name.contains("structure")) {
                         if (tvValueStructure != null) tvValueStructure.setText(formattedVal);
-                        if (indicatorStructure != null) indicatorStructure.setBackgroundColor(dynamicColor);
+                        if (indicatorStructure != null) indicatorStructure.setBackgroundTintList(colorTint);
                     } else if (name.contains("vocabulary")) {
                         if (tvValueVocabulary != null) tvValueVocabulary.setText(formattedVal);
-                        if (indicatorVocabulary != null) indicatorVocabulary.setBackgroundColor(dynamicColor);
+                        if (indicatorVocabulary != null) indicatorVocabulary.setBackgroundTintList(colorTint);
                     }
                 }
             }
