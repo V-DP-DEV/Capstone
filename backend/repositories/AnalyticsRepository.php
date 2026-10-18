@@ -1,7 +1,7 @@
 <?php
     class AnalyticsRepository implements IAnalyticsRepository{
         public function __construct(private Db $db){}
-        public function getCompetenciesAnalytics(SortOptions $sortOptions,int $last,int $userId):array{
+        public function getCompetenciesAnalytics(SortOptions $sortOptions,int $last,int $userId):array|false{
             $query = "WITH filteredInterviews as (
                         SELECT *
                         FROM interview_user_attempts iua
@@ -34,6 +34,7 @@
                         GROUP BY b.competency_id
                     )
                     SELECT cs.competency_score,
+                    cs.competency_id as competency_id,
                     bs.competency_breakdown_score,
                     cs.name as competency_name,
                     bs.name as competency_breakdown_name
@@ -42,7 +43,7 @@
                     ON bs.competency_id = cs.competency_id;";
             return $this->db->queryAll($query,[$userId,$last]);
         }
-        public function getConceptsAnalytics(SortOptions $sortOptions,int $last,int $userId):array{
+        public function getConceptsAnalytics(SortOptions $sortOptions,int $last,int $userId):array|false{
             $sortCollumns = [
                 'score' => 'score',
             ];
@@ -56,8 +57,8 @@
                         LIMIT ?
                     )
                     SELECT c.name,
-                    AVG(qcs.score)/2 score,
-                    COUNT(qcs.score) total
+                    AVG(qcs.score)/2 percentage,
+                    COUNT(qcs.score) timesTested
                     FROM filteredInterviews f
                     JOIN interview_question_attempts iqa
                     ON iqa.interview_attempt_id =f.id
