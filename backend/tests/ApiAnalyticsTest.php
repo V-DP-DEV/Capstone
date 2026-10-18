@@ -9,7 +9,7 @@ class ApiAnalyticsTest extends ApiTestCase
         $token = $this->loginAsUser();
         $response = $this->http->request(
             'GET',
-            '/analytics/concepts?sortBy=score&sortOrder=ASC&lastInterviews=5',
+            '/analytics/concepts?sortBy=percentage&sortOrder=ASC&lastInterviews=5',
             null,
             $token
         );
@@ -22,7 +22,7 @@ class ApiAnalyticsTest extends ApiTestCase
         $token = $this->loginAsUser();
         $response = $this->http->request(
             'GET',
-            '/analytics/competencies?sortBy=score&sortOrder=ASC&lastInterviews=5',
+            '/analytics/competencies?sortBy=percentage&sortOrder=ASC&lastInterviews=5',
             null,
             $token
         );
