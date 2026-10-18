@@ -80,48 +80,58 @@ public class CompetenciesAdapter extends RecyclerView.Adapter<CompetenciesAdapte
             tvValueVocabulary = itemView.findViewById(R.id.value_vocabulary);
             indicatorVocabulary = itemView.findViewById(R.id.indicator_vocabulary);
         }
-
+        private double getNormalizedPercentage(double rawValue) {
+            // If the API returns decimals (e.g., 0.8), convert to 80. If it already returns 80, keep it.
+            return rawValue <= 1.0 ? rawValue * 100.0 : rawValue;
+        }
         void bind(CompetenciesAnalysis item) {
             if (tvCardTitle != null) {
                 tvCardTitle.setText(item.getName());
             }
+
+            // Normalize main percentage (handles 0.8 -> 80%)
+            double mainPercentage = getNormalizedPercentage(item.getPercentage());
+
             if (tvCardStatus != null) {
-                tvCardStatus.setText(item.getPercentage() >= 70 ? "Strong" : (item.getPercentage() >= 40 ? "Moderate" : "Needs Improvement"));
+                tvCardStatus.setText(mainPercentage >= 70 ? "Strong" : (mainPercentage >= 40 ? "Moderate" : "Needs Improvement"));
             }
             if (tvCardPercentageMain != null) {
-                double mainPercentage = item.getPercentage();
                 tvCardPercentageMain.setText(String.format("%.0f%%", mainPercentage));
                 tvCardPercentageMain.setTextColor(getColorForPercentage(mainPercentage));
             }
 
             List<CompetenciesBreakdownAnalysis> breakdowns = item.getCompetenciesBreakdownAnalysisList();
             if (breakdowns != null) {
-                // Populate Container 1 (Index 0)
                 if (breakdowns.size() > 0) {
                     CompetenciesBreakdownAnalysis b0 = breakdowns.get(0);
-                    if (tvLabelClarity != null && b0.getName() != null) tvLabelClarity.setText(b0.getName());
-                    if (tvValueClarity != null) tvValueClarity.setText(String.format("%.0f%%", b0.getPercentage()));
-                    applyDynamicIndicator(indicatorClarity, b0.getPercentage());
+                    double p0 = getNormalizedPercentage(b0.getPercentage());
+                    if (tvLabelClarity != null && b0.getName() != null)
+                        tvLabelClarity.setText(b0.getName());
+                    if (tvValueClarity != null) tvValueClarity.setText(String.format("%.0f%%", p0));
+                    applyDynamicIndicator(indicatorClarity, p0);
                 }
 
-                // Populate Container 2 (Index 1)
                 if (breakdowns.size() > 1) {
                     CompetenciesBreakdownAnalysis b1 = breakdowns.get(1);
-                    if (tvLabelStructure != null && b1.getName() != null) tvLabelStructure.setText(b1.getName());
-                    if (tvValueStructure != null) tvValueStructure.setText(String.format("%.0f%%", b1.getPercentage()));
-                    applyDynamicIndicator(indicatorStructure, b1.getPercentage());
+                    double p1 = getNormalizedPercentage(b1.getPercentage());
+                    if (tvLabelStructure != null && b1.getName() != null)
+                        tvLabelStructure.setText(b1.getName());
+                    if (tvValueStructure != null)
+                        tvValueStructure.setText(String.format("%.0f%%", p1));
+                    applyDynamicIndicator(indicatorStructure, p1);
                 }
 
-                // Populate Container 3 (Index 2)
                 if (breakdowns.size() > 2) {
                     CompetenciesBreakdownAnalysis b2 = breakdowns.get(2);
-                    if (tvLabelVocabulary != null && b2.getName() != null) tvLabelVocabulary.setText(b2.getName());
-                    if (tvValueVocabulary != null) tvValueVocabulary.setText(String.format("%.0f%%", b2.getPercentage()));
-                    applyDynamicIndicator(indicatorVocabulary, b2.getPercentage());
+                    double p2 = getNormalizedPercentage(b2.getPercentage());
+                    if (tvLabelVocabulary != null && b2.getName() != null)
+                        tvLabelVocabulary.setText(b2.getName());
+                    if (tvValueVocabulary != null)
+                        tvValueVocabulary.setText(String.format("%.0f%%", p2));
+                    applyDynamicIndicator(indicatorVocabulary, p2);
                 }
             }
         }
-
         /**
          * Updates color tint and scales the bar width smoothly using scaleX anchored to the left.
          */
