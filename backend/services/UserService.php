@@ -51,5 +51,37 @@
             $this->userRepository->updatePassword($this->requestContext->getUserId(), $newPasswordHash);
             $this->log->tryAuditLog($this->requestContext->getUserId(),'CHANGE_PASSWORD','user',$this->requestContext->getUserId());
         }
+        
+        public function updateDetails(?string $firstname,?string $surname){
+            //define field errors
+            $fieldErrors = [];
+            
+            //if firstname empty add error
+            if(empty($firstname)){
+                $fieldErrors['firstname'] = "Firstname is required";
+            }
+            //if surname empty add error
+            if(empty($surname)){
+                $fieldErrors['surname'] = "Surname is required";
+            }
+            //if errors throw field validation error
+            if(!empty($fieldErrors)){
+                throw new FieldValidationException("Validation failed", $fieldErrors);
+            }
+            return $this->userRepository->updateDetails($firstname,$surname,$this->requestContext->getUserId());
+        }
+
+        public function getProfile(?int $userId){
+            if(empty($userId)){
+                throw new ValidationException("User not specified");
+            }
+
+            $result = $this->userRepository->getProfile($userId);
+            if(!$result){
+                throw new ValidationException("User could not be found");
+            }
+            $result["createdAt"] = TimeUtil::toMillis($result["createdAt"]);
+            return $result;
+        }
     }
 ?>
