@@ -5,7 +5,9 @@ import android.content.Context;
 
 import com.example.capstone.network.ApiClient;
 
+import com.example.capstone.repository.AnalyticsRepository;
 import com.example.capstone.repository.AuthRepository;
+import com.example.capstone.repository.IAnalyticsRepository;
 import com.example.capstone.repository.IAuthRepository;
 import com.example.capstone.repository.IInterviewAttemptsRepository;
 import com.example.capstone.repository.IInterviewRepository;
@@ -13,6 +15,7 @@ import com.example.capstone.repository.IUserRepository;
 import com.example.capstone.repository.InterviewAttemptsRepository;
 import com.example.capstone.repository.InterviewRepository;
 import com.example.capstone.repository.UserRepository;
+import com.example.capstone.service.AnalyticsService;
 import com.example.capstone.service.AuthService;
 import com.example.capstone.service.InterviewAttemptsService;
 import com.example.capstone.service.InterviewService;
@@ -41,6 +44,8 @@ public class AppContainer {
 
   public final IInterviewRepository interviewRepository;
   public final InterviewService interviewService;
+  public final AnalyticsService analyticsService;
+  public final IAnalyticsRepository analyticsRepository;
 
   public final Gson gson;
 
@@ -80,6 +85,9 @@ public class AppContainer {
 
     interviewService = new InterviewService(apiClient);
     interviewRepository = new InterviewRepository(interviewService);
+
+    analyticsService = new AnalyticsService(apiClient);
+    analyticsRepository = new AnalyticsRepository(analyticsService);
   }
 
   public SecureSession getSecureSession() {
