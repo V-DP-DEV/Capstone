@@ -46,9 +46,6 @@ public class SplashActivity extends Activity {
     authRepository = container.authRepository;
     interviewRepository = container.interviewRepository;
 
-    session.clear();
-    manager.clear();
-
     long sessionExpiration = session.getSessionExpiration();
     long refreshExpiration = session.getRefreshExpiration();
     long now = System.currentTimeMillis();
