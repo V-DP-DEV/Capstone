@@ -9,9 +9,20 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.example.capstone.AppContainer;
+import com.example.capstone.MyApplication;
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentUserDashboardBinding;
 import com.example.capstone.ui.components.BottomNavHelper;
+import com.example.capstone.domainModels.User;
+import com.example.capstone.model.request.UpdateUserRequest;
+import com.example.capstone.network.ApiCallback;
+import com.example.capstone.network.ApiResponse;
+import com.example.capstone.repository.IAuthRepository;
+import com.example.capstone.repository.IUserRepository;
+import com.example.capstone.ui.components.BottomNavHelper;
+
+import java.util.List;
 
 public class UserDashboardFragment extends Fragment {
 

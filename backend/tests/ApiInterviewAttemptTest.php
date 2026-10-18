@@ -60,7 +60,7 @@ class ApiInterviewAttemptTest extends ApiTestCase
         $response = $this->http->request(
             'POST',
             '/interviewAttempt/analyse',
-            ['id'=>1],
+            ['id'=>2],
             $token
         );
 
@@ -85,7 +85,7 @@ class ApiInterviewAttemptTest extends ApiTestCase
         $token = $this->loginAsUser();
         $response = $this->http->request(
             'GET',
-            '/interviewAttempt/getAttempt?id=1',
+            '/interviewAttempt/getAttempt?id=2',
             null,
             $token
         );

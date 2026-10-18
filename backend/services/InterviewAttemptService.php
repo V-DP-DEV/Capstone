@@ -68,6 +68,7 @@
                 $id = $attempt['interview_id'];
 
                 $attempt['questionTypes'] =$typesByInterview[$id] ?? [];
+                $attempt['completedAt'] = TimeUtil::toMillis($attempt['completedAt']);
                 unset($attempt);
             }
             return $attempts;
@@ -155,9 +156,10 @@
                     ];
                 }
                 //when all competencies are mapped add to attempt
-                $attempt['competencies'] = $competencies;
+                $attempt['competencyFeedbacks'] = array_values($competencies);
             }   
 
+            $attempt['completedAt'] = TimeUtil::toMillis($attempt['completedAt']);
             return $attempt;
         }
 

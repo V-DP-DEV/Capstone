@@ -12,10 +12,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.capstone.AppContainer;
+import com.example.capstone.MyApplication;
 import com.example.capstone.R;
 import com.example.capstone.adapter.ReviewInterviewAdapter;
 import com.example.capstone.databinding.FragmentReviewInterviewBinding;
@@ -23,7 +26,14 @@ import com.example.capstone.domainModels.UserAttemptCompetencyBreakdownFeedback;
 import com.example.capstone.domainModels.UserAttemptCompetencyFeedback;
 import com.example.capstone.domainModels.UserInterviewAttempt;
 import com.example.capstone.domainModels.UserQuestionAttempt;
+import com.example.capstone.repository.IAuthRepository;
+import com.example.capstone.repository.IInterviewAttemptsRepository;
+import com.example.capstone.ui.BaseActivity;
 import com.example.capstone.ui.components.BottomNavHelper;
+import com.example.capstone.viewmodel.LoginViewModel;
+import com.example.capstone.viewmodel.ReviewViewModel;
+import com.example.capstone.viewmodel.ViewModelFactory;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +48,7 @@ public class ReviewInterviewFragment extends Fragment {
     private boolean isStrengthsExpanded = false;
     private boolean isAreasExpanded = true;
     private boolean isAnalysisRequested = false;
+    private ReviewViewModel viewModel;
 
     @Nullable
     @Override
@@ -50,8 +61,96 @@ public class ReviewInterviewFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        initializeAttemptData();
-        displaySessionMetadata();
+        // Get app-wide repository
+        MyApplication app =
+            (MyApplication) requireActivity().getApplication();
+
+        AppContainer container = app.getAppContainer();
+
+        IInterviewAttemptsRepository interviewAttemptsRepository = container.interviewAttemptsRepository;
+
+        // Create ViewModel factory
+        ViewModelFactory<ReviewViewModel> factory =
+            new ViewModelFactory<>(
+                () -> new ReviewViewModel(interviewAttemptsRepository)
+            );
+
+        // Create ViewModel
+        viewModel = new ViewModelProvider(requireActivity(), factory)
+            .get(ReviewViewModel.class);
+
+        Bundle args= getArguments();
+        long attemptId = args.getLong("attempt_id");
+
+        viewModel.loadInterview(attemptId);
+
+
+        viewModel.getCurrentInterviewAttempt().observe(getViewLifecycleOwner(),attempt->{
+            if(attempt!=null){
+                //initializeAttemptData();
+                currentAttempt = attempt;
+                displaySessionMetadata();
+                setupRecyclerView();
+                if(attempt.isAnalysed()){
+                    System.out.println("It is analysed");
+                    bindCompetencyFeedbackData();
+                    // Reveal the competency breakdown card
+                    if (binding.cardCompetencies != null) {
+                        binding.cardCompetencies.setVisibility(View.VISIBLE);
+                    }
+
+                    // Update button text to "Review questions"
+                    if (binding.reviewQuestions != null) {
+                        binding.reviewQuestions.setText("Review questions");
+                    }
+                }
+            }
+        });
+
+        viewModel.getIsLoading().observe(getViewLifecycleOwner(),isLoading->{
+            if(Boolean.TRUE.equals(isLoading)){
+                if (getActivity() instanceof BaseActivity) {
+                    ((BaseActivity) getActivity()).showLoadingDialog("Getting interview...");
+                }
+            }
+            else{
+                if (getActivity() instanceof BaseActivity) {
+                    ((BaseActivity) getActivity()).hideLoadingDialog();
+                }
+            }
+        });
+
+        viewModel.getIsAnalysing().observe(getViewLifecycleOwner(),isAnalysing->{
+            if(Boolean.TRUE.equals(isAnalysing)){
+                if (getActivity() instanceof BaseActivity) {
+                    ((BaseActivity) getActivity()).showLoadingDialog("Analysing attempt...");
+                }
+            }
+            else{
+                if (getActivity() instanceof BaseActivity) {
+                    ((BaseActivity) getActivity()).hideLoadingDialog();
+                }
+            }
+        });
+
+        viewModel.getError().observe(getViewLifecycleOwner(),error->{
+            if (error != null && !error.isEmpty()) {
+                BaseActivity baseActivity = ((BaseActivity) getActivity());
+            }
+        });
+
+        viewModel.getAnalysed().observe(getViewLifecycleOwner(),analysed->{
+            if(analysed){
+                if (getActivity() instanceof BaseActivity) {
+                    ((BaseActivity) getActivity()).showAlertDialog("Analysed!","Your attempt has been analysed");
+                }
+                viewModel.loadInterview(attemptId);
+            }
+        });
+
+
+        //initializeAttemptData();
+        //displaySessionMetadata();
         setupRecyclerView();
         setupClickListeners();
         setupDropdownListeners();
@@ -69,20 +168,39 @@ public class ReviewInterviewFragment extends Fragment {
      * Binds session metadata directly from the root UserInterviewAttempt domain model.
      */
     private void displaySessionMetadata() {
-        if (binding == null || currentAttempt == null) return;
+        if (currentAttempt == null) return;
 
         if (binding.cDeveloper != null) {
-            binding.cDeveloper.setText(currentAttempt.getName() != null ? currentAttempt.getName() : "C# Developer");
+            binding.cDeveloper.setText(currentAttempt.getName());
         }
         if (binding.hard != null) {
-            binding.hard.setText(currentAttempt.getDifficulty() != null ? currentAttempt.getDifficulty() : "Hard");
+            binding.hard.setText(currentAttempt.getDifficulty());
         }
         if (binding.tv10Questions != null) {
-            int questionCount = currentAttempt.getQuestions() != null ? currentAttempt.getQuestions().size() : 10;
+            int questionCount = currentAttempt.getQuestions().size();
             binding.tv10Questions.setText(String.format(Locale.getDefault(), "%d questions", questionCount));
         }
         if (binding.tvDuration != null) {
-            binding.tvDuration.setText("01:24 / 20 minutes");
+            long totalSeconds = currentAttempt.getTotalSecondsSpent();
+            long minutes = Math.floorDiv(totalSeconds,60);
+            long seconds = totalSeconds -  (minutes*60);
+            long estimatedMinutes = currentAttempt.getEstimatedMinutes();
+            binding.tvDuration.setText(
+                String.format(
+                    Locale.getDefault(),
+                    "%02d:%02d",
+                    minutes,
+                    seconds
+                ) + "/"+ String.format(
+                    Locale.getDefault(),
+                    "%02d:%02d",
+                    estimatedMinutes,
+                    0
+                )
+            );
+        }
+        if(binding.tvDate != null){
+
         }
     }
 
@@ -188,6 +306,9 @@ public class ReviewInterviewFragment extends Fragment {
         // TODO FOR PERSON 2: Trigger ViewModel / Repository AI analysis call here
         // =========================================================================
 
+        viewModel.analyseAttempt();
+
+        /*
         isAnalysisRequested = true;
         currentAttempt.setAnalysed(true);
 
@@ -207,6 +328,8 @@ public class ReviewInterviewFragment extends Fragment {
         if (getContext() != null) {
             Toast.makeText(getContext(), "AI Analysis Generated Successfully!", Toast.LENGTH_SHORT).show();
         }
+
+         */
     }
 
 
