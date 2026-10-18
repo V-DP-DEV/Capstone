@@ -1,14 +1,16 @@
 package com.example.capstone.adapter;
 
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.capstone.R;
 import com.example.capstone.domainModels.ConceptAnalysis;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,19 +42,26 @@ public class ConceptAdapter extends RecyclerView.Adapter<ConceptAdapter.ViewHold
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvConceptName, tvTimesTested, tvConceptPercentage;
+        TextView tvSkillName, tvTotalCount, tvPercentage;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvConceptName = itemView.findViewById(R.id.tv_skill_name);
-            tvTimesTested = itemView.findViewById(R.id.tv_total_count);
-            tvConceptPercentage = itemView.findViewById(R.id.tv_percentage);
+            // Mapped directly to your XML layout IDs
+            tvSkillName = itemView.findViewById(R.id.tv_skill_name);
+            tvTotalCount = itemView.findViewById(R.id.tv_total_count);
+            tvPercentage = itemView.findViewById(R.id.tv_percentage);
         }
 
         void bind(ConceptAnalysis item) {
-            if (tvConceptName != null) tvConceptName.setText(item.getName());
-            if (tvTimesTested != null) tvTimesTested.setText(String.format("Tested: %d", item.getTimesTested()));
-            if (tvConceptPercentage != null) tvConceptPercentage.setText(String.format("%.1f%%", item.getPercentage()));
+            if (tvSkillName != null) {
+                tvSkillName.setText(item.getName());
+            }
+            if (tvTotalCount != null) {
+                tvTotalCount.setText(String.format("Total %d", item.getTimesTested()));
+            }
+            if (tvPercentage != null) {
+                tvPercentage.setText(String.format("%.0f%%", item.getPercentage()));
+            }
         }
     }
 }

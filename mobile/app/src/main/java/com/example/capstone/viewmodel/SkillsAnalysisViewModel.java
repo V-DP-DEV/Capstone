@@ -26,7 +26,6 @@ public class SkillsAnalysisViewModel extends ViewModel {
         this.analyticsRepository = analyticsRepository;
     }
 
-    // Observable States
     public LiveData<List<CompetenciesAnalysis>> getCompetencies() { return competencies; }
     public LiveData<List<ConceptAnalysis>> getConcepts() { return concepts; }
     public LiveData<Boolean> getIsLoading() { return isLoading; }

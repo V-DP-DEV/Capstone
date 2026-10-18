@@ -54,7 +54,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/div_subbar_skills"
         android:layout_width="match_parent"
-        android:layout_height="82dp"
+        android:layout_height="90dp"
         android:background="#FFFCFDFE"
         android:paddingStart="26dp"
         android:paddingEnd="26dp"

@@ -1,5 +1,6 @@
 package com.example.capstone.ui.analysis;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +18,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.capstone.AppContainer;
 import com.example.capstone.MyApplication;
 import com.example.capstone.R;
-import com.example.capstone.databinding.FragmentSkillsAnalysisBinding;
-import com.example.capstone.repository.IAnalyticsRepository;
 import com.example.capstone.adapter.CompetenciesAdapter;
 import com.example.capstone.adapter.ConceptAdapter;
+import com.example.capstone.databinding.FragmentSkillsAnalysisBinding;
+import com.example.capstone.repository.IAnalyticsRepository;
 import com.example.capstone.util.BottomNavUtils;
 import com.example.capstone.viewmodel.SkillsAnalysisViewModel;
 import com.example.capstone.viewmodel.ViewModelFactory;
@@ -33,6 +34,11 @@ public class SkillsAnalysisFragment extends Fragment {
     private CompetenciesAdapter competenciesAdapter;
     private ConceptAdapter conceptAdapter;
 
+    // Current filter states
+    private int currentLastInterviews = 3;
+    private String currentSortBy = "percentage";
+    private String currentSortOrder = "ASC"; // Weakest first
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSkillsAnalysisBinding.inflate(inflater, container, false);
@@ -43,27 +49,29 @@ public class SkillsAnalysisFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
+        // 1. Get repository from AppContainer
         MyApplication app = (MyApplication) requireActivity().getApplication();
         AppContainer container = app.getAppContainer();
         IAnalyticsRepository analyticsRepository = container.analyticsRepository;
 
-
+        // 2. Setup ViewModel via Factory
         ViewModelFactory<SkillsAnalysisViewModel> factory = new ViewModelFactory<>(
                 () -> new SkillsAnalysisViewModel(analyticsRepository)
         );
-
         viewModel = new ViewModelProvider(this, factory).get(SkillsAnalysisViewModel.class);
 
-        BottomNavUtils.setupBottomNavigation(view.findViewById(R.id.bottom_nav_container));
-
+        // 3. Setup Navigation & UI Components
+        View bottomBar = view.findViewById(R.id.bottom_nav_container);
+        if (bottomBar != null) {
+            BottomNavUtils.setupBottomNavigation(bottomBar);
+        }
 
         setupRecyclerViews();
         setupClickListeners();
         observeViewModel();
 
-
-        viewModel.loadCompetencies(10, "percentage", "DESC");
+        // 4. Initial Data Fetch
+        fetchData();
     }
 
     private void setupRecyclerViews() {
@@ -78,38 +86,74 @@ public class SkillsAnalysisFragment extends Fragment {
             binding.btnBack.setOnClickListener(v -> Navigation.findNavController(v).popBackStack());
         }
 
+        // --- Core Skills vs Other Skills Tabs ---
         binding.tabCoreSkills.setOnClickListener(v -> {
             viewModel.setCoreSkillsSelected(true);
             binding.rvSkillsBody.setAdapter(competenciesAdapter);
-            viewModel.loadCompetencies(10, "percentage", "DESC");
+            fetchData();
         });
 
         binding.tabOtherSkills.setOnClickListener(v -> {
             viewModel.setCoreSkillsSelected(false);
             binding.rvSkillsBody.setAdapter(conceptAdapter);
-            viewModel.loadConcepts(10, "percentage", "DESC");
+            fetchData();
+        });
+
+        // --- Interview Filters (Last 3, Last 5, All) ---
+        binding.tabInterviewLast3.setOnClickListener(v -> {
+            currentLastInterviews = 3;
+            updateInterviewFilterUI(0);
+            fetchData();
+        });
+        binding.tabInterviewLast5.setOnClickListener(v -> {
+            currentLastInterviews = 5;
+            updateInterviewFilterUI(1);
+            fetchData();
+        });
+        binding.tabInterviewAll.setOnClickListener(v -> {
+            currentLastInterviews = 100; // All interviews
+            updateInterviewFilterUI(2);
+            fetchData();
+        });
+
+        // --- Skills Filters (Weakest, Strongest, All) ---
+        binding.tabSkillWeakest.setOnClickListener(v -> {
+            currentSortOrder = "ASC";
+            updateSkillFilterUI(0);
+            fetchData();
+        });
+        binding.tabSkillStrongest.setOnClickListener(v -> {
+            currentSortOrder = "DESC";
+            updateSkillFilterUI(1);
+            fetchData();
+        });
+        binding.tabSkillAll.setOnClickListener(v -> {
+            currentSortOrder = "DESC"; // Default fallback for all
+            updateSkillFilterUI(2);
+            fetchData();
         });
     }
 
+    private void fetchData() {
+        Boolean isCore = viewModel.getIsCoreSkillsSelected().getValue();
+        if (isCore == null || isCore) {
+            viewModel.loadCompetencies(currentLastInterviews, currentSortBy, currentSortOrder);
+        } else {
+            viewModel.loadConcepts(currentLastInterviews, currentSortBy, currentSortOrder);
+        }
+    }
+
     private void observeViewModel() {
-        // Observe Competencies Data
-        viewModel.getCompetencies().observe(getViewLifecycleOwner(), competencies -> {
-            if (competencies != null) {
-                competenciesAdapter.setCompetenciesList(competencies);
-            }
+        viewModel.getCompetencies().observe(getViewLifecycleOwner(), list -> {
+            if (list != null) competenciesAdapter.setCompetenciesList(list);
         });
 
-        // Observe Concepts Data
-        viewModel.getConcepts().observe(getViewLifecycleOwner(), concepts -> {
-            if (concepts != null) {
-                conceptAdapter.setConceptList(concepts);
-            }
+        viewModel.getConcepts().observe(getViewLifecycleOwner(), list -> {
+            if (list != null) conceptAdapter.setConceptList(list);
         });
 
-        // Observe Tab Selection State
-        viewModel.getIsCoreSkillsSelected().observe(getViewLifecycleOwner(), this::updateTabSelection);
+        viewModel.getIsCoreSkillsSelected().observe(getViewLifecycleOwner(), this::updateTabSelectionUI);
 
-        // Observe General Errors
         viewModel.getError().observe(getViewLifecycleOwner(), errorMsg -> {
             if (errorMsg != null && !errorMsg.isEmpty()) {
                 Toast.makeText(requireContext(), errorMsg, Toast.LENGTH_SHORT).show();
@@ -117,20 +161,64 @@ public class SkillsAnalysisFragment extends Fragment {
         });
     }
 
-    private void updateTabSelection(boolean coreSelected) {
+    private void updateTabSelectionUI(boolean coreSelected) {
+        int activeBg = R.drawable.bg_circle_pill;
+        int white = ContextCompat.getColor(requireContext(), android.R.color.white);
+        int mutedSlate = Color.parseColor("#82889E");
+
         if (coreSelected) {
-            binding.tabCoreSkills.setBackgroundResource(R.drawable.bg_circle_pill);
-            binding.tabCoreSkills.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white));
+            binding.tabCoreSkills.setBackgroundResource(activeBg);
+            binding.tabCoreSkills.setTextColor(white);
 
             binding.tabOtherSkills.setBackground(null);
-            binding.tabOtherSkills.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_grey));
+            binding.tabOtherSkills.setTextColor(mutedSlate);
         } else {
-            binding.tabOtherSkills.setBackgroundResource(R.drawable.bg_circle_pill);
-            binding.tabOtherSkills.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white));
+            binding.tabOtherSkills.setBackgroundResource(activeBg);
+            binding.tabOtherSkills.setTextColor(white);
 
             binding.tabCoreSkills.setBackground(null);
-            binding.tabCoreSkills.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_grey));
+            binding.tabCoreSkills.setTextColor(mutedSlate);
         }
+    }
+
+    private void updateInterviewFilterUI(int selectedIndex) {
+        int activeBg = R.drawable.bg_pill_grey;
+        int activeText = ContextCompat.getColor(requireContext(), android.R.color.white);
+        int inactiveText = ContextCompat.getColor(requireContext(), R.color.color_grey);
+
+        binding.tabInterviewLast3.setBackground(selectedIndex == 0 ? ContextCompat.getDrawable(requireContext(), activeBg) : null);
+        binding.tabInterviewLast3.setTextColor(selectedIndex == 0 ? activeText : inactiveText);
+
+        binding.tabInterviewLast5.setBackground(selectedIndex == 1 ? ContextCompat.getDrawable(requireContext(), activeBg) : null);
+        binding.tabInterviewLast5.setTextColor(selectedIndex == 1 ? activeText : inactiveText);
+
+        binding.tabInterviewAll.setBackground(selectedIndex == 2 ? ContextCompat.getDrawable(requireContext(), activeBg) : null);
+        binding.tabInterviewAll.setTextColor(selectedIndex == 2 ? activeText : inactiveText);
+
+        // Update top pill label text
+        if (selectedIndex == 0) binding.pillInterviewFilter.setText("Last 3 interviews");
+        else if (selectedIndex == 1) binding.pillInterviewFilter.setText("Last 5 interviews");
+        else binding.pillInterviewFilter.setText("All interviews");
+    }
+
+    private void updateSkillFilterUI(int selectedIndex) {
+        int activeBg = R.drawable.bg_pill_grey;
+        int activeText = ContextCompat.getColor(requireContext(), android.R.color.white);
+        int inactiveText = ContextCompat.getColor(requireContext(), R.color.color_grey);
+
+        binding.tabSkillWeakest.setBackground(selectedIndex == 0 ? ContextCompat.getDrawable(requireContext(), activeBg) : null);
+        binding.tabSkillWeakest.setTextColor(selectedIndex == 0 ? activeText : inactiveText);
+
+        binding.tabSkillStrongest.setBackground(selectedIndex == 1 ? ContextCompat.getDrawable(requireContext(), activeBg) : null);
+        binding.tabSkillStrongest.setTextColor(selectedIndex == 1 ? activeText : inactiveText);
+
+        binding.tabSkillAll.setBackground(selectedIndex == 2 ? ContextCompat.getDrawable(requireContext(), activeBg) : null);
+        binding.tabSkillAll.setTextColor(selectedIndex == 2 ? activeText : inactiveText);
+
+        // Update top pill label text
+        if (selectedIndex == 0) binding.pillSkillFilter.setText("Weakest skills");
+        else if (selectedIndex == 1) binding.pillSkillFilter.setText("Strongest skills");
+        else binding.pillSkillFilter.setText("All skills");
     }
 
     @Override
