@@ -10,15 +10,15 @@
             private Db $db
         ){}
 
-        public function login($data){
+        public function login(?string $email, ?string $password,?string $deviceId,?string $deviceName){
             //define field errors
             $fieldErrors = [];
             //if email empty add error
-            if(empty($data['email'])){
+            if(empty($email)){
                 $fieldErrors['email'] = "Email is required";
             }
             //if password empty add error
-            if(empty($data['password'])){
+            if(empty($password)){
                 $fieldErrors['password'] = "Password is required";
             }
             //if errors throw field validation error
@@ -27,10 +27,10 @@
             }
 
             //find user by email
-            $user = $this->userRepository->findByEmail($data['email']);
+            $user = $this->userRepository->findByEmail($email);
 
             //if user empty and password not match, throw error
-            if(!$user || !password_verify($data['password'],$user['password'])){
+            if(!$user || !password_verify($password,$user['password'])){
                 throw new UnauthorizedException("Invalid credentials");
             }
             //generate the token
@@ -44,9 +44,9 @@
             $refreshExpiresAt = date('Y-m-d H:i:s', strtotime('+30 days'));
             //create the token in db
             //AuthTokenRepository::create($user['id'],$tokenHash,$expiresAt,$data['deviceId'],$data['deviceName']);
-            $this->db->transaction(function() use ($user,$tokenHash,$expiresAt,$refreshTokenHash,$refreshExpiresAt,$data){
-                $this->authTokenRepository->create($user['id'],$tokenHash,$expiresAt,$data['deviceId'],$data['deviceName']);
-                $this->refreshTokenRepository->create($user['id'],$refreshTokenHash,$refreshExpiresAt,$data['deviceId'],$data['deviceName']);
+            $this->db->transaction(function() use ($deviceId, $deviceName, $user,$tokenHash,$expiresAt,$refreshTokenHash,$refreshExpiresAt){
+                $this->authTokenRepository->create($user['id'],$tokenHash,$expiresAt,$deviceId,$deviceName);
+                $this->refreshTokenRepository->create($user['id'],$refreshTokenHash,$refreshExpiresAt,$deviceId,$deviceName);
             });
 
             //try to log the token
@@ -55,7 +55,7 @@
             return ['token'=>$token,'tokenExpiresAt'=>TimeUtil::toMillis($expiresAt),'refreshToken'=>$refreshToken,'refreshTokenExpiresAt'=>TimeUtil::toMillis($refreshExpiresAt),'userRole'=>$user['role'] ];
         }
 
-        public function logout($token){
+        public function logout(?string $token){
             //if no token return
             if(!$token){
                 return;
@@ -76,7 +76,7 @@
             $this->log->tryAuthLog($dbToken['user_id'],'LOGOUT',$dbToken['id']);
         }
 
-        public function logoutAllDevices($token){
+        public function logoutAllDevices(?string $token){
             //if no token return
             if(!$token){
                 return;
@@ -100,7 +100,7 @@
             $this->log->tryAuthLog($dbToken['user_id'],'LOGOUT_ALL',$dbToken['id']);
         }
 
-        public function refresh($refreshToken){
+        public function refresh(string $refreshToken){
             //hash the token
             $refreshTokenHash = Token::hashToken($refreshToken);
             //find token in db
@@ -151,34 +151,34 @@
             return ['token'=>$token,'tokenExpiresAt'=>TimeUtil::toMillis($expiresAt),'refreshToken'=>$newRefreshToken,'refreshTokenExpiresAt'=>TimeUtil::toMillis($newRefreshExpiresAt),'userRole'=>$user['role'] ];
         }
 
-        public function signup($data){
+        public function signup(?string $email,?string $password, ?string $firstname,?string $surname){
             //define field errors
             $fieldErrors = [];
             //if email empty add error
-            if(empty($data['email'])){
+            if(empty($email)){
                 $fieldErrors['email'] = "Email is required";
             }
-            else if(!filter_var($data['email'], FILTER_VALIDATE_EMAIL)){
+            else if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
                 $fieldErrors['email'] = "Email is not valid";
             }
             
             //if password empty add error
-            if (strlen($data['password']) < 8) {
+            if (strlen($password) < 8) {
                 $fieldErrors['password'] = "Password must be at least 8 characters";
             }
-            else if (!preg_match('/\d/', $data['password'])) {
+            else if (!preg_match('/\d/', $password)) {
                 $fieldErrors['password'] = "Password must contain a number";
             }
-            else if (!preg_match('/[^a-zA-Z0-9]/', $data['password'])) {
+            else if (!preg_match('/[^a-zA-Z0-9]/', $password)) {
                 $fieldErrors['password'] = "Password must contain a special character";
             }
 
             //if firstname empty add error
-            if(empty($data['firstname'])){
+            if(empty($firstname)){
                 $fieldErrors['firstname'] = "Firstname is required";
             }
             //if surname empty add error
-            if(empty($data['surname'])){
+            if(empty($surname)){
                 $fieldErrors['surname'] = "Surname is required";
             }
             //if errors throw field validation error
@@ -187,10 +187,10 @@
             }
 
             //hash the password
-            $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             
             //create the user in db
-            $this->userRepository->createUser($data['email'],$hashedPassword,'USER',$data['firstname'],$data['surname']);
+            $this->userRepository->createUser($email,$hashedPassword,'USER',$firstname,$surname);
         }
     }
 ?>
