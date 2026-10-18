@@ -7,7 +7,7 @@
         ){}
 
     public function getCompetenciesAnalytics(string $sortBy,string $sortOrder,int $last){
-        $sortOption = new SortOptions($sortBy ?? 'score',$sortOrder ?? 'DESC');
+        $sortOption = new SortOptions($sortBy ?? 'percentage',$sortOrder ?? 'DESC');
 
         $dbCompetencies = $this->interviewAnalyticsRepository->getCompetenciesAnalytics($sortOption,$last,$this->request_context->getUserId());
         if(!$dbCompetencies){
@@ -21,13 +21,13 @@
                     $competencies[$competencyId] = [
                         'id'=>$competencyId,
                         'name'=>$row['competency_name'],
-                        'percentage'=>$row['competency_score'],
+                        'percentage'=>$row['competency_percentage'],
                     ];
                 }
                 //add a concept for each row
                 $competencies[$competencyId]['competenciesBreakdownAnalysisList'][] = [
                     'name'=>$row['competency_breakdown_name'],
-                    'percentage'=>$row['competency_breakdown_score'],
+                    'percentage'=>$row['competency_breakdown_percentage'],
                 ];
             }
 
@@ -37,7 +37,7 @@
     }
 
     public function getConceptsAnalytics(string $sortBy,string $sortOrder,int $last){
-        $sortOption = new SortOptions($sortBy ?? 'score',$sortOrder ?? 'DESC');
+        $sortOption = new SortOptions($sortBy ?? 'percentage',$sortOrder ?? 'DESC');
         $dbResult = $this->interviewAnalyticsRepository->getConceptsAnalytics($sortOption,$last,$this->request_context->getUserId());
         if(!$dbResult){
             throw new ValidationException("No attempts analysed");
