@@ -2,18 +2,18 @@
     class RefreshTokenRepository implements IRefreshTokenRepository{
         public function __construct(private Db $db){}
 
-        public function create(int $userId,string $token,string $expiresAt,string $deviceId,string $deviceName){
+        public function create(int $userId,string $token,string $expiresAt,string $deviceId,string $deviceName):int{
             return $this->db->execute("INSERT INTO refresh_tokens (user_id,token_hash,expires_at,device_id,device_name) VALUES (?,?,?,?,?)",[$userId,$token,$expiresAt,$deviceId,$deviceName]);
         }
 
-        public function findRefreshTokenByHash(string $tokenHash){
+        public function findRefreshTokenByHash(string $tokenHash):array|false{
             return $this->db->queryOne("SELECT * FROM refresh_tokens WHERE token_hash = ?",[$tokenHash]);
         }
 
-        public function revokeRefreshTokenByHash(string $tokenHash){
+        public function revokeRefreshTokenByHash(string $tokenHash):int{
             return $this->db->execute("UPDATE refresh_tokens SET revoked_at = NOW() WHERE token_hash = ? AND revoked_at IS NULL",[$tokenHash]);
         }
-        public function revokeAllByUserId(int $userId){
+        public function revokeAllByUserId(int $userId):int{
             return $this->db->execute("UPDATE refresh_tokens SET revoked_at = NOW() WHERE user_id = ? AND revoked_at IS NULL",[$userId]);
         }
     }

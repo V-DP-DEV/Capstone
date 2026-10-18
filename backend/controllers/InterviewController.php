@@ -16,9 +16,6 @@
             Request::requireMethod("GET");
             //extracts the id
             $id = $filters['id'] ?? null;
-            if($id === null){
-                throw new ValidationException("Missing required parameter: id");
-            }
             //passes id and than retrieves data
             $result = $this->interviewService->getInterview((int)$id);
             //returns result, and other errors will be thrown to error exception handler
