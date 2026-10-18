@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.capstone.R;
@@ -86,9 +85,13 @@ public class CompetenciesAdapter extends RecyclerView.Adapter<CompetenciesAdapte
             if (tvCardTitle != null) {
                 tvCardTitle.setText(item.getName());
             }
+            if (tvCardStatus != null) {
+                tvCardStatus.setText(item.getPercentage() >= 70 ? "Strong" : (item.getPercentage() >= 40 ? "Moderate" : "Needs Improvement"));
+            }
             if (tvCardPercentageMain != null) {
-                tvCardPercentageMain.setText(String.format("%.0f%%", item.getPercentage()));
-                tvCardPercentageMain.setTextColor(getColorForPercentage(item.getPercentage()));
+                double mainPercentage = item.getPercentage();
+                tvCardPercentageMain.setText(String.format("%.0f%%", mainPercentage));
+                tvCardPercentageMain.setTextColor(getColorForPercentage(mainPercentage));
             }
 
             List<CompetenciesBreakdownAnalysis> breakdowns = item.getCompetenciesBreakdownAnalysisList();
@@ -98,9 +101,7 @@ public class CompetenciesAdapter extends RecyclerView.Adapter<CompetenciesAdapte
                     CompetenciesBreakdownAnalysis b0 = breakdowns.get(0);
                     if (tvLabelClarity != null && b0.getName() != null) tvLabelClarity.setText(b0.getName());
                     if (tvValueClarity != null) tvValueClarity.setText(String.format("%.0f%%", b0.getPercentage()));
-                    if (indicatorClarity != null) {
-                        indicatorClarity.setBackgroundTintList(ColorStateList.valueOf(getColorForPercentage(b0.getPercentage())));
-                    }
+                    applyDynamicIndicator(indicatorClarity, b0.getPercentage());
                 }
 
                 // Populate Container 2 (Index 1)
@@ -108,9 +109,7 @@ public class CompetenciesAdapter extends RecyclerView.Adapter<CompetenciesAdapte
                     CompetenciesBreakdownAnalysis b1 = breakdowns.get(1);
                     if (tvLabelStructure != null && b1.getName() != null) tvLabelStructure.setText(b1.getName());
                     if (tvValueStructure != null) tvValueStructure.setText(String.format("%.0f%%", b1.getPercentage()));
-                    if (indicatorStructure != null) {
-                        indicatorStructure.setBackgroundTintList(ColorStateList.valueOf(getColorForPercentage(b1.getPercentage())));
-                    }
+                    applyDynamicIndicator(indicatorStructure, b1.getPercentage());
                 }
 
                 // Populate Container 3 (Index 2)
@@ -118,13 +117,14 @@ public class CompetenciesAdapter extends RecyclerView.Adapter<CompetenciesAdapte
                     CompetenciesBreakdownAnalysis b2 = breakdowns.get(2);
                     if (tvLabelVocabulary != null && b2.getName() != null) tvLabelVocabulary.setText(b2.getName());
                     if (tvValueVocabulary != null) tvValueVocabulary.setText(String.format("%.0f%%", b2.getPercentage()));
-                    if (indicatorVocabulary != null) {
-                        indicatorVocabulary.setBackgroundTintList(ColorStateList.valueOf(getColorForPercentage(b2.getPercentage())));
-                    }
+                    applyDynamicIndicator(indicatorVocabulary, b2.getPercentage());
                 }
             }
         }
 
+        /**
+         * Updates color tint and scales the bar width smoothly using scaleX anchored to the left.
+         */
         private void applyDynamicIndicator(View indicator, double percentage) {
             if (indicator == null) return;
 
@@ -132,21 +132,12 @@ public class CompetenciesAdapter extends RecyclerView.Adapter<CompetenciesAdapte
             int dynamicColor = getColorForPercentage(percentage);
             indicator.setBackgroundTintList(ColorStateList.valueOf(dynamicColor));
 
-            // 2. Adjust Width dynamically as a percentage progress bar
-            ViewGroup.LayoutParams params = indicator.getLayoutParams();
-            if (params instanceof ConstraintLayout.LayoutParams) {
-                ConstraintLayout.LayoutParams constraintParams = (ConstraintLayout.LayoutParams) params;
-
-                // CRITICAL: Tell ConstraintLayout to use percentage mode
-                constraintParams.matchConstraintDefaultWidth = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT_PERCENT;
-
-                // Normalize percentage between 0.05 (5% minimum visible width) and 1.0 (100%)
-                float ratio = (float) Math.max(0.05, Math.min(1.0, percentage / 100.0));
-                constraintParams.matchConstraintPercentWidth = ratio;
-
-                indicator.setLayoutParams(constraintParams);
-            }
+            // 2. Scale width smoothly from left to right (0.0 to 1.0)
+            indicator.setPivotX(0f);
+            float scale = (float) Math.max(0.0, Math.min(1.0, percentage / 100.0));
+            indicator.setScaleX(scale);
         }
+
         /**
          * Returns Red for very low marks (< 40%),
          * Orange for mid-range (40% - 69%),
