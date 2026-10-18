@@ -55,12 +55,19 @@ class ApiInterviewAttemptTest extends ApiTestCase
          
     
     public function testAnalyse(){
-        $token = $this->loginAsUser();
+        //$token = $this->loginAsUser();
+
+        $response = $this->http->request(
+            'POST',
+            '/auth/login',
+            ['email' => 'vian@icloud.com', 'password' => 'Viandp2@', "deviceId"=>"12","deviceName"=>"Hello"]
+        );
+        $token = $response['body']['data']['token'];
 
         $response = $this->http->request(
             'POST',
             '/interviewAttempt/analyse',
-            ['id'=>1],
+            ['id'=>2],
             $token
         );
 

@@ -46,22 +46,8 @@ public class SplashActivity extends Activity {
     authRepository = container.authRepository;
     interviewRepository = container.interviewRepository;
 
-    interviewRepository.getCategories(new ApiCallback<List<InterviewCategory>>() {
-      @Override
-      public void onSuccess(ApiResponse<List<InterviewCategory>> response) {
-        System.out.println(new Gson().toJson(response));
-      }
-
-      @Override
-      public void onGeneralError(Exception e) {
-
-      }
-
-      @Override
-      public void onHttpError(ApiResponse<List<InterviewCategory>> response) {
-
-      }
-    });
+    session.clear();
+    manager.clear();
 
     long sessionExpiration = session.getSessionExpiration();
     long refreshExpiration = session.getRefreshExpiration();
