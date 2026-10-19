@@ -170,7 +170,7 @@ public class ReviewInterviewFragment extends Fragment {
             }
         });
 
-        // Observe Successful Analysis Completion -> Auto reload and navigate/update
+        // Observe Successful Analysis Completion
         viewModel.getAnalysed().observe(getViewLifecycleOwner(), analysed -> {
             if (Boolean.TRUE.equals(analysed)) {
                 if (getActivity() instanceof BaseActivity) {
@@ -195,7 +195,6 @@ public class ReviewInterviewFragment extends Fragment {
         if (adapter == null) {
             adapter = new ReviewInterviewAdapter(new ArrayList<>(), false, (questionAttempt, position) -> {
                 if (currentAttempt != null && currentAttempt.isAnalysed()) {
-                    navigateToQuestionReview();
                 } else {
                     Toast.makeText(requireContext(), "Request analysis to review individual answers.", Toast.LENGTH_SHORT).show();
                 }
@@ -329,10 +328,9 @@ public class ReviewInterviewFragment extends Fragment {
     private void addBreakdownItemView(ViewGroup container, UserAttemptCompetencyBreakdownFeedback breakdownItem) {
         if (container == null || breakdownItem == null) return;
 
-        // Use a vertical LinearLayout with proper spacing
         LinearLayout itemLayout = new LinearLayout(requireContext());
         itemLayout.setOrientation(LinearLayout.VERTICAL);
-        itemLayout.setPadding(0, 12, 0, 16); // Clean vertical padding between breakdown blocks
+        itemLayout.setPadding(0, 12, 0, 16);
 
         TextView tvTitle = new TextView(requireContext());
         double percentage = breakdownItem.getBreakdownPercentage();
@@ -349,7 +347,6 @@ public class ReviewInterviewFragment extends Fragment {
         tvDesc.setTextSize(12f);
         tvDesc.setTextColor(getResources().getColor(android.R.color.darker_gray, null));
 
-        // Add top margin to description so it never overlaps the title
         LinearLayout.LayoutParams descParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
