@@ -218,6 +218,11 @@ public class ReviewInterviewFragment extends Fragment {
             int questionCount = currentAttempt.getQuestions() != null ? currentAttempt.getQuestions().size() : 0;
             binding.tv10Questions.setText(String.format(Locale.getDefault(), "%d questions", questionCount));
         }
+        if (binding.hard != null) {
+            String difficulty = currentAttempt.getDifficulty() != null ? currentAttempt.getDifficulty() : "";
+            binding.hard.setText(difficulty);
+            binding.hard.setTextColor(getColorForDifficulty(difficulty));
+        }
         if (binding.tvDuration != null) {
             long totalSeconds = currentAttempt.getTotalSecondsSpent();
             long minutes = Math.floorDiv(totalSeconds, 60);
@@ -358,6 +363,20 @@ public class ReviewInterviewFragment extends Fragment {
         container.addView(itemLayout);
     }
 
+    private int getColorForDifficulty(String difficulty) {
+        if (difficulty == null) return Color.parseColor("#FF8A8A97");
+
+        switch (difficulty.trim().toLowerCase(Locale.ROOT)) {
+            case "easy":
+                return Color.parseColor("#FF08B425"); // Green
+            case "medium":
+                return Color.parseColor("#FFF7A93B"); // Orange
+            case "hard":
+                return Color.parseColor("#FFEF5350"); // Red
+            default:
+                return Color.parseColor("#FF8A8A97"); // Default Gray
+        }
+    }
     private int getColorForPercentage(double percentage) {
         if (percentage < 40.0) {
             return Color.parseColor("#FFEF5350"); // Red
