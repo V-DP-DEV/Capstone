@@ -17,16 +17,7 @@ public class UpdateUserRequest {
     this.surname = surname;
   }
 
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
   private String firstname;
   private String surname;
-  private String email;
 
 }

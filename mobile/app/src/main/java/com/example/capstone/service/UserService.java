@@ -1,6 +1,7 @@
 
 package com.example.capstone.service;
 
+import com.example.capstone.domainModels.User;
 import com.example.capstone.model.request.ChangePasswordRequest;
 import com.example.capstone.model.request.DeleteAccountRequest;
 import com.example.capstone.model.request.UpdateUserRequest;
@@ -23,7 +24,7 @@ public class UserService {
 
     ApiRequest request = new ApiRequest("user/updateDetails");
 
-    request.setMethodPUT();
+    request.setMethodPATCH();
     request.setRequiresAuthentication(true);
     request.setBody(updateUserRequest);
 
@@ -55,5 +56,12 @@ public class UserService {
     request.setBody(deleteAccountRequest);
 
     apiClient.execute(request, Void.class, callback);
+  }
+
+  public void getProfile(ApiCallback<User> callback){
+    ApiRequest request = new ApiRequest("user/getProfile");
+    request.setMethodGET();
+    request.setRequiresAuthentication(true);
+    apiClient.execute(request,User.class,callback);
   }
 }

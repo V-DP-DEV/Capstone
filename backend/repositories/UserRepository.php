@@ -23,5 +23,14 @@
         public function updatePassword(int $userId, string $newPasswordHash):int{
             return $this->db->execute("UPDATE users SET password = ? WHERE id = ?",[$newPasswordHash,$userId]);
         }
+
+        public function updateDetails(string $firstname,string $surname,int $userId):int{
+            $query = "UPDATE users SET  firstname = ?,surname = ? WHERE id =?";
+            return $this->db->execute($query,[$firstname,$surname,$userId]);
+        }
+        
+        public function getProfile(int $userId):array|false{
+            return $this->db->queryOne("SELECT email,firstname,surname,role,created_at as createdAt FROM users WHERE id = ?",[$userId]);
+        }
     }
 ?>
