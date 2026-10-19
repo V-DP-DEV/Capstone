@@ -249,10 +249,10 @@ public class ReviewInterviewFragment extends Fragment {
         // Bottom Pill Button ("Request Analysis" -> toggles to -> "Review questions")
         if (binding.divPillBtn != null) {
             binding.divPillBtn.setOnClickListener(v -> {
-                if (!isAnalysisRequested) {
+                if (!viewModel.getCurrentInterviewAttempt().getValue().isAnalysed()) {
                     requestAiAnalysis();
                 } else {
-                    navigateToQuestionReview();
+                    navigateToQuestionReview(0);
                 }
             });
         }
@@ -327,7 +327,7 @@ public class ReviewInterviewFragment extends Fragment {
         List<UserQuestionAttempt> questions = currentAttempt != null ? currentAttempt.getQuestions() : new ArrayList<>();
 
         adapter = new ReviewInterviewAdapter(questions, (questionAttempt, position) -> {
-            navigateToQuestionReview();
+            navigateToQuestionReview(position);
         });
 
         if (binding.rvQList != null) {
@@ -336,12 +336,13 @@ public class ReviewInterviewFragment extends Fragment {
         }
     }
 
-    private void navigateToQuestionReview() {
+    private void navigateToQuestionReview(int index) {
         if (isAdded()) {
             NavController navController = NavHostFragment.findNavController(this);
             if (navController.getCurrentDestination() != null
                     && navController.getCurrentDestination().getId() == R.id.reviewInterviewFragment) {
                 // Navigate cleanly without bundles
+                viewModel.moveToQuestion(index);
                 navController.navigate(R.id.action_reviewInterviewFragment_to_reviewQuestionFragment);
             }
         }
