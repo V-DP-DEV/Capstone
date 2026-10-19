@@ -1,6 +1,7 @@
 package com.example.capstone.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,19 +21,22 @@ import java.util.Locale;
 public class ReviewInterviewAdapter extends RecyclerView.Adapter<ReviewInterviewAdapter.ViewHolder> {
 
     private List<UserQuestionAttempt> questionAttempts;
+    private boolean isAnalysed;
     private final OnItemClickListener listener;
 
     public interface OnItemClickListener {
         void onItemClick(UserQuestionAttempt attempt, int position);
     }
 
-    public ReviewInterviewAdapter(List<UserQuestionAttempt> questionAttempts, OnItemClickListener listener) {
+    public ReviewInterviewAdapter(List<UserQuestionAttempt> questionAttempts, boolean isAnalysed, OnItemClickListener listener) {
         this.questionAttempts = questionAttempts;
+        this.isAnalysed = isAnalysed;
         this.listener = listener;
     }
 
-    public void updateData(List<UserQuestionAttempt> newData) {
+    public void updateData(List<UserQuestionAttempt> newData, boolean isAnalysed) {
         this.questionAttempts = newData;
+        this.isAnalysed = isAnalysed;
         notifyDataSetChanged();
     }
 
@@ -45,6 +49,7 @@ public class ReviewInterviewAdapter extends RecyclerView.Adapter<ReviewInterview
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        if (questionAttempts == null || position >= questionAttempts.size()) return;
         UserQuestionAttempt attempt = questionAttempts.get(position);
 
         // Badge Question Number
@@ -57,10 +62,20 @@ public class ReviewInterviewAdapter extends RecyclerView.Adapter<ReviewInterview
             holder.tvQuestionText.setText(attempt.getQuestion() != null ? attempt.getQuestion() : "No question text");
         }
 
-        // Score (Earned / Max)
+        // State 1 vs State 2: Score visibility & color coding based on analysis status
         if (holder.tvQuestionScore != null) {
-            holder.tvQuestionScore.setText(String.format(Locale.getDefault(), "%.0f/%.0f",
-                    attempt.getScore(), (double) attempt.getMaxScore()));
+            if (isAnalysed) {
+                holder.tvQuestionScore.setVisibility(View.VISIBLE);
+                double score = attempt.getScore();
+                double maxScore = (double) attempt.getMaxScore();
+                holder.tvQuestionScore.setText(String.format(Locale.getDefault(), "%.0f/%.0f", score, maxScore));
+
+                double percentage = maxScore > 0 ? (score / maxScore) * 100.0 : 0.0;
+                holder.tvQuestionScore.setTextColor(getColorForPercentage(percentage));
+            } else {
+                // State 1: Hide scores before analysis is requested
+                holder.tvQuestionScore.setVisibility(View.GONE);
+            }
         }
 
         // Seconds Spent
@@ -108,6 +123,16 @@ public class ReviewInterviewAdapter extends RecyclerView.Adapter<ReviewInterview
     @Override
     public int getItemCount() {
         return questionAttempts != null ? questionAttempts.size() : 0;
+    }
+
+    private int getColorForPercentage(double percentage) {
+        if (percentage < 40.0) {
+            return Color.parseColor("#FFEF5350"); // Red
+        } else if (percentage < 70.0) {
+            return Color.parseColor("#FFF7A93B"); // Orange
+        } else {
+            return Color.parseColor("#FF08B425"); // Green
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

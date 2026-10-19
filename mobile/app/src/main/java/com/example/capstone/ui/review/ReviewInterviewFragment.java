@@ -1,7 +1,8 @@
 package com.example.capstone.ui.review;
 
-
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,14 +27,11 @@ import com.example.capstone.domainModels.UserAttemptCompetencyBreakdownFeedback;
 import com.example.capstone.domainModels.UserAttemptCompetencyFeedback;
 import com.example.capstone.domainModels.UserInterviewAttempt;
 import com.example.capstone.domainModels.UserQuestionAttempt;
-import com.example.capstone.repository.IAuthRepository;
 import com.example.capstone.repository.IInterviewAttemptsRepository;
 import com.example.capstone.ui.BaseActivity;
 import com.example.capstone.ui.components.BottomNavHelper;
-
 import com.example.capstone.viewmodel.ReviewViewModel;
 import com.example.capstone.viewmodel.ViewModelFactory;
-
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,15 +41,15 @@ import java.util.Locale;
 
 public class ReviewInterviewFragment extends Fragment {
 
+    private static final String TAG = "ReviewInterviewFragment";
     private FragmentReviewInterviewBinding binding;
     private ReviewInterviewAdapter adapter;
 
     private UserInterviewAttempt currentAttempt;
     private boolean isStrengthsExpanded = false;
     private boolean isAreasExpanded = true;
-    private boolean isAnalysisRequested = false;
-    private long attemptId;
     private ReviewViewModel viewModel;
+    private long attemptId = -1;
 
     @Nullable
     @Override
@@ -64,15 +62,126 @@ public class ReviewInterviewFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-        setupViewModel();
-
-        Bundle args= getArguments();
-        attemptId = args.getLong("attempt_id");
-
-        viewModel.loadInterview(attemptId);
-
+        // 1. Initialize RecyclerView immediately
         setupRecyclerView();
+
+        // 2. Safe Argument Extraction with Fallback Keys
+        Bundle args = getArguments();
+        if (args != null) {
+            attemptId = args.getLong("attempt_id", -1);
+            if (attemptId == -1) attemptId = args.getLong("id", -1);
+            if (attemptId == -1) attemptId = args.getLong("attemptId", -1);
+
+            Log.d(TAG, "Extracted attemptId: " + attemptId);
+        } else {
+            Log.w(TAG, "getArguments() is null!");
+        }
+
+        // Get app-wide repository
+        MyApplication app = (MyApplication) requireActivity().getApplication();
+        AppContainer container = app.getAppContainer();
+        IInterviewAttemptsRepository interviewAttemptsRepository = container.interviewAttemptsRepository;
+
+        // Create ViewModel factory
+        ViewModelFactory<ReviewViewModel> factory = new ViewModelFactory<>(
+                () -> new ReviewViewModel(interviewAttemptsRepository)
+        );
+
+        // Create ViewModel
+        viewModel = new ViewModelProvider(requireActivity(), factory)
+                .get(ReviewViewModel.class);
+
+        if (attemptId != -1) {
+            viewModel.loadInterview(attemptId);
+        } else {
+            Toast.makeText(requireContext(), "Error: Interview ID not found", Toast.LENGTH_SHORT).show();
+        }
+
+        // Observe Interview Attempt LiveData
+        viewModel.getCurrentInterviewAttempt().observe(getViewLifecycleOwner(), attempt -> {
+            if (attempt != null) {
+                currentAttempt = attempt;
+                displaySessionMetadata();
+
+                boolean analysed = attempt.isAnalysed();
+                List<UserQuestionAttempt> questions = attempt.getQuestions();
+
+                // Update question cards and state flag in adapter
+                if (adapter != null) {
+                    adapter.updateData(questions != null ? questions : new ArrayList<>(), analysed);
+                }
+
+                // Handle State 1 vs State 2 UI updates
+                if (analysed) {
+                    bindCompetencyFeedbackData();
+                    if (binding.cardCompetencies != null) {
+                        binding.cardCompetencies.setVisibility(View.VISIBLE);
+                    }
+                    if (binding.reviewQuestions != null) {
+                        binding.reviewQuestions.setText("Review questions");
+                    }
+                } else {
+                    if (binding.cardCompetencies != null) {
+                        binding.cardCompetencies.setVisibility(View.GONE);
+                    }
+                    if (binding.reviewQuestions != null) {
+                        binding.reviewQuestions.setText("Request Analysis");
+                    }
+                }
+            }
+        });
+
+        // Observe Loading State
+        viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            if (Boolean.TRUE.equals(isLoading)) {
+                if (getActivity() instanceof BaseActivity) {
+                    ((BaseActivity) getActivity()).showLoadingDialog("Getting interview...");
+                }
+            } else {
+                if (getActivity() instanceof BaseActivity) {
+                    ((BaseActivity) getActivity()).hideLoadingDialog();
+                }
+            }
+        });
+
+        // Observe Analysis Loading State
+        viewModel.getIsAnalysing().observe(getViewLifecycleOwner(), isAnalysing -> {
+            if (Boolean.TRUE.equals(isAnalysing)) {
+                if (getActivity() instanceof BaseActivity) {
+                    ((BaseActivity) getActivity()).showLoadingDialog("Analysing attempt...");
+                }
+            } else {
+                if (getActivity() instanceof BaseActivity) {
+                    ((BaseActivity) getActivity()).hideLoadingDialog();
+                }
+            }
+        });
+
+        // Observe Errors
+        viewModel.getError().observe(getViewLifecycleOwner(), error -> {
+            if (error != null && !error.isEmpty()) {
+                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        viewModel.getAnalysisError().observe(getViewLifecycleOwner(), analysisError -> {
+            if (analysisError != null && !analysisError.isEmpty()) {
+                Toast.makeText(requireContext(), analysisError, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Observe Successful Analysis Completion -> Auto reload and navigate/update
+        viewModel.getAnalysed().observe(getViewLifecycleOwner(), analysed -> {
+            if (Boolean.TRUE.equals(analysed)) {
+                if (getActivity() instanceof BaseActivity) {
+                    ((BaseActivity) getActivity()).showAlertDialog("Analysed!", "Your attempt has been analysed successfully.");
+                }
+                if (attemptId != -1) {
+                    viewModel.loadInterview(attemptId);
+                }
+            }
+        });
+
         setupClickListeners();
         setupDropdownListeners();
 
@@ -80,139 +189,55 @@ public class ReviewInterviewFragment extends Fragment {
         BottomNavHelper.setupNavListeners(this, bottomBar);
     }
 
-    private void setupViewModel(){
-        // Get app-wide repository
-        MyApplication app =
-            (MyApplication) requireActivity().getApplication();
+    private void setupRecyclerView() {
+        if (binding == null || binding.rvQList == null) return;
 
-        AppContainer container = app.getAppContainer();
-
-        IInterviewAttemptsRepository interviewAttemptsRepository = container.interviewAttemptsRepository;
-
-        // Create ViewModel factory
-        ViewModelFactory<ReviewViewModel> factory =
-            new ViewModelFactory<>(
-                () -> new ReviewViewModel(interviewAttemptsRepository)
-            );
-
-        // Create ViewModel
-        viewModel = new ViewModelProvider(requireActivity(), factory)
-            .get(ReviewViewModel.class);
-
-
-        viewModel.getCurrentInterviewAttempt().observe(getViewLifecycleOwner(),attempt->{
-            if(attempt!=null){
-                //initializeAttemptData();
-                currentAttempt = attempt;
-                displaySessionMetadata();
-                setupRecyclerView();
-                if(attempt.isAnalysed()){
-                    System.out.println("It is analysed");
-                    bindCompetencyFeedbackData();
-                    // Reveal the competency breakdown card
-                    if (binding.cardCompetencies != null) {
-                        binding.cardCompetencies.setVisibility(View.VISIBLE);
-                    }
-
-                    // Update button text to "Review questions"
-                    if (binding.reviewQuestions != null) {
-                        binding.reviewQuestions.setText("Review questions");
-                    }
+        if (adapter == null) {
+            adapter = new ReviewInterviewAdapter(new ArrayList<>(), false, (questionAttempt, position) -> {
+                if (currentAttempt != null && currentAttempt.isAnalysed()) {
+                    navigateToQuestionReview();
+                } else {
+                    Toast.makeText(requireContext(), "Request analysis to review individual answers.", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
-
-        viewModel.getIsLoading().observe(getViewLifecycleOwner(),isLoading->{
-            if(Boolean.TRUE.equals(isLoading)){
-                if (getActivity() instanceof BaseActivity) {
-                    ((BaseActivity) getActivity()).showLoadingDialog("Getting interview...");
-                }
-            }
-            else{
-                if (getActivity() instanceof BaseActivity) {
-                    ((BaseActivity) getActivity()).hideLoadingDialog();
-                }
-            }
-        });
-
-        viewModel.getIsAnalysing().observe(getViewLifecycleOwner(),isAnalysing->{
-            if(Boolean.TRUE.equals(isAnalysing)){
-                if (getActivity() instanceof BaseActivity) {
-                    ((BaseActivity) getActivity()).showLoadingDialog("Analysing attempt...");
-                }
-            }
-            else{
-                if (getActivity() instanceof BaseActivity) {
-                    ((BaseActivity) getActivity()).hideLoadingDialog();
-                }
-            }
-        });
-
-        viewModel.getError().observe(getViewLifecycleOwner(),error->{
-            if (error != null && !error.isEmpty()) {
-                BaseActivity baseActivity = ((BaseActivity) getActivity());
-                baseActivity.showAlertDialog("Error occured",error);
-            }
-        });
-
-        viewModel.getAnalysed().observe(getViewLifecycleOwner(),analysed->{
-            if(analysed){
-                if (getActivity() instanceof BaseActivity) {
-                    ((BaseActivity) getActivity()).showAlertDialog("Analysed!","Your attempt has been analysed");
-                }
-                viewModel.getAnalysed().setValue(false);
-                viewModel.loadInterview(attemptId);
-            }
-        });
+            });
+            binding.rvQList.setLayoutManager(new LinearLayoutManager(requireContext()));
+            binding.rvQList.setAdapter(adapter);
+            binding.rvQList.setNestedScrollingEnabled(false);
+        }
     }
 
-    /**
-     * Binds session metadata directly from the root UserInterviewAttempt domain model.
-     */
     private void displaySessionMetadata() {
-        if (currentAttempt == null) return;
+        if (currentAttempt == null || binding == null) return;
 
         if (binding.cDeveloper != null) {
-            binding.cDeveloper.setText(currentAttempt.getName());
+            binding.cDeveloper.setText(currentAttempt.getName() != null ? currentAttempt.getName() : "Interview");
         }
         if (binding.hard != null) {
-            binding.hard.setText(currentAttempt.getDifficulty());
+            binding.hard.setText(currentAttempt.getDifficulty() != null ? currentAttempt.getDifficulty() : "");
         }
         if (binding.tv10Questions != null) {
-            int questionCount = currentAttempt.getQuestions().size();
+            int questionCount = currentAttempt.getQuestions() != null ? currentAttempt.getQuestions().size() : 0;
             binding.tv10Questions.setText(String.format(Locale.getDefault(), "%d questions", questionCount));
         }
         if (binding.tvDuration != null) {
             long totalSeconds = currentAttempt.getTotalSecondsSpent();
-            long minutes = Math.floorDiv(totalSeconds,60);
-            long seconds = totalSeconds -  (minutes*60);
+            long minutes = Math.floorDiv(totalSeconds, 60);
+            long seconds = totalSeconds - (minutes * 60);
             long estimatedMinutes = currentAttempt.getEstimatedMinutes();
             binding.tvDuration.setText(
-                String.format(
-                    Locale.getDefault(),
-                    "%02d:%02d",
-                    minutes,
-                    seconds
-                ) + "/"+ String.format(
-                    Locale.getDefault(),
-                    "%02d:%02d",
-                    estimatedMinutes,
-                    0
-                )
+                    String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds) + "/" +
+                            String.format(Locale.getDefault(), "%02d:%02d", estimatedMinutes, 0)
             );
         }
-        if(binding.tvDate != null){
-            if (currentAttempt.getCompletedAt() > 0) {
-                SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
-                binding.tvDate.setText(sdf.format(new Date(currentAttempt.getCompletedAt())));
-            }
+        if (binding.tvDate != null && currentAttempt.getCompletedAt() > 0) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
+            binding.tvDate.setText(sdf.format(new Date(currentAttempt.getCompletedAt())));
         }
     }
 
     private void setupDropdownListeners() {
         if (binding == null) return;
 
-        // Strengths Section Toggle
         if (binding.sectionStrengths != null) {
             binding.sectionStrengths.setOnClickListener(v -> {
                 isStrengthsExpanded = !isStrengthsExpanded;
@@ -225,7 +250,6 @@ public class ReviewInterviewFragment extends Fragment {
             });
         }
 
-        // Areas to Improve Section Toggle
         if (binding.sectionAreasImprove != null) {
             binding.sectionAreasImprove.setOnClickListener(v -> {
                 isAreasExpanded = !isAreasExpanded;
@@ -246,25 +270,19 @@ public class ReviewInterviewFragment extends Fragment {
             binding.btnBack.setOnClickListener(v -> navigateBack());
         }
 
-        // Bottom Pill Button ("Request Analysis" -> toggles to -> "Review questions")
+        // Bottom Pill Button ("Request Analysis" vs "Review questions")
         if (binding.divPillBtn != null) {
             binding.divPillBtn.setOnClickListener(v -> {
-                if (!isAnalysisRequested) {
-                    requestAiAnalysis();
-                } else {
-                    navigateToQuestionReview();
+                if (currentAttempt != null) {
+                    if (!currentAttempt.isAnalysed()) {
+                        viewModel.analyseAttempt();
+                    } else {
+                        navigateToQuestionReview();
+                    }
                 }
             });
         }
     }
-
-    /**
-     * Triggers AI Analysis generation, reveals the competencies card, binds the feedback models, and updates button text.
-     */
-    private void requestAiAnalysis() {
-        viewModel.analyseAttempt();
-    }
-
 
     private void bindCompetencyFeedbackData() {
         if (currentAttempt == null || currentAttempt.getCompetencyFeedbacks() == null || currentAttempt.getCompetencyFeedbacks().isEmpty()) {
@@ -274,25 +292,33 @@ public class ReviewInterviewFragment extends Fragment {
         UserAttemptCompetencyFeedback cf = currentAttempt.getCompetencyFeedbacks().get(0);
 
         if (binding.tvScorePercent != null) {
-            binding.tvScorePercent.setText(String.format(Locale.getDefault(), "%.0f%%", cf.getCompetencyPercentage()));
+            double percentage = cf.getCompetencyPercentage();
+            double normalizedPercentage = percentage <= 1.0 ? percentage * 100.0 : percentage;
+
+            binding.tvScorePercent.setText(String.format(Locale.getDefault(), "%.0f%%", normalizedPercentage));
+            binding.tvScorePercent.setTextColor(getColorForPercentage(normalizedPercentage));
         }
 
-        // Populate Strengths list from breakdown items
         if (binding.layoutStrengthsContent != null) {
             binding.layoutStrengthsContent.removeAllViews();
             List<UserAttemptCompetencyBreakdownFeedback> strengths = cf.getStrengths();
-            if (strengths != null) {
+            if (strengths != null && !strengths.isEmpty()) {
                 for (UserAttemptCompetencyBreakdownFeedback item : strengths) {
                     addBreakdownItemView(binding.layoutStrengthsContent, item);
                 }
+            } else {
+                TextView tvEmpty = new TextView(requireContext());
+                tvEmpty.setText("No recorded strengths.");
+                tvEmpty.setTextColor(getResources().getColor(android.R.color.darker_gray, null));
+                tvEmpty.setTextSize(14f);
+                binding.layoutStrengthsContent.addView(tvEmpty);
             }
         }
 
-        // Populate Areas to Improve list from breakdown items
         if (binding.layoutAreasContent != null) {
             binding.layoutAreasContent.removeAllViews();
             List<UserAttemptCompetencyBreakdownFeedback> improvements = cf.getImprovements();
-            if (improvements != null) {
+            if (improvements != null && !improvements.isEmpty()) {
                 for (UserAttemptCompetencyBreakdownFeedback item : improvements) {
                     addBreakdownItemView(binding.layoutAreasContent, item);
                 }
@@ -303,12 +329,16 @@ public class ReviewInterviewFragment extends Fragment {
     private void addBreakdownItemView(ViewGroup container, UserAttemptCompetencyBreakdownFeedback breakdownItem) {
         if (container == null || breakdownItem == null) return;
 
+        // Use a vertical LinearLayout with proper spacing
         LinearLayout itemLayout = new LinearLayout(requireContext());
         itemLayout.setOrientation(LinearLayout.VERTICAL);
-        itemLayout.setPadding(0, 8, 0, 12);
+        itemLayout.setPadding(0, 12, 0, 16); // Clean vertical padding between breakdown blocks
 
         TextView tvTitle = new TextView(requireContext());
-        tvTitle.setText(String.format(Locale.getDefault(), "• %s (%.0f%%)", breakdownItem.getName(), breakdownItem.getBreakdownPercentage()));
+        double percentage = breakdownItem.getBreakdownPercentage();
+        double normalizedPercentage = percentage <= 1.0 ? percentage * 100.0 : percentage;
+
+        tvTitle.setText(String.format(Locale.getDefault(), "• %s (%.0f%%)", breakdownItem.getName(), normalizedPercentage));
         tvTitle.setTextSize(14f);
         tvTitle.setTypeface(null, android.graphics.Typeface.BOLD);
         tvTitle.setTextColor(getResources().getColor(android.R.color.black, null));
@@ -318,21 +348,26 @@ public class ReviewInterviewFragment extends Fragment {
         tvDesc.setText(breakdownItem.getFeedback() != null ? breakdownItem.getFeedback() : "No qualitative feedback available.");
         tvDesc.setTextSize(12f);
         tvDesc.setTextColor(getResources().getColor(android.R.color.darker_gray, null));
-        itemLayout.addView(tvDesc);
 
+        // Add top margin to description so it never overlaps the title
+        LinearLayout.LayoutParams descParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        descParams.topMargin = 4;
+        tvDesc.setLayoutParams(descParams);
+
+        itemLayout.addView(tvDesc);
         container.addView(itemLayout);
     }
 
-    private void setupRecyclerView() {
-        List<UserQuestionAttempt> questions = currentAttempt != null ? currentAttempt.getQuestions() : new ArrayList<>();
-
-        adapter = new ReviewInterviewAdapter(questions, (questionAttempt, position) -> {
-            navigateToQuestionReview();
-        });
-
-        if (binding.rvQList != null) {
-            binding.rvQList.setAdapter(adapter);
-            binding.rvQList.setLayoutManager(new LinearLayoutManager(requireContext()));
+    private int getColorForPercentage(double percentage) {
+        if (percentage < 40.0) {
+            return Color.parseColor("#FFEF5350"); // Red
+        } else if (percentage < 70.0) {
+            return Color.parseColor("#FFF7A93B"); // Orange
+        } else {
+            return Color.parseColor("#FF08B425"); // Green
         }
     }
 
@@ -341,7 +376,6 @@ public class ReviewInterviewFragment extends Fragment {
             NavController navController = NavHostFragment.findNavController(this);
             if (navController.getCurrentDestination() != null
                     && navController.getCurrentDestination().getId() == R.id.reviewInterviewFragment) {
-                // Navigate cleanly without bundles
                 navController.navigate(R.id.action_reviewInterviewFragment_to_reviewQuestionFragment);
             }
         }

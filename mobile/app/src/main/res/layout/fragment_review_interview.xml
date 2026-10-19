@@ -54,41 +54,46 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/div_subbar"
         android:layout_width="match_parent"
-        android:layout_height="82dp"
+        android:layout_height="wrap_content"
         android:background="#FFFCFDFE"
         android:paddingStart="26dp"
         android:paddingEnd="26dp"
-        android:paddingBottom="19dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/div_topbar">
 
+        <!-- Title: Takes remaining space up until the question count -->
         <TextView
             android:id="@+id/c_developer"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
             android:text="C# Developer"
-            android:textColor="#FF8A8A97"
-            android:textSize="18sp"
+            android:textColor="#FF1C1C28"
+            android:textSize="15sp"
             android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/tv_10_questions"
+            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Difficulty Badge -->
         <TextView
             android:id="@+id/hard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
             android:fontFamily="sans-serif"
             android:text="Hard"
             android:textColor="#FFE49596"
-            android:textSize="18sp"
+            android:textSize="13sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/c_developer"
-            app:layout_constraintStart_toEndOf="@id/c_developer"
-            app:layout_constraintTop_toTopOf="@id/c_developer" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/c_developer" />
 
+        <!-- Question Count: Pinned cleanly to the top-right -->
         <TextView
             android:id="@+id/tv_10_questions"
             android:layout_width="wrap_content"
@@ -96,33 +101,37 @@
             android:fontFamily="sans-serif"
             android:text="10 questions"
             android:textColor="#FF8A8A97"
-            android:textSize="18sp"
+            android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Duration: Bottom Left -->
         <TextView
             android:id="@+id/tv_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
             android:fontFamily="sans-serif"
-            android:text="01:24 /20 minutes"
+            android:text="00:19/30:00"
             android:textColor="#FF08B425"
-            android:textSize="16sp"
+            android:textSize="13sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toEndOf="@id/hard"
             app:layout_constraintTop_toBottomOf="@id/c_developer" />
 
+        <!-- Date: Bottom Right -->
         <TextView
             android:id="@+id/tv_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="4dp"
             android:fontFamily="sans-serif"
-            android:text="18 August 2026"
+            android:text="19 October 2026"
             android:textColor="#FF8A8A97"
-            android:textSize="18sp"
+            android:textSize="13sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_10_questions" />
@@ -143,7 +152,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/div_pill_btn"
         android:layout_width="match_parent"
-        android:layout_height="68dp"
+        android:layout_height="54dp"
         android:layout_margin="12dp"
         android:background="@drawable/bg_berry_pill_button"
         app:layout_constraintBottom_toTopOf="@id/bottom_nav_container"
@@ -320,116 +329,17 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <!-- Areas Content Wrapper (Visible by default) -->
-                    <androidx.constraintlayout.widget.ConstraintLayout
+                    <!-- Vertical LinearLayout to prevent text overlapping for dynamic list items -->
+                    <LinearLayout
                         android:id="@+id/layout_areas_content"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
+                        android:orientation="vertical"
                         android:visibility="visible"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tv_areas_title">
-
-                        <!-- Item 1: Structure -->
-                        <View
-                            android:id="@+id/dot_structure"
-                            android:layout_width="14dp"
-                            android:layout_height="14dp"
-                            android:background="@drawable/bg_rounded"
-                            android:backgroundTint="#FF08B425"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
-                            android:id="@+id/tv_structure_title"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:text="Structure"
-                            android:textColor="#FF000000"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            app:layout_constraintStart_toEndOf="@id/dot_structure"
-                            app:layout_constraintTop_toTopOf="@id/dot_structure" />
-
-                        <TextView
-                            android:id="@+id/tv_structure_desc"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Focus on SQL and C# error handling"
-                            android:textColor="#FF8A8A97"
-                            android:textSize="12sp"
-                            app:layout_constraintStart_toStartOf="@id/tv_structure_title"
-                            app:layout_constraintTop_toBottomOf="@id/tv_structure_title" />
-
-                        <!-- Item 2: Clarity -->
-                        <View
-                            android:id="@+id/dot_clarity"
-                            android:layout_width="14dp"
-                            android:layout_height="14dp"
-                            android:layout_marginTop="16dp"
-                            android:background="@drawable/bg_rounded"
-                            android:backgroundTint="#FFE49596"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/tv_structure_desc" />
-
-                        <TextView
-                            android:id="@+id/tv_clarity_title"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:text="Clarity"
-                            android:textColor="#FF000000"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            app:layout_constraintStart_toEndOf="@id/dot_clarity"
-                            app:layout_constraintTop_toTopOf="@id/dot_clarity" />
-
-                        <TextView
-                            android:id="@+id/tv_clarity_desc"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Try and explain problem solving better"
-                            android:textColor="#FF8A8A97"
-                            android:textSize="12sp"
-                            app:layout_constraintStart_toStartOf="@id/tv_clarity_title"
-                            app:layout_constraintTop_toBottomOf="@id/tv_clarity_title" />
-
-                        <!-- Item 3: Communication -->
-                        <View
-                            android:id="@+id/dot_comm"
-                            android:layout_width="14dp"
-                            android:layout_height="14dp"
-                            android:layout_marginTop="16dp"
-                            android:background="@drawable/bg_rounded"
-                            android:backgroundTint="#FFF7A93B"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/tv_clarity_desc" />
-
-                        <TextView
-                            android:id="@+id/tv_comm_title"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:text="Communication"
-                            android:textColor="#FF000000"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            app:layout_constraintStart_toEndOf="@id/dot_comm"
-                            app:layout_constraintTop_toTopOf="@id/dot_comm" />
-
-                        <TextView
-                            android:id="@+id/tv_comm_desc"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Structure better, focusing on 1 thing and building off it"
-                            android:textColor="#FF8A8A97"
-                            android:textSize="12sp"
-                            app:layout_constraintStart_toStartOf="@id/tv_comm_title"
-                            app:layout_constraintTop_toBottomOf="@id/tv_comm_title" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                        app:layout_constraintTop_toBottomOf="@id/tv_areas_title" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
