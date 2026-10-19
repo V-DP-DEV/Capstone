@@ -174,7 +174,7 @@ public class ReviewViewModel extends ViewModel {
     return moveToQuestion(index - 1);
   }
 
-  private boolean moveToQuestion(
+  public boolean moveToQuestion(
       int targetIndex) {
 
     List<UserQuestionAttempt> questions = getQuestions();
