@@ -174,7 +174,7 @@ public class ReviewViewModel extends ViewModel {
     return moveToQuestion(index - 1);
   }
 
-  private boolean moveToQuestion(
+  public boolean moveToQuestion(
       int targetIndex) {
 
     List<UserQuestionAttempt> questions = getQuestions();
@@ -225,6 +225,7 @@ public class ReviewViewModel extends ViewModel {
     error.setValue("");
     isLoading.setValue(false);
     isAnalysing.setValue(false);
+    analysed.setValue(false);
     answers.clear();;
   }
 }
