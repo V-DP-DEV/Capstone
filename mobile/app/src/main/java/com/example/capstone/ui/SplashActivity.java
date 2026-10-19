@@ -50,6 +50,9 @@ public class SplashActivity extends Activity {
     long refreshExpiration = session.getRefreshExpiration();
     long now = System.currentTimeMillis();
 
+    session.clear();
+    manager.clear();
+
 
     // No session at all
     if (sessionExpiration == 0L) {
