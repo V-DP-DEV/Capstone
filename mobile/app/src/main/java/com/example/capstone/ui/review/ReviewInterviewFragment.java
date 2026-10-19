@@ -349,6 +349,7 @@ public class ReviewInterviewFragment extends Fragment {
 
     private void navigateBack() {
         if (isAdded()) {
+            viewModel.clearViewModel();
             NavHostFragment.findNavController(this).navigateUp();
         }
     }
