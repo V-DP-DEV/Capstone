@@ -30,7 +30,7 @@ import com.example.capstone.repository.IAuthRepository;
 import com.example.capstone.repository.IInterviewAttemptsRepository;
 import com.example.capstone.ui.BaseActivity;
 import com.example.capstone.ui.components.BottomNavHelper;
-import com.example.capstone.viewmodel.LoginViewModel;
+
 import com.example.capstone.viewmodel.ReviewViewModel;
 import com.example.capstone.viewmodel.ViewModelFactory;
 import com.google.gson.Gson;
