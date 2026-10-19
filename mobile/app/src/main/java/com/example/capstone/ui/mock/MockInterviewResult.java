@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.capstone.AppContainer;
@@ -150,11 +151,19 @@ public class MockInterviewResult extends Fragment {
      */
     private void navigateToReview() {
         if (isAdded()) {
+            Bundle args = new Bundle();
+            args.putLong("attempt_id",answerViewModel.getAttemptId());
             // Pass forward the current arguments bundle so ReviewInterviewFragment can read the session metadata
-            Bundle args = getArguments() != null ? new Bundle(getArguments()) : new Bundle();
 
-            NavHostFragment.findNavController(this)
-                    .navigate(R.id.action_mockInterviewResult_to_reviewInterviewFragment, args);
+            NavOptions navOptions = new NavOptions.Builder()
+                .setPopUpTo(R.id.userDashboardFragment, false)
+                .build();
+
+            NavHostFragment.findNavController(this).navigate(
+                R.id.action_mockInterviewResult_to_reviewInterviewFragment,
+                args,
+                navOptions
+            );
         }
     }
 

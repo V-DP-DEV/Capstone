@@ -35,7 +35,9 @@ import com.example.capstone.viewmodel.ReviewViewModel;
 import com.example.capstone.viewmodel.ViewModelFactory;
 import com.google.gson.Gson;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -48,6 +50,7 @@ public class ReviewInterviewFragment extends Fragment {
     private boolean isStrengthsExpanded = false;
     private boolean isAreasExpanded = true;
     private boolean isAnalysisRequested = false;
+    private long attemptId;
     private ReviewViewModel viewModel;
 
     @Nullable
@@ -61,6 +64,23 @@ public class ReviewInterviewFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
+        setupViewModel();
+
+        Bundle args= getArguments();
+        attemptId = args.getLong("attempt_id");
+
+        viewModel.loadInterview(attemptId);
+
+        setupRecyclerView();
+        setupClickListeners();
+        setupDropdownListeners();
+
+        View bottomBar = view.findViewById(R.id.bottom_nav_container);
+        BottomNavHelper.setupNavListeners(this, bottomBar);
+    }
+
+    private void setupViewModel(){
         // Get app-wide repository
         MyApplication app =
             (MyApplication) requireActivity().getApplication();
@@ -78,11 +98,6 @@ public class ReviewInterviewFragment extends Fragment {
         // Create ViewModel
         viewModel = new ViewModelProvider(requireActivity(), factory)
             .get(ReviewViewModel.class);
-
-        Bundle args= getArguments();
-        long attemptId = args.getLong("attempt_id");
-
-        viewModel.loadInterview(attemptId);
 
 
         viewModel.getCurrentInterviewAttempt().observe(getViewLifecycleOwner(),attempt->{
@@ -136,6 +151,7 @@ public class ReviewInterviewFragment extends Fragment {
         viewModel.getError().observe(getViewLifecycleOwner(),error->{
             if (error != null && !error.isEmpty()) {
                 BaseActivity baseActivity = ((BaseActivity) getActivity());
+                baseActivity.showAlertDialog("Error occured",error);
             }
         });
 
@@ -144,24 +160,10 @@ public class ReviewInterviewFragment extends Fragment {
                 if (getActivity() instanceof BaseActivity) {
                     ((BaseActivity) getActivity()).showAlertDialog("Analysed!","Your attempt has been analysed");
                 }
+                viewModel.getAnalysed().setValue(false);
                 viewModel.loadInterview(attemptId);
             }
         });
-
-
-        //initializeAttemptData();
-        //displaySessionMetadata();
-        setupRecyclerView();
-        setupClickListeners();
-        setupDropdownListeners();
-
-        // Initially hide the competencies card until analysis is requested
-        if (binding.cardCompetencies != null) {
-            binding.cardCompetencies.setVisibility(View.GONE);
-        }
-
-        View bottomBar = view.findViewById(R.id.bottom_nav_container);
-        BottomNavHelper.setupNavListeners(this, bottomBar);
     }
 
     /**
@@ -200,53 +202,11 @@ public class ReviewInterviewFragment extends Fragment {
             );
         }
         if(binding.tvDate != null){
-
+            if (currentAttempt.getCompletedAt() > 0) {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
+                binding.tvDate.setText(sdf.format(new Date(currentAttempt.getCompletedAt())));
+            }
         }
-    }
-
-    /**
-     * Initializes the root UserInterviewAttempt model and nested feedback lists.
-     */
-    private void initializeAttemptData() {
-        currentAttempt = new UserInterviewAttempt();
-        currentAttempt.setName("C# Developer");
-        currentAttempt.setDifficulty("Hard");
-        currentAttempt.setAnalysed(false);
-
-        List<UserQuestionAttempt> questionAttempts = new ArrayList<>();
-
-        // Question 1
-        UserQuestionAttempt qa1 = new UserQuestionAttempt();
-        qa1.setType("Introduction");
-        qa1.setQuestion("Tell me about yourself and your technical background.");
-        qa1.setScore(5);
-        qa1.setMaxScore(5);
-        qa1.setSecondsSpent(84); // 01:24
-        questionAttempts.add(qa1);
-
-        // Question 2
-        UserQuestionAttempt qa2 = new UserQuestionAttempt();
-        qa2.setType("Technical");
-        qa2.setDifficulty("Hard");
-        qa2.setQuestion("Explain the four principles of OOP.");
-        qa2.setScore(5);
-        qa2.setMaxScore(5);
-        qa2.setSecondsSpent(84); // 01:24
-        questionAttempts.add(qa2);
-
-        // Question 3
-        UserQuestionAttempt qa3 = new UserQuestionAttempt();
-        qa3.setType("Technical");
-        qa3.setQuestion("Interface vs abstract class in C#?");
-        qa3.setScore(5);
-        qa3.setMaxScore(5);
-        qa3.setSecondsSpent(84); // 01:24
-        questionAttempts.add(qa3);
-
-        currentAttempt.setQuestions(questionAttempts);
-
-        // TODO FOR PERSON 2 (LIVEDATA / REPOSITORY INTEGRATION):
-        // Observe LiveData from ViewModel to update these attempts dynamically.
     }
 
     private void setupDropdownListeners() {
@@ -302,34 +262,7 @@ public class ReviewInterviewFragment extends Fragment {
      * Triggers AI Analysis generation, reveals the competencies card, binds the feedback models, and updates button text.
      */
     private void requestAiAnalysis() {
-        // =========================================================================
-        // TODO FOR PERSON 2: Trigger ViewModel / Repository AI analysis call here
-        // =========================================================================
-
         viewModel.analyseAttempt();
-
-        /*
-        isAnalysisRequested = true;
-        currentAttempt.setAnalysed(true);
-
-        // Reveal the competency breakdown card
-        if (binding.cardCompetencies != null) {
-            binding.cardCompetencies.setVisibility(View.VISIBLE);
-        }
-
-        // Update button text to "Review questions"
-        if (binding.reviewQuestions != null) {
-            binding.reviewQuestions.setText("Review questions");
-        }
-
-        // Bind competency data using domain model getters
-        bindCompetencyFeedbackData();
-
-        if (getContext() != null) {
-            Toast.makeText(getContext(), "AI Analysis Generated Successfully!", Toast.LENGTH_SHORT).show();
-        }
-
-         */
     }
 
 
