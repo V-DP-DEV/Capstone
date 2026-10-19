@@ -25,7 +25,9 @@ import com.example.capstone.ui.components.BottomNavHelper;
 import com.example.capstone.viewmodel.ReviewViewModel;
 import com.example.capstone.viewmodel.ViewModelFactory;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -47,7 +49,6 @@ public class ReviewQuestionFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        displaySessionMetadata();
         loadReviewData();
         setupClickListeners();
 
@@ -77,6 +78,7 @@ public class ReviewQuestionFragment extends Fragment {
             if(index>= 0){
                 System.out.println(currentReviewIndex);
                 displayQuestionReview(index);
+                displaySessionMetadata();
             }
         });
 
@@ -97,17 +99,37 @@ public class ReviewQuestionFragment extends Fragment {
 
     private void displaySessionMetadata() {
         if (binding == null) return;
-
+        int index = viewModel.getCurrentQuestionIndex().getValue();
+        UserQuestionAttempt q = reviewQuestionsList.get(index);
         // TODO FOR PERSON 2: Bind session metadata (title, difficulty, timer)
         // from your shared ViewModel or Repository instead of static text.
         if (binding.tvRoleTitle != null) {
-            binding.tvRoleTitle.setText("C# Developer");
+            binding.tvRoleTitle.setText(viewModel.getCurrentInterviewAttempt().getValue().getName());
         }
         if (binding.tvDifficulty != null) {
-            binding.tvDifficulty.setText("Hard");
+            binding.tvDifficulty.setText(viewModel.getCurrentInterviewAttempt().getValue().getDifficulty());
         }
         if (binding.tvTimer != null) {
-            binding.tvTimer.setText("01:24 / 20 minutes");
+            long totalSeconds = q.getSecondsSpent();
+            long minutes = Math.floorDiv(totalSeconds,60);
+            long seconds = totalSeconds -  (minutes*60);
+            binding.tvTimer.setText(String.format(
+                Locale.getDefault(),
+                "%02d:%02d",
+                minutes,
+                seconds
+            ));
+        }
+        if(binding.tvDate!=null){
+            if (viewModel.getCurrentInterviewAttempt().getValue().getCompletedAt()> 0) {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
+                binding.tvDate.setText(sdf.format(new Date(viewModel.getCurrentInterviewAttempt().getValue().getCompletedAt())));
+            }
+        }
+        if(binding.tvScoreVal!= null){
+            double score = q.getScore();
+            double maxScore = q.getMaxScore();
+            binding.tvScoreVal.setText(String.format("%.2f/%.2f", score, maxScore));
         }
     }
 
