@@ -225,6 +225,7 @@ public class ReviewViewModel extends ViewModel {
     error.setValue("");
     isLoading.setValue(false);
     isAnalysing.setValue(false);
+    analysed.setValue(false);
     answers.clear();;
   }
 }
