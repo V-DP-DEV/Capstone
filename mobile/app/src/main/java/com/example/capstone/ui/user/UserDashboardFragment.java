@@ -60,7 +60,7 @@ public class UserDashboardFragment extends Fragment {
     View navAnalytics = binding.bottomNavContainer.getRoot().findViewById(R.id.nav_analytics);
     if (navAnalytics != null) {
       navAnalytics.setOnClickListener(v -> {
-        Navigation.findNavController(v).navigate(R.id.interviewHistoryFragment);
+        Navigation.findNavController(v).navigate(R.id.skillsAnalysisFragment);
       });
     }
 
