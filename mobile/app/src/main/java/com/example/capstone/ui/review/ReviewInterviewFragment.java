@@ -30,6 +30,7 @@ import com.example.capstone.domainModels.UserQuestionAttempt;
 import com.example.capstone.repository.IInterviewAttemptsRepository;
 import com.example.capstone.ui.BaseActivity;
 import com.example.capstone.ui.components.BottomNavHelper;
+import com.example.capstone.util.BottomNavUtils;
 import com.example.capstone.viewmodel.ReviewViewModel;
 import com.example.capstone.viewmodel.ViewModelFactory;
 
@@ -186,7 +187,9 @@ public class ReviewInterviewFragment extends Fragment {
         setupDropdownListeners();
 
         View bottomBar = view.findViewById(R.id.bottom_nav_container);
-        BottomNavHelper.setupNavListeners(this, bottomBar);
+        if (bottomBar != null) {
+            BottomNavUtils.setupBottomNavigation(bottomBar);
+        }
     }
 
     private void setupRecyclerView() {
