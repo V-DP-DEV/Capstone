@@ -240,6 +240,15 @@ public class ReviewInterviewFragment extends Fragment {
             SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
             binding.tvDate.setText(sdf.format(new Date(currentAttempt.getCompletedAt())));
         }
+        if (binding.tvAnalysedTag != null) {
+            if (currentAttempt.isAnalysed()) {
+                binding.tvAnalysedTag.setVisibility(View.VISIBLE);
+                binding.tvAnalysedTag.setText("Analysed");
+                binding.tvAnalysedTag.setTextColor(Color.parseColor("#FF08B425")); // Green tag
+            } else {
+                binding.tvAnalysedTag.setVisibility(View.GONE); // Hide until analysis is requested & completed
+            }
+        }
     }
 
     private void setupDropdownListeners() {

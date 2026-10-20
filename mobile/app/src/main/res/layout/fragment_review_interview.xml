@@ -92,6 +92,21 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/c_developer" />
+        <TextView
+            android:id="@+id/tv_analysed_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="sans-serif"
+            android:text="Analysed"
+            android:textColor="@color/primary_blue"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/hard"
+            app:layout_constraintStart_toEndOf="@id/hard"
+            app:layout_constraintTop_toTopOf="@id/hard"
+            tools:visibility="visible" />
 
         <!-- Question Count: Pinned cleanly to the top-right -->
         <TextView
@@ -107,22 +122,22 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Duration: Bottom Left -->
+
+        <!-- Date: Bottom Right -->
         <TextView
             android:id="@+id/tv_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="100dp"
             android:layout_marginTop="4dp"
             android:fontFamily="sans-serif"
             android:text="00:19/30:00"
             android:textColor="#FF08B425"
             android:textSize="13sp"
             android:textStyle="bold"
-            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toEndOf="@id/hard"
             app:layout_constraintTop_toBottomOf="@id/c_developer" />
 
-        <!-- Date: Bottom Right -->
         <TextView
             android:id="@+id/tv_date"
             android:layout_width="wrap_content"
@@ -135,6 +150,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_10_questions" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

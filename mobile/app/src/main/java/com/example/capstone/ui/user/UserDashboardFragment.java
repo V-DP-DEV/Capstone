@@ -11,7 +11,6 @@ import androidx.navigation.Navigation;
 
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentUserDashboardBinding;
-import com.example.capstone.ui.components.BottomNavHelper;
 import com.example.capstone.util.BottomNavUtils;
 
 public class UserDashboardFragment extends Fragment {
@@ -36,6 +35,8 @@ public class UserDashboardFragment extends Fragment {
     View bottomBar = view.findViewById(R.id.bottom_nav_container);
     if (bottomBar != null) {
       BottomNavUtils.setupBottomNavigation(bottomBar);
+
+
     }
 
 
@@ -43,7 +44,32 @@ public class UserDashboardFragment extends Fragment {
     binding.btnStartMockInterview.setOnClickListener(v ->
             Navigation.findNavController(v).navigate(R.id.action_userDashboardFragment_to_selectDifficultyFragment)
     );
+    if (binding.btnStartInterview != null) {
+      binding.btnStartInterview.setOnClickListener(v ->
+              Navigation.findNavController(v).navigate(R.id.action_userDashboardFragment_to_selectDifficultyFragment)
+      );
+    }
 
+    // 3. View Previous Interviews Quick Action Grid Item
+    if (binding.btnViewInterviews != null) {
+      binding.btnViewInterviews.setOnClickListener(v ->
+              Navigation.findNavController(v).navigate(R.id.action_userDashboardFragment_to_interviewHistoryFragment)
+      );
+    }
+
+    // 4. Tips & Library Quick Action Grid Item
+    if (binding.btnTipsLibrary != null) {
+      binding.btnTipsLibrary.setOnClickListener(v -> {
+        Navigation.findNavController(v).navigate(R.id.action_userDashboardFragment_to_tipsLibraryFragment);
+      });
+    }
+
+    // 5. Skills Analysis Quick Action Grid Item (matches XML id: btn_skills_anaylsis)
+    if (binding.btnSkillsAnaylsis != null) {
+      binding.btnSkillsAnaylsis.setOnClickListener(v ->
+              Navigation.findNavController(v).navigate(R.id.action_userDashboardFragment_to_skillAnalysisFragment)
+      );
+    }
   }
 
 
