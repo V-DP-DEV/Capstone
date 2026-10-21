@@ -338,6 +338,13 @@ public class ReviewInterviewFragment extends Fragment {
                 for (UserAttemptCompetencyBreakdownFeedback item : improvements) {
                     addBreakdownItemView(binding.layoutAreasContent, item);
                 }
+            } else {
+                // Added empty state fallback
+                TextView tvEmpty = new TextView(requireContext());
+                tvEmpty.setText("No areas to improve recorded.");
+                tvEmpty.setTextColor(getResources().getColor(android.R.color.darker_gray, null));
+                tvEmpty.setTextSize(14f);
+                binding.layoutAreasContent.addView(tvEmpty);
             }
         }
     }

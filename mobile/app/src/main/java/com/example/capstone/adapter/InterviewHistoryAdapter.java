@@ -67,6 +67,20 @@ public class InterviewHistoryAdapter extends RecyclerView.Adapter<InterviewHisto
             holder.tvPercentage.setTextColor(getColorForPercentage(normalizedPercentage));
         }
 
+        if (summary.isAnalysed()) {
+            if (holder.tvPercentage != null) {
+                holder.tvPercentage.setVisibility(View.VISIBLE);
+                double score = summary.getScore();
+                holder.tvPercentage.setText(String.format(Locale.getDefault(), "%.0f%%", score));
+            }
+        } else {
+            if (holder.tvPercentage != null) {
+
+                holder.tvPercentage.setVisibility(View.GONE);
+
+            }
+        }
+
         if (summary.isCompletedInTime()) {
             holder.tvCompletionStatus.setText("Completed in time");
             holder.tvCompletionStatus.setTextColor(Color.parseColor("#FF08B425")); // Green (Good)
