@@ -33,7 +33,7 @@
                         SELECT 
                         c.id as competency_id,
                         c.name as name,
-                        AVG(competency_breakdown_score)/5 competency_score
+                        AVG(competency_breakdown_score) competency_score
                         FROM breakdown_scores b
                         JOIN competencies c
                         ON b.competency_id  = c.id
