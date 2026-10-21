@@ -60,7 +60,7 @@ public class ConceptAdapter extends RecyclerView.Adapter<ConceptAdapter.ViewHold
                 tvTotalCount.setText(String.format("Total %d", item.getTimesTested()));
             }
             if (tvPercentage != null) {
-                double percentage = item.getPercentage();
+                double percentage = item.getPercentage()*100;
                 tvPercentage.setText(String.format("%.0f%%", percentage));
                 // Dynamically color-code the percentage text based on score
                 tvPercentage.setTextColor(getColorForPercentage(percentage));
