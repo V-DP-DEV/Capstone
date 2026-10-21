@@ -11,7 +11,6 @@ import androidx.navigation.Navigation;
 
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentUserDashboardBinding;
-import com.example.capstone.ui.components.BottomNavHelper;
 import com.example.capstone.util.BottomNavUtils;
 
 public class UserDashboardFragment extends Fragment {
@@ -33,46 +32,43 @@ public class UserDashboardFragment extends Fragment {
   public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-
     View bottomBar = view.findViewById(R.id.bottom_nav_container);
-    BottomNavUtils.setupBottomNavigation(bottomBar);
+    if (bottomBar != null) {
+      BottomNavUtils.setupBottomNavigation(bottomBar);
+
+
+    }
+
 
     // Your dashboard button click listeners...
     binding.btnStartMockInterview.setOnClickListener(v ->
             Navigation.findNavController(v).navigate(R.id.action_userDashboardFragment_to_selectDifficultyFragment)
     );
-    View navHome = binding.bottomNavContainer.getRoot().findViewById(R.id.nav_home);
-    if (navHome != null) {
-      navHome.setOnClickListener(v -> {
-        Navigation.findNavController(v).navigate(R.id.userDashboardFragment);
+    if (binding.btnStartInterview != null) {
+      binding.btnStartInterview.setOnClickListener(v ->
+              Navigation.findNavController(v).navigate(R.id.action_userDashboardFragment_to_selectDifficultyFragment)
+      );
+    }
+
+    // 3. View Previous Interviews Quick Action Grid Item
+    if (binding.btnViewInterviews != null) {
+      binding.btnViewInterviews.setOnClickListener(v ->
+              Navigation.findNavController(v).navigate(R.id.action_userDashboardFragment_to_interviewHistoryFragment)
+      );
+    }
+
+    // 4. Tips & Library Quick Action Grid Item
+    if (binding.btnTipsLibrary != null) {
+      binding.btnTipsLibrary.setOnClickListener(v -> {
+        Navigation.findNavController(v).navigate(R.id.action_userDashboardFragment_to_tipsLibraryFragment);
       });
     }
 
-    // Bottom Nav: Settings -> User Profile
-    View navSettings = binding.bottomNavContainer.getRoot().findViewById(R.id.nav_settings);
-    if (navSettings != null) {
-      navSettings.setOnClickListener(v -> {
-        Navigation.findNavController(v).navigate(R.id.userProfileFragment);
-      });
-    }
-
-    // Bottom Nav: Analytics -> Interview History
-    View navAnalytics = binding.bottomNavContainer.getRoot().findViewById(R.id.nav_analytics);
-    if (navAnalytics != null) {
-      navAnalytics.setOnClickListener(v -> {
-        Navigation.findNavController(v).navigate(R.id.skillsAnalysisFragment);
-      });
-    }
-
-    // Bottom Nav: Presentation -> Tips & Library
-
-
-    // Bottom Nav: Profile -> User Profile Page
-    View navProfile = binding.bottomNavContainer.getRoot().findViewById(R.id.nav_profile);
-    if (navProfile != null) {
-      navProfile.setOnClickListener(v -> {
-        // Already on profile page
-      });
+    // 5. Skills Analysis Quick Action Grid Item (matches XML id: btn_skills_anaylsis)
+    if (binding.btnSkillsAnaylsis != null) {
+      binding.btnSkillsAnaylsis.setOnClickListener(v ->
+              Navigation.findNavController(v).navigate(R.id.action_userDashboardFragment_to_skillAnalysisFragment)
+      );
     }
   }
 

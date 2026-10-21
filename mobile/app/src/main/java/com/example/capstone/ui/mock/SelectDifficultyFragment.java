@@ -15,6 +15,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentSelectDifficultyBinding;
 import com.example.capstone.ui.components.BottomNavHelper;
+import com.example.capstone.util.BottomNavUtils;
 
 /**
  * SelectDifficultyFragment presents static options (Easy, Medium, Hard) for the user to choose
@@ -61,7 +62,9 @@ public class SelectDifficultyFragment extends Fragment {
         updateContinueButtonState();
 
         View bottomBar = view.findViewById(R.id.bottom_nav_container);
-        BottomNavHelper.setupNavListeners(this, bottomBar);
+        if (bottomBar != null) {
+            BottomNavUtils.setupBottomNavigation(bottomBar);
+        }
     }
 
     /**

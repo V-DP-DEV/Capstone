@@ -12,10 +12,11 @@ public class UserInterviewAttemptSummary {
   private int analysed;
   private int completedInTime;
   private int reviewed;
-
+  private double score;
   private String analysedStatus;
   private long totalSecondsSpent;
   private long estimatedMinutes;
+
   private List<String> questionTypes;
 
   public String getName() {
@@ -50,6 +51,9 @@ public class UserInterviewAttemptSummary {
     this.completedAt = completedAt;
   }
 
+  public double getScore() {
+    return score;
+  }
   // Expose as boolean for the rest of your app
   public boolean isAnalysed() {
     return analysed == 1;

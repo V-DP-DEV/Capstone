@@ -1,5 +1,6 @@
 package com.example.capstone.ui.review;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.example.capstone.domainModels.UserConceptScores;
 import com.example.capstone.domainModels.UserQuestionAttempt;
 import com.example.capstone.repository.IInterviewAttemptsRepository;
 import com.example.capstone.ui.components.BottomNavHelper;
+import com.example.capstone.util.BottomNavUtils;
 import com.example.capstone.viewmodel.ReviewViewModel;
 import com.example.capstone.viewmodel.ViewModelFactory;
 
@@ -53,7 +55,9 @@ public class ReviewQuestionFragment extends Fragment {
         setupClickListeners();
 
         View bottomBar = view.findViewById(R.id.bottom_nav_container);
-        BottomNavHelper.setupNavListeners(this, bottomBar);
+        if (bottomBar != null) {
+            BottomNavUtils.setupBottomNavigation(bottomBar);
+        }
 
         MyApplication app =
             (MyApplication) requireActivity().getApplication();
@@ -98,16 +102,19 @@ public class ReviewQuestionFragment extends Fragment {
     }
 
     private void displaySessionMetadata() {
-        if (binding == null) return;
-        int index = viewModel.getCurrentQuestionIndex().getValue();
+        if (binding == null || viewModel.getCurrentInterviewAttempt().getValue() == null) return;
+        int index = viewModel.getCurrentQuestionIndex().getValue() != null ? viewModel.getCurrentQuestionIndex().getValue() : 0;
+        if (index < 0 || index >= reviewQuestionsList.size()) return;
+
         UserQuestionAttempt q = reviewQuestionsList.get(index);
-        // TODO FOR PERSON 2: Bind session metadata (title, difficulty, timer)
-        // from your shared ViewModel or Repository instead of static text.
+
         if (binding.tvRoleTitle != null) {
             binding.tvRoleTitle.setText(viewModel.getCurrentInterviewAttempt().getValue().getName());
         }
         if (binding.tvDifficulty != null) {
-            binding.tvDifficulty.setText(viewModel.getCurrentInterviewAttempt().getValue().getDifficulty());
+            String difficulty = viewModel.getCurrentInterviewAttempt().getValue().getDifficulty();
+            binding.tvDifficulty.setText(difficulty != null ? difficulty : "");
+            binding.tvDifficulty.setTextColor(getColorForDifficulty(difficulty));
         }
         if (binding.tvTimer != null) {
             long totalSeconds = q.getSecondsSpent();
@@ -132,7 +139,20 @@ public class ReviewQuestionFragment extends Fragment {
             binding.tvScoreVal.setText(String.format("%.2f/%.2f", score, maxScore));
         }
     }
+    private int getColorForDifficulty(String difficulty) {
+        if (difficulty == null) return Color.parseColor("#FF8A8A97");
 
+        switch (difficulty.trim().toLowerCase(Locale.ROOT)) {
+            case "easy":
+                return Color.parseColor("#FF08B425"); // Green
+            case "medium":
+                return Color.parseColor("#FFF7A93B"); // Orange
+            case "hard":
+                return Color.parseColor("#FFEF5350"); // Red
+            default:
+                return Color.parseColor("#FF8A8A97"); // Default Gray
+        }
+    }
     private void loadReviewData() {
         reviewQuestionsList = new ArrayList<>();
 

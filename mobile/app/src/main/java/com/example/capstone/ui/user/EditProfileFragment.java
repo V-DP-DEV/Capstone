@@ -13,6 +13,7 @@ import androidx.navigation.Navigation;
 
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentEditProfileBinding;
+import com.example.capstone.util.BottomNavUtils;
 
 public class EditProfileFragment extends Fragment {
 
@@ -29,6 +30,10 @@ public class EditProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupClickListeners();
+        View bottomBar = view.findViewById(R.id.bottom_nav_container);
+        if (bottomBar != null) {
+            BottomNavUtils.setupBottomNavigation(bottomBar);
+        }
     }
 
     private void setupClickListeners() {
