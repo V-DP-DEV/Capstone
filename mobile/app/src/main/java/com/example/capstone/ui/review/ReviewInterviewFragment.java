@@ -305,47 +305,70 @@ public class ReviewInterviewFragment extends Fragment {
             return;
         }
 
-        UserAttemptCompetencyFeedback cf = currentAttempt.getCompetencyFeedbacks().get(0);
+        // 1. Calculate and bind overall average score across all category feedbacks
+        double totalPercentage = 0.0;
+        List<UserAttemptCompetencyFeedback> feedbackList = currentAttempt.getCompetencyFeedbacks();
 
-        if (binding.tvScorePercent != null) {
-            double percentage = cf.getCompetencyPercentage();
-            double normalizedPercentage = percentage <= 1.0 ? percentage * 100.0 : percentage;
-
-            binding.tvScorePercent.setText(String.format(Locale.getDefault(), "%.0f%%", normalizedPercentage));
-            binding.tvScorePercent.setTextColor(getColorForPercentage(normalizedPercentage));
+        for (UserAttemptCompetencyFeedback cf : feedbackList) {
+            totalPercentage += cf.getCompetencyPercentage();
         }
 
+        double overallAverage = totalPercentage / feedbackList.size();
+        double normalizedOverall = overallAverage <= 1.0 ? overallAverage * 100.0 : overallAverage;
+
+        if (binding.tvScorePercent != null) {
+            binding.tvScorePercent.setText(String.format(Locale.getDefault(), "%.0f%%", normalizedOverall));
+            binding.tvScorePercent.setTextColor(getColorForPercentage(normalizedOverall));
+        }
+
+        // 2. Clear previous content containers
         if (binding.layoutStrengthsContent != null) {
             binding.layoutStrengthsContent.removeAllViews();
+        }
+        if (binding.layoutAreasContent != null) {
+            binding.layoutAreasContent.removeAllViews();
+        }
+
+        boolean hasAnyStrengths = false;
+        boolean hasAnyImprovements = false;
+
+        // 3. Loop through ALL competency feedback categories (Communication, Technical, Problem Solving)
+        for (UserAttemptCompetencyFeedback cf : feedbackList) {
+
+            // Render Strengths across all categories
             List<UserAttemptCompetencyBreakdownFeedback> strengths = cf.getStrengths();
-            if (strengths != null && !strengths.isEmpty()) {
+            if (strengths != null && !strengths.isEmpty() && binding.layoutStrengthsContent != null) {
+                hasAnyStrengths = true;
                 for (UserAttemptCompetencyBreakdownFeedback item : strengths) {
                     addBreakdownItemView(binding.layoutStrengthsContent, item);
                 }
-            } else {
-                TextView tvEmpty = new TextView(requireContext());
-                tvEmpty.setText("No recorded strengths.");
-                tvEmpty.setTextColor(getResources().getColor(android.R.color.darker_gray, null));
-                tvEmpty.setTextSize(14f);
-                binding.layoutStrengthsContent.addView(tvEmpty);
             }
-        }
 
-        if (binding.layoutAreasContent != null) {
-            binding.layoutAreasContent.removeAllViews();
+            // Render Improvements across all categories
             List<UserAttemptCompetencyBreakdownFeedback> improvements = cf.getImprovements();
-            if (improvements != null && !improvements.isEmpty()) {
+            if (improvements != null && !improvements.isEmpty() && binding.layoutAreasContent != null) {
+                hasAnyImprovements = true;
                 for (UserAttemptCompetencyBreakdownFeedback item : improvements) {
                     addBreakdownItemView(binding.layoutAreasContent, item);
                 }
-            } else {
-                // Added empty state fallback
-                TextView tvEmpty = new TextView(requireContext());
-                tvEmpty.setText("No areas to improve recorded.");
-                tvEmpty.setTextColor(getResources().getColor(android.R.color.darker_gray, null));
-                tvEmpty.setTextSize(14f);
-                binding.layoutAreasContent.addView(tvEmpty);
             }
+        }
+
+        // 4. Empty State Fallbacks
+        if (!hasAnyStrengths && binding.layoutStrengthsContent != null) {
+            TextView tvEmpty = new TextView(requireContext());
+            tvEmpty.setText("No recorded strengths.");
+            tvEmpty.setTextColor(getResources().getColor(android.R.color.darker_gray, null));
+            tvEmpty.setTextSize(14f);
+            binding.layoutStrengthsContent.addView(tvEmpty);
+        }
+
+        if (!hasAnyImprovements && binding.layoutAreasContent != null) {
+            TextView tvEmpty = new TextView(requireContext());
+            tvEmpty.setText("No areas to improve recorded.");
+            tvEmpty.setTextColor(getResources().getColor(android.R.color.darker_gray, null));
+            tvEmpty.setTextSize(14f);
+            binding.layoutAreasContent.addView(tvEmpty);
         }
     }
 
