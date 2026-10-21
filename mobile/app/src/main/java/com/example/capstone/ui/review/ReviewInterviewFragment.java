@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.capstone.AppContainer;
 import com.example.capstone.MyApplication;
 import com.example.capstone.R;
+import com.example.capstone.adapter.CompetencyFeedbackAdapter;
 import com.example.capstone.adapter.ReviewInterviewAdapter;
 import com.example.capstone.databinding.FragmentReviewInterviewBinding;
 import com.example.capstone.domainModels.UserAttemptCompetencyBreakdownFeedback;
@@ -45,6 +46,8 @@ public class ReviewInterviewFragment extends Fragment {
     private static final String TAG = "ReviewInterviewFragment";
     private FragmentReviewInterviewBinding binding;
     private ReviewInterviewAdapter adapter;
+
+    private CompetencyFeedbackAdapter competencyFeedbackAdapter;
 
     private UserInterviewAttempt currentAttempt;
     private boolean isStrengthsExpanded = false;
@@ -113,17 +116,21 @@ public class ReviewInterviewFragment extends Fragment {
                 }
 
                 // Handle State 1 vs State 2 UI updates
+
                 if (analysed) {
-                    bindCompetencyFeedbackData();
-                    if (binding.cardCompetencies != null) {
-                        binding.cardCompetencies.setVisibility(View.VISIBLE);
+                    // Populate duplicated competency cards via adapter
+                    if (competencyFeedbackAdapter != null && attempt.getCompetencyFeedbacks() != null) {
+                        competencyFeedbackAdapter.setData(attempt.getCompetencyFeedbacks());
+                    }
+                    if (binding.rvCompetencyCards != null) {
+                        binding.rvCompetencyCards.setVisibility(View.VISIBLE);
                     }
                     if (binding.reviewQuestions != null) {
                         binding.reviewQuestions.setText("Review questions");
                     }
                 } else {
-                    if (binding.cardCompetencies != null) {
-                        binding.cardCompetencies.setVisibility(View.GONE);
+                    if (binding.rvCompetencyCards != null) {
+                        binding.rvCompetencyCards.setVisibility(View.GONE);
                     }
                     if (binding.reviewQuestions != null) {
                         binding.reviewQuestions.setText("Request Analysis");
@@ -184,7 +191,6 @@ public class ReviewInterviewFragment extends Fragment {
         });
 
         setupClickListeners();
-        setupDropdownListeners();
 
         View bottomBar = view.findViewById(R.id.bottom_nav_container);
         if (bottomBar != null) {
@@ -205,6 +211,12 @@ public class ReviewInterviewFragment extends Fragment {
             binding.rvQList.setLayoutManager(new LinearLayoutManager(requireContext()));
             binding.rvQList.setAdapter(adapter);
             binding.rvQList.setNestedScrollingEnabled(false);
+        }
+        if (competencyFeedbackAdapter == null && binding.rvCompetencyCards != null) {
+            competencyFeedbackAdapter = new CompetencyFeedbackAdapter();
+            binding.rvCompetencyCards.setLayoutManager(new LinearLayoutManager(requireContext()));
+            binding.rvCompetencyCards.setAdapter(competencyFeedbackAdapter);
+            binding.rvCompetencyCards.setNestedScrollingEnabled(false);
         }
     }
 
@@ -251,33 +263,7 @@ public class ReviewInterviewFragment extends Fragment {
         }
     }
 
-    private void setupDropdownListeners() {
-        if (binding == null) return;
 
-        if (binding.sectionStrengths != null) {
-            binding.sectionStrengths.setOnClickListener(v -> {
-                isStrengthsExpanded = !isStrengthsExpanded;
-                if (binding.layoutStrengthsContent != null) {
-                    binding.layoutStrengthsContent.setVisibility(isStrengthsExpanded ? View.VISIBLE : View.GONE);
-                }
-                if (binding.tvStrengthsPlus != null) {
-                    binding.tvStrengthsPlus.setText(isStrengthsExpanded ? "-" : "+");
-                }
-            });
-        }
-
-        if (binding.sectionAreasImprove != null) {
-            binding.sectionAreasImprove.setOnClickListener(v -> {
-                isAreasExpanded = !isAreasExpanded;
-                if (binding.layoutAreasContent != null) {
-                    binding.layoutAreasContent.setVisibility(isAreasExpanded ? View.VISIBLE : View.GONE);
-                }
-                if (binding.tvAreasPlus != null) {
-                    binding.tvAreasPlus.setText(isAreasExpanded ? "-" : "+");
-                }
-            });
-        }
-    }
 
     private void setupClickListeners() {
         if (binding == null) return;
@@ -300,77 +286,6 @@ public class ReviewInterviewFragment extends Fragment {
         }
     }
 
-    private void bindCompetencyFeedbackData() {
-        if (currentAttempt == null || currentAttempt.getCompetencyFeedbacks() == null || currentAttempt.getCompetencyFeedbacks().isEmpty()) {
-            return;
-        }
-
-        // 1. Calculate and bind overall average score across all category feedbacks
-        double totalPercentage = 0.0;
-        List<UserAttemptCompetencyFeedback> feedbackList = currentAttempt.getCompetencyFeedbacks();
-
-        for (UserAttemptCompetencyFeedback cf : feedbackList) {
-            totalPercentage += cf.getCompetencyPercentage();
-        }
-
-        double overallAverage = totalPercentage / feedbackList.size();
-        double normalizedOverall = overallAverage <= 1.0 ? overallAverage * 100.0 : overallAverage;
-
-        if (binding.tvScorePercent != null) {
-            binding.tvScorePercent.setText(String.format(Locale.getDefault(), "%.0f%%", normalizedOverall));
-            binding.tvScorePercent.setTextColor(getColorForPercentage(normalizedOverall));
-        }
-
-        // 2. Clear previous content containers
-        if (binding.layoutStrengthsContent != null) {
-            binding.layoutStrengthsContent.removeAllViews();
-        }
-        if (binding.layoutAreasContent != null) {
-            binding.layoutAreasContent.removeAllViews();
-        }
-
-        boolean hasAnyStrengths = false;
-        boolean hasAnyImprovements = false;
-
-        // 3. Loop through ALL competency feedback categories (Communication, Technical, Problem Solving)
-        for (UserAttemptCompetencyFeedback cf : feedbackList) {
-
-            // Render Strengths across all categories
-            List<UserAttemptCompetencyBreakdownFeedback> strengths = cf.getStrengths();
-            if (strengths != null && !strengths.isEmpty() && binding.layoutStrengthsContent != null) {
-                hasAnyStrengths = true;
-                for (UserAttemptCompetencyBreakdownFeedback item : strengths) {
-                    addBreakdownItemView(binding.layoutStrengthsContent, item);
-                }
-            }
-
-            // Render Improvements across all categories
-            List<UserAttemptCompetencyBreakdownFeedback> improvements = cf.getImprovements();
-            if (improvements != null && !improvements.isEmpty() && binding.layoutAreasContent != null) {
-                hasAnyImprovements = true;
-                for (UserAttemptCompetencyBreakdownFeedback item : improvements) {
-                    addBreakdownItemView(binding.layoutAreasContent, item);
-                }
-            }
-        }
-
-        // 4. Empty State Fallbacks
-        if (!hasAnyStrengths && binding.layoutStrengthsContent != null) {
-            TextView tvEmpty = new TextView(requireContext());
-            tvEmpty.setText("No recorded strengths.");
-            tvEmpty.setTextColor(getResources().getColor(android.R.color.darker_gray, null));
-            tvEmpty.setTextSize(14f);
-            binding.layoutStrengthsContent.addView(tvEmpty);
-        }
-
-        if (!hasAnyImprovements && binding.layoutAreasContent != null) {
-            TextView tvEmpty = new TextView(requireContext());
-            tvEmpty.setText("No areas to improve recorded.");
-            tvEmpty.setTextColor(getResources().getColor(android.R.color.darker_gray, null));
-            tvEmpty.setTextSize(14f);
-            binding.layoutAreasContent.addView(tvEmpty);
-        }
-    }
 
     private void addBreakdownItemView(ViewGroup container, UserAttemptCompetencyBreakdownFeedback breakdownItem) {
         if (container == null || breakdownItem == null) return;
