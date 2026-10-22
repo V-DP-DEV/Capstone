@@ -30,4 +30,15 @@ class ApiAnalyticsTest extends ApiTestCase
         $this->assertSame(200, $response['status']);
     }
 
+    public function testGetUserDashboard():void{
+        $token = $this->loginAsUser();
+        $response = $this->http->request(
+            'GET',
+            '/analytics/userDashboard',
+            null,
+            $token
+        );
+        print_r($response);
+        $this->assertSame(200, $response['status']);
+    }
 }

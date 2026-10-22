@@ -2,6 +2,7 @@ package com.example.capstone.service;
 
 import com.example.capstone.domainModels.CompetenciesAnalysis;
 import com.example.capstone.domainModels.ConceptAnalysis;
+import com.example.capstone.domainModels.UserDashboardMetrics;
 import com.example.capstone.domainModels.UserInterviewAttemptSummary;
 import com.example.capstone.network.ApiCallback;
 import com.example.capstone.network.ApiClient;
@@ -57,5 +58,12 @@ public class AnalyticsService {
     Type type = new TypeToken<
         List<ConceptAnalysis>>() {}.getType();
     apiClient.execute(request,type,callback);
+  }
+
+  public void getUserDashboard(ApiCallback<UserDashboardMetrics> callback) {
+    ApiRequest request = new ApiRequest("analytics/userDashboard");
+    request.setRequiresAuthentication(true);
+    request.setMethodGET();
+    apiClient.execute(request,UserDashboardMetrics.class,callback);
   }
 }

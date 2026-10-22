@@ -2,12 +2,26 @@
     class AnalyticsRepository implements IAnalyticsRepository{
         public function __construct(private Db $db){}
         public function getCompetenciesAnalytics(SortOptions $sortOptions,int $last,int $userId):array|false{
+            //only allow these sort collumns
             $sortCollumns = [
                 'percentage' => 'competency_percentage',
             ];
 
+            //tries to map otherwise throws errors
             $sortCollumn = $sortOptions->mapField($sortCollumns);
-        
+
+            //CTE get filtered interviews.
+            
+            //CTE2 uses CTE1 gets the breakdown scores 
+            //joins to get the competency breakdowns
+            // /5 for max score and average for percentage
+            
+            //CTE3 uses CTE2 to get overall scores
+            //joins to get competency name
+
+            //final query
+            // join CTE 2 and CTE 3
+            //applies order by
             $query = "WITH filteredInterviews as (
                         SELECT *
                         FROM interview_user_attempts iua
@@ -51,11 +65,17 @@
             return $this->db->queryAll($query,[$userId,$last]);
         }
         public function getConceptsAnalytics(SortOptions $sortOptions,int $last,int $userId):array|false{
+            //only allow these sort collumns
             $sortCollumns = [
                 'percentage' => 'percentage',
             ];
 
+            //tries to map otherwise throws errors
             $sortCollumn = $sortOptions->mapField($sortCollumns);
+
+            //cte to get the interviews.
+            //than join to get the concept scores
+            //than count and divide by 2 for the max score
             $query = "WITH filteredInterviews as (
                         SELECT *
                         FROM interview_user_attempts iua
@@ -75,9 +95,28 @@
                     ON c.id = qcs.concept_id
                     GROUP BY qcs.concept_id
                     ORDER BY ". $sortCollumn . " ". $sortOptions->direction .";";
-            //return [$query,[$userId,$last]];
-            //$userId,$last
             
             return $this->db->queryAll($query,[$userId,$last]);
+        }
+
+        public function getUserInterviewMetrics(int $userId):array|false{
+            //get the last interviews completed for current month
+            //than count total, do sum if checks for total week and if they were difficult.
+            //group by userId.
+            $query = "WITH interviews_this_month AS (
+                        SELECT iua.*,i.difficulty
+                        FROM interview_user_attempts iua
+                        JOIN interviews i
+                            ON iua.interview_id= i.id
+                        WHERE iua.user_id = ?
+                        AND MONTH(iua.completed_at) = MONTH(CURDATE())
+                    ) 
+                    SELECT COUNT(*) as totalMonth,
+                    SUM(interviews_this_month.completed_at >= NOW() - INTERVAL 1 WEEK) as totalWeek,
+                    SUM(interviews_this_month.difficulty <> 'easy') as totalDifficult
+                    FROM interviews_this_month 
+                    GROUP BY user_id;
+                    ";
+            return $this->db->queryOne($query,[$userId]);
         }
     }
