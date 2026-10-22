@@ -1,5 +1,6 @@
 package com.example.capstone.ui.mock;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -92,6 +93,7 @@ public class SelectInterviewFragment extends Fragment {
         setupSearchFilter();
         setupActionButtons();
         updateContinueButtonState();
+
 
         // 4. Setup Bottom Navigation
         View bottomBar = view.findViewById(R.id.bottom_nav_container);

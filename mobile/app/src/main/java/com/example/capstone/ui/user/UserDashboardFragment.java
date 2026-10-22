@@ -5,44 +5,58 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.capstone.AppContainer;
+import com.example.capstone.MyApplication;
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentUserDashboardBinding;
+import com.example.capstone.domainModels.UserDashboardMetrics;
+import com.example.capstone.repository.IAnalyticsRepository;
 import com.example.capstone.util.BottomNavUtils;
+import com.example.capstone.viewmodel.UserDashboardViewModel;
+import com.example.capstone.viewmodel.ViewModelFactory;
 
 public class UserDashboardFragment extends Fragment {
 
   private FragmentUserDashboardBinding binding;
+  private UserDashboardViewModel viewModel;
 
   @Override
   public View onCreateView(
-      @NonNull LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState
+          @NonNull LayoutInflater inflater, ViewGroup container,
+          Bundle savedInstanceState
   ) {
-
     binding = FragmentUserDashboardBinding.inflate(inflater, container, false);
     return binding.getRoot();
-
   }
 
   @Override
-  public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+
+    MyApplication app = (MyApplication) requireActivity().getApplication();
+    AppContainer appContainer = app.getAppContainer();
+    IAnalyticsRepository analyticsRepository = appContainer.analyticsRepository;
+
+    ViewModelFactory<UserDashboardViewModel> factory = new ViewModelFactory<>(() ->
+            new UserDashboardViewModel(analyticsRepository)
+    );
+
+    viewModel = new ViewModelProvider(this, factory).get(UserDashboardViewModel.class);
 
     View bottomBar = view.findViewById(R.id.bottom_nav_container);
     if (bottomBar != null) {
       BottomNavUtils.setupBottomNavigation(bottomBar);
-
-
     }
 
-
-    // Your dashboard button click listeners...
     binding.btnStartMockInterview.setOnClickListener(v ->
             Navigation.findNavController(v).navigate(R.id.action_userDashboardFragment_to_selectDifficultyFragment)
     );
@@ -52,40 +66,72 @@ public class UserDashboardFragment extends Fragment {
       );
     }
 
-    // 3. View Previous Interviews Quick Action Grid Item
     if (binding.btnViewInterviews != null) {
       binding.btnViewInterviews.setOnClickListener(v ->
               Navigation.findNavController(v).navigate(R.id.action_userDashboardFragment_to_interviewHistoryFragment)
       );
     }
 
-    // 4. Tips & Library Quick Action Grid Item
     if (binding.btnTipsLibrary != null) {
-      binding.btnTipsLibrary.setOnClickListener(v -> {
-        Navigation.findNavController(v).navigate(R.id.action_userDashboardFragment_to_tipsLibraryFragment);
-      });
+      binding.btnTipsLibrary.setOnClickListener(v ->
+              Navigation.findNavController(v).navigate(R.id.action_userDashboardFragment_to_tipsLibraryFragment)
+      );
     }
 
-    // 5. Skills Analysis Quick Action Grid Item (matches XML id: btn_skills_anaylsis)
     if (binding.btnSkillsAnaylsis != null) {
       binding.btnSkillsAnaylsis.setOnClickListener(v ->
               Navigation.findNavController(v).navigate(R.id.action_userDashboardFragment_to_skillAnalysisFragment)
       );
     }
+
     ImageButton btnProfileAvatar = view.findViewById(R.id.img_profile_avatar);
     if (btnProfileAvatar != null) {
-      btnProfileAvatar.setOnClickListener(v -> {
-        // Navigate to your profile destination
-        NavHostFragment.findNavController(this).navigate(R.id.action_userDashboardFragment_to_userProfileFragment);
-      });
+      btnProfileAvatar.setOnClickListener(v ->
+              NavHostFragment.findNavController(this).navigate(R.id.action_userDashboardFragment_to_userProfileFragment)
+      );
     }
+
+    observeViewModel();
+
+    viewModel.fetchDashboardData();
   }
 
+  private void observeViewModel() {
+    viewModel.getDashboardMetrics().observe(getViewLifecycleOwner(), metrics -> {
+      if (metrics != null) {
+        updateDashboardMetrics(metrics);
+      }
+    });
+
+    viewModel.getError().observe(getViewLifecycleOwner(), errorMsg -> {
+      if (errorMsg != null && !errorMsg.isEmpty()) {
+        Toast.makeText(getContext(), errorMsg, Toast.LENGTH_SHORT).show();
+      }
+    });
+  }
+
+  public void updateDashboardMetrics(UserDashboardMetrics metrics) {
+    if (metrics == null || binding == null) return;
+
+    if (binding.totalMonth != null) {
+      binding.totalMonth.setProgressData(metrics.getTotalMonth(), "Monthly Total");
+      binding.totalMonth.setProgressDrawable(R.drawable.circle_progress_green);
+    }
+
+    if (binding.totalWeek != null) {
+      binding.totalWeek.setProgressData(metrics.getTotalWeek(), "Weekly Total");
+      binding.totalWeek.setProgressDrawable(R.drawable.circle_progress_blue);
+    }
+
+    if (binding.totalDifficult != null) {
+      binding.totalDifficult.setProgressData(metrics.getTotalDifficult(), "Difficulty");
+      binding.totalDifficult.setProgressDrawable(R.drawable.circle_progress_orange);
+    }
+  }
 
   @Override
   public void onDestroyView() {
     super.onDestroyView();
     binding = null;
   }
-
 }
