@@ -123,7 +123,7 @@ public class ProfileViewModel extends ViewModel {
                 User currentUser = profile.getValue();
 
                 if (currentUser != null) {
-                    currentUser.setFirstName(cleanFirstName);
+                    currentUser.setFirstname(cleanFirstName);
                     currentUser.setSurname(cleanSurname);
                     profile.postValue(currentUser);
                 }

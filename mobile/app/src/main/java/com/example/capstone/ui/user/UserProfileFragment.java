@@ -324,8 +324,8 @@ public class UserProfileFragment extends Fragment {
                         return;
                     }
 
-                    String firstName = user.getFirstName() == null
-                            ? "" : user.getFirstName().trim();
+                    String firstName = user.getFirstname() == null
+                            ? "" : user.getFirstname().trim();
 
                     String surname = user.getSurname() == null
                             ? "" : user.getSurname().trim();
