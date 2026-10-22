@@ -1,14 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 1. Background Track Ring (Grey) -->
     <item android:id="@android:id/background">
-        <shape android:innerRadiusRatio="2.7" android:shape="ring" android:thickness="10dp" android:useLevel="false">
-            <solid android:color="#FFEBEFF6"/>
+        <shape android:shape="ring"
+            android:innerRadiusRatio="3"
+            android:thicknessRatio="10"
+            android:useLevel="false">
+            <solid android:color="#E0E0E0" />
         </shape>
     </item>
+
+    <!-- 2. Active Progress Ring (Green / Blue / Orange) -->
     <item android:id="@android:id/progress">
-        <rotate android:fromDegrees="270" android:toDegrees="270">
-            <shape android:innerRadiusRatio="2.7" android:shape="ring" android:thickness="10dp" android:useLevel="true">
-                <solid android:color="#FFF58F00"/>
-            </shape>
-        </rotate>
+        <shape android:shape="ring"
+            android:innerRadiusRatio="3"
+            android:thicknessRatio="10"
+            android:useLevel="true"> <!-- Must be true so it fills up based on percentage! -->
+            <solid android:color="@color/progress_orange" /> <!-- Change to #2196F3 for blue or #FF9800 for orange -->
+        </shape>
     </item>
+
 </layer-list>
