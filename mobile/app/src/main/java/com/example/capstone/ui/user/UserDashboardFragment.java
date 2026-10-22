@@ -114,21 +114,20 @@ public class UserDashboardFragment extends Fragment {
     if (metrics == null || binding == null) return;
 
     if (binding.totalMonth != null) {
-      binding.totalMonth.setProgressData(metrics.getTotalMonth(), "Monthly Total");
       binding.totalMonth.setProgressDrawable(R.drawable.circle_progress_green);
+      binding.totalMonth.setProgressData(metrics.getTotalMonth(), 4, "Monthly Total");
     }
 
     if (binding.totalWeek != null) {
-      binding.totalWeek.setProgressData(metrics.getTotalWeek(), "Weekly Total");
       binding.totalWeek.setProgressDrawable(R.drawable.circle_progress_blue);
+      binding.totalWeek.setProgressData(metrics.getTotalWeek(), 1, "Weekly Total");
     }
 
     if (binding.totalDifficult != null) {
-      binding.totalDifficult.setProgressData(metrics.getTotalDifficult(), "Difficulty");
       binding.totalDifficult.setProgressDrawable(R.drawable.circle_progress_orange);
+      binding.totalDifficult.setProgressData(metrics.getTotalDifficult(), 1, "Difficulty");
     }
   }
-
   @Override
   public void onDestroyView() {
     super.onDestroyView();

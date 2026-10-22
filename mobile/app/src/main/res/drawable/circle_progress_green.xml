@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Background Track Ring -->
-    <item>
-        <shape
+
+    <!-- 1. Background Track Ring (Grey) -->
+    <item android:id="@android:id/background">
+        <shape android:shape="ring"
             android:innerRadiusRatio="3"
-            android:shape="ring"
             android:thicknessRatio="10"
             android:useLevel="false">
-            <solid android:color="#E0E0E0" /> <!-- Light grey track background -->
+            <solid android:color="#E0E0E0" />
         </shape>
     </item>
 
-    <!-- Active Progress Ring -->
-    <item>
-        <shape
+    <item android:id="@android:id/progress">
+        <shape android:shape="ring"
             android:innerRadiusRatio="3"
-            android:shape="ring"
             android:thicknessRatio="10"
             android:useLevel="true">
-            <solid android:color="@color/progress_green" /> <!-- Your active progress green color -->
+            <solid android:color="@color/color_green_progress" />
         </shape>
     </item>
+
 </layer-list>

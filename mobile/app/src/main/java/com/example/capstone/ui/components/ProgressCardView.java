@@ -30,12 +30,18 @@ public class ProgressCardView extends MaterialCardView {
         super(context, attrs, defStyleAttr);
         init(context);
     }
-    public void setProgressData(int percentage, String label) {
+    public void setProgressData(int count, int goal, String label) {
+        int percentage = 0;
+        if (goal > 0) {
+            percentage = Math.min(100, (int) (((float) count / goal) * 100));
+        }
+
         if (progressChart != null) {
             progressChart.setProgress(percentage);
         }
         if (tvProgressValue != null) {
-            tvProgressValue.setText(String.format("%d%%", percentage));
+            // Displays actual progress vs goal (e.g., "1/4" or "3/4")
+            tvProgressValue.setText(String.format("%d/%d", count, goal));
         }
         if (tvProgressLabel != null) {
             tvProgressLabel.setText(label);
@@ -43,7 +49,17 @@ public class ProgressCardView extends MaterialCardView {
     }
     public void setProgressDrawable(int drawableResId) {
         if (progressChart != null) {
-            progressChart.setProgressDrawable(getResources().getDrawable(drawableResId, getContext().getTheme()));
+
+            android.graphics.drawable.Drawable drawable =
+                    androidx.core.content.ContextCompat.getDrawable(getContext(), drawableResId);
+
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                progressChart.setProgressTintList(null);
+            }
+
+
+            progressChart.setProgressDrawable(drawable);
         }
     }
     private void init(Context context) {
@@ -59,7 +75,6 @@ public class ProgressCardView extends MaterialCardView {
         setPreventCornerOverlap(true);
         setClipToOutline(true);
 
-        // Inflate the inner ConstraintLayout view
         inflate(context, R.layout.component_progress_card, this);
 
         progressChart = findViewById(R.id.progress_chart);
