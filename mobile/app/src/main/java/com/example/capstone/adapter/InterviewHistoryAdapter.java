@@ -57,27 +57,29 @@ public class InterviewHistoryAdapter extends RecyclerView.Adapter<InterviewHisto
         holder.tvDifficulty.setTextColor(getColorForDifficulty(difficulty));
 
 
-
+        /*
         // Bind and color-code score percentage
         if (holder.tvPercentage != null) {
             double scorePercentage = summary.getScore();
-            double normalizedPercentage = scorePercentage <= 1.0 ? scorePercentage * 100.0 : scorePercentage;
 
+            double normalizedPercentage = scorePercentage <= 1.0 ? scorePercentage * 100.0 : scorePercentage;
+            System.out.println(normalizedPercentage);
             holder.tvPercentage.setText(String.format(Locale.getDefault(), "%.0f%%", normalizedPercentage));
             holder.tvPercentage.setTextColor(getColorForPercentage(normalizedPercentage));
         }
-
+        */
         if (summary.isAnalysed()) {
             if (holder.tvPercentage != null) {
                 holder.tvPercentage.setVisibility(View.VISIBLE);
-                double score = summary.getScore();
-                holder.tvPercentage.setText(String.format(Locale.getDefault(), "%.0f%%", score));
+                double scorePercentage = summary.getScore();
+                double normalizedPercentage = scorePercentage <= 1.0 ? scorePercentage * 100.0 : scorePercentage;
+                holder.tvPercentage.setText(String.format(Locale.getDefault(), "%.0f%%", normalizedPercentage));
+                holder.tvPercentage.setTextColor(getColorForPercentage(normalizedPercentage));
             }
         } else {
             if (holder.tvPercentage != null) {
-
-                holder.tvPercentage.setVisibility(View.GONE);
-
+                holder.tvPercentage.setText("N/A");
+                holder.tvPercentage.setTextColor(Color.rgb(0,0,0));
             }
         }
 

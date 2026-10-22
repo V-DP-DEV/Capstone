@@ -226,6 +226,7 @@
                         iua.completed_at as completedAt,
                         iua.analysed as analysed,
                         iua.status as analysedStatus,
+                        iua.score_percentage as percentage,
                         i.estimated_time_in_minutes as estimatedMinutes,
                         iua.reviewed as reviewed,
                         

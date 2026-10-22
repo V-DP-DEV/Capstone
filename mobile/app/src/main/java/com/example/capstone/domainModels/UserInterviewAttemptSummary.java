@@ -12,7 +12,7 @@ public class UserInterviewAttemptSummary {
   private int analysed;
   private int completedInTime;
   private int reviewed;
-  private double score;
+  private double percentage;
   private String analysedStatus;
   private long totalSecondsSpent;
   private long estimatedMinutes;
@@ -52,7 +52,7 @@ public class UserInterviewAttemptSummary {
   }
 
   public double getScore() {
-    return score;
+    return percentage;
   }
   // Expose as boolean for the rest of your app
   public boolean isAnalysed() {
