@@ -3,9 +3,11 @@ package com.example.capstone.ui.user;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,6 +22,7 @@ import com.example.capstone.MyApplication;
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentUserProfileBinding;
 import com.example.capstone.ui.auth.AuthActivity;
+import com.example.capstone.viewmodel.ProfileViewModel;
 import com.example.capstone.viewmodel.SettingsViewModel;
 import com.example.capstone.viewmodel.ViewModelFactory;
 
@@ -27,6 +30,7 @@ public class UserProfileFragment extends Fragment {
 
     private FragmentUserProfileBinding binding;
     private SettingsViewModel settingsViewModel;
+    private ProfileViewModel profileViewModel;
 
     @Nullable
     @Override
@@ -62,13 +66,22 @@ public class UserProfileFragment extends Fragment {
                 )
         ).get(SettingsViewModel.class);
 
+        profileViewModel = new ViewModelProvider(
+                this,
+                new ViewModelFactory<>(
+                        appContainer::createProfileViewModel
+                )
+        ).get(ProfileViewModel.class);
+
         setupClickListeners();
         observeViewModel();
+        observeProfile();
+
+        profileViewModel.loadProfile();
     }
 
     private void setupClickListeners() {
 
-        // Edit profile.
         View editProfile = binding.getRoot()
                 .findViewById(R.id.btn_edit_profile);
 
@@ -80,7 +93,6 @@ public class UserProfileFragment extends Fragment {
             );
         }
 
-        // Change password.
         View changePassword = binding.getRoot()
                 .findViewById(R.id.btn_change_password);
 
@@ -92,7 +104,6 @@ public class UserProfileFragment extends Fragment {
             );
         }
 
-        // Log out of the current session.
         View logoutButton = binding.getRoot()
                 .findViewById(R.id.btn_logout);
 
@@ -102,7 +113,6 @@ public class UserProfileFragment extends Fragment {
             );
         }
 
-        // Log out all devices.
         View logoutAllButton = binding.getRoot()
                 .findViewById(R.id.btn_logout_all_devices);
 
@@ -112,7 +122,15 @@ public class UserProfileFragment extends Fragment {
             );
         }
 
-        // Bottom navigation.
+        View deleteAccountButton = binding.getRoot()
+                .findViewById(R.id.btn_delete_account);
+
+        if (deleteAccountButton != null) {
+            deleteAccountButton.setOnClickListener(v ->
+                    showDeleteAccountConfirmation()
+            );
+        }
+
         if (binding.bottomNavContainer != null) {
 
             View navHome = binding.bottomNavContainer.getRoot()
@@ -196,9 +214,57 @@ public class UserProfileFragment extends Fragment {
                 .show();
     }
 
+    private void showDeleteAccountConfirmation() {
+
+        if (!isAdded()) {
+            return;
+        }
+
+        EditText passwordInput = new EditText(requireContext());
+        passwordInput.setHint("Enter your password");
+        passwordInput.setInputType(
+                InputType.TYPE_CLASS_TEXT
+                        | InputType.TYPE_TEXT_VARIATION_PASSWORD
+        );
+
+        int padding = (int) (24 * getResources()
+                .getDisplayMetrics().density);
+
+        passwordInput.setPadding(
+                padding, padding / 2, padding, padding / 2
+        );
+
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Delete account?")
+                .setMessage(
+                        "This action is permanent. Enter your password " +
+                                "to confirm that you want to delete your account."
+                )
+                .setView(passwordInput)
+                .setNegativeButton("Cancel", (dialog, which) ->
+                        dialog.dismiss()
+                )
+                .setPositiveButton("Delete account", (dialog, which) -> {
+
+                    String password = passwordInput.getText()
+                            .toString();
+
+                    if (password.trim().isEmpty()) {
+                        Toast.makeText(
+                                requireContext(),
+                                "Please enter your password.",
+                                Toast.LENGTH_SHORT
+                        ).show();
+                        return;
+                    }
+
+                    settingsViewModel.deleteAccount(password);
+                })
+                .show();
+    }
+
     private void observeViewModel() {
 
-        // Prevent repeated logout requests while one is in progress.
         settingsViewModel.getLoading().observe(
                 getViewLifecycleOwner(),
                 loading -> {
@@ -206,23 +272,20 @@ public class UserProfileFragment extends Fragment {
                         return;
                     }
 
-                    View logoutButton = binding.getRoot()
-                            .findViewById(R.id.btn_logout);
+                    setButtonEnabled(
+                            R.id.btn_logout, !loading
+                    );
 
-                    View logoutAllButton = binding.getRoot()
-                            .findViewById(R.id.btn_logout_all_devices);
+                    setButtonEnabled(
+                            R.id.btn_logout_all_devices, !loading
+                    );
 
-                    if (logoutButton != null) {
-                        logoutButton.setEnabled(!loading);
-                    }
-
-                    if (logoutAllButton != null) {
-                        logoutAllButton.setEnabled(!loading);
-                    }
+                    setButtonEnabled(
+                            R.id.btn_delete_account, !loading
+                    );
                 }
         );
 
-        // Display API or network errors.
         settingsViewModel.getGeneralError().observe(
                 getViewLifecycleOwner(),
                 error -> {
@@ -240,28 +303,108 @@ public class UserProfileFragment extends Fragment {
                 }
         );
 
-        // Navigate to authentication after a successful normal logout.
         settingsViewModel.getLogoutSuccess().observe(
                 getViewLifecycleOwner(),
                 success -> {
                     if (Boolean.TRUE.equals(success) && binding != null) {
-                        openAuthenticationScreen();
+                        openAuthenticationScreen(
+                                "You have been logged out."
+                        );
                     }
                 }
         );
 
-        // Navigate to authentication after logging out all devices.
         settingsViewModel.getLogoutAllDevicesSuccess().observe(
                 getViewLifecycleOwner(),
                 success -> {
                     if (Boolean.TRUE.equals(success) && binding != null) {
-                        openAuthenticationScreen();
+                        openAuthenticationScreen(
+                                "You have been logged out."
+                        );
+                    }
+                }
+        );
+
+        settingsViewModel.getDeleteAccountSuccess().observe(
+                getViewLifecycleOwner(),
+                success -> {
+                    if (Boolean.TRUE.equals(success) && binding != null) {
+                        openAuthenticationScreen(
+                                "Your account has been deleted."
+                        );
                     }
                 }
         );
     }
 
-    private void openAuthenticationScreen() {
+    private void observeProfile() {
+
+        profileViewModel.getProfile().observe(
+                getViewLifecycleOwner(),
+                user -> {
+                    if (binding == null || user == null) {
+                        return;
+                    }
+
+                    String firstName = user.getFirstName() == null
+                            ? "" : user.getFirstName().trim();
+
+                    String surname = user.getSurname() == null
+                            ? "" : user.getSurname().trim();
+
+                    String fullName =
+                            (firstName + " " + surname).trim();
+
+                    binding.tvUserFullname.setText(
+                            fullName.isEmpty() ? "User" : fullName
+                    );
+
+                    String email = user.getEmail();
+
+                    binding.tvUserEmail.setText(
+                            email == null ? "" : email
+                    );
+                }
+        );
+
+        profileViewModel.getGeneralError().observe(
+                getViewLifecycleOwner(),
+                error -> {
+                    if (binding != null
+                            && error != null
+                            && !error.trim().isEmpty()) {
+                        Toast.makeText(
+                                requireContext(),
+                                error,
+                                Toast.LENGTH_LONG
+                        ).show();
+                    }
+                }
+        );
+    }
+
+    private void setButtonEnabled(int viewId, boolean enabled) {
+        if (binding == null) {
+            return;
+        }
+
+        View button = binding.getRoot().findViewById(viewId);
+
+        if (button != null) {
+            button.setEnabled(enabled);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (profileViewModel != null) {
+            profileViewModel.loadProfile();
+        }
+    }
+
+    private void openAuthenticationScreen(String message) {
 
         if (!isAdded()) {
             return;
@@ -269,7 +412,7 @@ public class UserProfileFragment extends Fragment {
 
         Toast.makeText(
                 requireContext(),
-                "You have been logged out.",
+                message,
                 Toast.LENGTH_SHORT
         ).show();
 
@@ -278,7 +421,6 @@ public class UserProfileFragment extends Fragment {
                 AuthActivity.class
         );
 
-        // Clear the user area so Back cannot reopen the profile.
         intent.addFlags(
                 Intent.FLAG_ACTIVITY_NEW_TASK
                         | Intent.FLAG_ACTIVITY_CLEAR_TASK

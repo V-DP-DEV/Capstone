@@ -105,9 +105,12 @@ public class AppContainer {
   public SetupViewModel createSetupViewModel() {
     return new SetupViewModel(interviewRepository);
   }
+
+
   public SettingsViewModel createSettingsViewModel() {
-    return new SettingsViewModel(this.authRepository);
+    return new SettingsViewModel(authRepository, userRepository);
   }
+
   public ProfileViewModel createProfileViewModel() {
     return new ProfileViewModel(userRepository);
   }
