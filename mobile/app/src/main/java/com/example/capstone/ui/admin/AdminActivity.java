@@ -59,7 +59,7 @@ public class AdminActivity extends BaseActivity {
 
     navController.addOnDestinationChangedListener(
         (controller, destination, arguments) -> {
-          binding.toolbar.toolbarTitle.setText(destination.getLabel());
+
         }
     );
   }

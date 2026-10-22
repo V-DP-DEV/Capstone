@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentUserDashboardBinding;
@@ -69,6 +71,13 @@ public class UserDashboardFragment extends Fragment {
       binding.btnSkillsAnaylsis.setOnClickListener(v ->
               Navigation.findNavController(v).navigate(R.id.action_userDashboardFragment_to_skillAnalysisFragment)
       );
+    }
+    ImageButton btnProfileAvatar = view.findViewById(R.id.img_profile_avatar);
+    if (btnProfileAvatar != null) {
+      btnProfileAvatar.setOnClickListener(v -> {
+        // Navigate to your profile destination
+        NavHostFragment.findNavController(this).navigate(R.id.action_userDashboardFragment_to_userProfileFragment);
+      });
     }
   }
 
