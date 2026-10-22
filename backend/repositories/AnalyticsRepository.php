@@ -102,7 +102,7 @@
         public function getUserInterviewMetrics(int $userId):array|false{
             //get the last interviews completed for current month
             //than count total, do sum if checks for total week and if they were difficult.
-            //group by userId.
+            //coalesce to ensure the fields will always return a record
             $query = "WITH interviews_this_month AS (
                         SELECT iua.*,i.difficulty
                         FROM interview_user_attempts iua
@@ -112,11 +112,9 @@
                         AND MONTH(iua.completed_at) = MONTH(CURDATE())
                     ) 
                     SELECT COUNT(*) as totalMonth,
-                    SUM(interviews_this_month.completed_at >= NOW() - INTERVAL 1 WEEK) as totalWeek,
-                    SUM(interviews_this_month.difficulty <> 'easy') as totalDifficult
-                    FROM interviews_this_month 
-                    GROUP BY user_id;
-                    ";
+                    COALESCE(SUM(interviews_this_month.completed_at >= NOW() - INTERVAL 1 WEEK),0) as totalWeek,
+                    COALESCE(SUM(interviews_this_month.difficulty <> 'easy'),0) as totalDifficult
+                    FROM interviews_this_month;";
             return $this->db->queryOne($query,[$userId]);
         }
     }
