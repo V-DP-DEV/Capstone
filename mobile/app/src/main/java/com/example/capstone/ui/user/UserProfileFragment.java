@@ -131,6 +131,7 @@ public class UserProfileFragment extends Fragment {
             );
         }
 
+        // Bottom navigation
         if (binding.bottomNavContainer != null) {
 
             View navHome = binding.bottomNavContainer.getRoot()
@@ -143,39 +144,14 @@ public class UserProfileFragment extends Fragment {
                 );
             }
 
-            View navSettings = binding.bottomNavContainer.getRoot()
-                    .findViewById(R.id.nav_settings);
+            View navStartInterview =
+                    binding.bottomNavContainer.getRoot()
+                            .findViewById(R.id.nav_start_interview);
 
-            if (navSettings != null) {
-                navSettings.setOnClickListener(v ->
-                        Navigation.findNavController(v)
-                                .navigate(R.id.userProfileFragment)
-                );
-            // Bottom Nav: Start Interview -> Select Difficulty
-            View navStartInterview = binding.bottomNavContainer.getRoot().findViewById(R.id.nav_start_interview);
             if (navStartInterview != null) {
-                navStartInterview.setOnClickListener(v -> {
-                    Navigation.findNavController(v).navigate(R.id.selectDifficultyFragment);
-                });
-            }
-
-            View navAnalytics = binding.bottomNavContainer.getRoot()
-                    .findViewById(R.id.nav_analytics);
-
-            if (navAnalytics != null) {
-                navAnalytics.setOnClickListener(v ->
+                navStartInterview.setOnClickListener(v ->
                         Navigation.findNavController(v)
-                                .navigate(R.id.interviewHistoryFragment)
-                );
-            }
-
-            View navPresentation = binding.bottomNavContainer.getRoot()
-                    .findViewById(R.id.nav_presentation);
-
-            if (navPresentation != null) {
-                navPresentation.setOnClickListener(v ->
-                        Navigation.findNavController(v)
-                                .navigate(R.id.tipsLibraryFragment)
+                                .navigate(R.id.selectDifficultyFragment)
                 );
             }
 
@@ -278,14 +254,10 @@ public class UserProfileFragment extends Fragment {
                         return;
                     }
 
-                    setButtonEnabled(
-                            R.id.btn_logout, !loading
-                    );
-
+                    setButtonEnabled(R.id.btn_logout, !loading);
                     setButtonEnabled(
                             R.id.btn_logout_all_devices, !loading
                     );
-
                     setButtonEnabled(
                             R.id.btn_delete_account, !loading
                     );
@@ -390,6 +362,7 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void setButtonEnabled(int viewId, boolean enabled) {
+
         if (binding == null) {
             return;
         }
