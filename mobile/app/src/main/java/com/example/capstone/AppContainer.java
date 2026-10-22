@@ -23,7 +23,10 @@ import com.example.capstone.service.UserService;
 import com.example.capstone.util.FlexibleBooleanAdapter;
 import com.example.capstone.util.PreferenceManager;
 import com.example.capstone.util.SecureSession;
+import com.example.capstone.viewmodel.ProfileViewModel;
 import com.example.capstone.viewmodel.SetupViewModel;
+import com.example.capstone.viewmodel.SettingsViewModel;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -52,10 +55,11 @@ public class AppContainer {
   public AppContainer(Context context) {
     secureSession = new SecureSession(context);
     preferenceManager = new PreferenceManager(context);
+
     gson = new GsonBuilder()
-        .registerTypeAdapter(boolean.class, new FlexibleBooleanAdapter())
-        .registerTypeAdapter(Boolean.class, new FlexibleBooleanAdapter())
-        .create();
+            .registerTypeAdapter(boolean.class, new FlexibleBooleanAdapter())
+            .registerTypeAdapter(Boolean.class, new FlexibleBooleanAdapter())
+            .create();
 
     apiClient = new ApiClient(secureSession, gson);
 
@@ -102,4 +106,12 @@ public class AppContainer {
     return new SetupViewModel(interviewRepository);
   }
 
+
+  public SettingsViewModel createSettingsViewModel() {
+    return new SettingsViewModel(authRepository, userRepository);
+  }
+
+  public ProfileViewModel createProfileViewModel() {
+    return new ProfileViewModel(userRepository);
+  }
 }
