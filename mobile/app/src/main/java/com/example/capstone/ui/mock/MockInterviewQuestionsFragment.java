@@ -1,5 +1,7 @@
 package com.example.capstone.ui.mock;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,8 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
@@ -20,19 +26,15 @@ import com.example.capstone.MyApplication;
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentMockInterviewQuestionsBinding;
 import com.example.capstone.domainModels.UserQuestion;
-import com.example.capstone.repository.IAuthRepository;
 import com.example.capstone.repository.IInterviewAttemptsRepository;
 import com.example.capstone.repository.IInterviewRepository;
-import com.example.capstone.repository.InterviewRepository;
 import com.example.capstone.ui.BaseActivity;
+import com.example.capstone.util.BottomNavUtils;
+import com.example.capstone.util.SpeechManager;
 import com.example.capstone.viewmodel.AnswerViewModel;
-import com.example.capstone.viewmodel.LoginViewModel;
 import com.example.capstone.viewmodel.ViewModelFactory;
-import com.google.gson.Gson;
 import com.example.capstone.ui.components.BottomNavHelper;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -49,6 +51,8 @@ public class MockInterviewQuestionsFragment extends Fragment {
     private CountDownTimer countDownTimer;
     private boolean isRecording = false;
     private AnswerViewModel answerViewModel;
+    private SpeechManager speechManager;
+    private StringBuilder transcript = new StringBuilder();
 
     // Standard 3-minute limit per question
     private static final int DEFAULT_QUESTION_DURATION_SECONDS = 180;
@@ -58,6 +62,7 @@ public class MockInterviewQuestionsFragment extends Fragment {
     private long elapsedTime = 0;
     private boolean isTimerRunning = false;
     private Runnable timerRunnable;
+    private ActivityResultLauncher<String> requestPermissionLauncher;
 
     @Nullable
     @Override
@@ -72,7 +77,9 @@ public class MockInterviewQuestionsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         View bottomBar = view.findViewById(R.id.bottom_nav_container);
-        BottomNavHelper.setupNavListeners(this, bottomBar);
+        if (bottomBar != null) {
+            BottomNavUtils.setupBottomNavigation(bottomBar);
+        }
 
 
 
@@ -147,8 +154,46 @@ public class MockInterviewQuestionsFragment extends Fragment {
         );
 
         setupNewEventListeners();
+
+        speechManager = new SpeechManager(requireContext(), new SpeechManager.SpeechCallback() {
+            @Override
+            public void onSpeechResult(String textChunk) {
+                //append text when it arrives
+                transcript.append(textChunk).append(" ");
+                binding.etAnswer.setText(transcript.toString());
+            }
+
+            @Override
+            public void onError(int errorCode, String errorMessage) {
+                System.out.println(errorCode);
+                System.out.println(errorMessage);
+            }
+        });
+
+        // Initialize the modern Android launcher to request the microphone
+        requestPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            isGranted -> {
+                if (isGranted) {
+                    // Permission granted! Start listening safely
+                    speechManager.startListening();
+                } else {
+                    // Permission denied! Warn the user
+                    Toast.makeText(requireContext(), "Microphone permission is required for text-to-speech.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        );
     }
 
+    private void startSpeechRecordingSafe() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+            // if permission start
+            speechManager.startListening();
+        } else {
+            // else trigger permission
+            requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO);
+        }
+    }
     private void setupNewEventListeners(){
         //event listened for both continue and skip
         View.OnClickListener listener = new View.OnClickListener() {
@@ -175,6 +220,9 @@ public class MockInterviewQuestionsFragment extends Fragment {
                     return;
                 }
 
+                //clear transcript and stop speach manager
+                transcript.setLength(0);
+                speechManager.stopListening();
                 answerViewModel.moveToNextQuestion(answer, seconds);
             }
         };
@@ -306,12 +354,18 @@ public class MockInterviewQuestionsFragment extends Fragment {
     private void toggleRecording() {
         isRecording = !isRecording;
         if (isRecording) {
+            System.out.println("Started recording");
+            startSpeechRecordingSafe();
             binding.tvMicStatus.setText("Recording... (Tap to stop)");
             binding.tvMicStatus.setTextColor(Color.parseColor("#E53935")); // Red accent
             binding.btnMic.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#E53935")));
             startMicPulseAnimation();
         } else {
             stopRecordingState();
+            //stop listining and set the edit text
+            speechManager.stopListening();
+            binding.etAnswer.setText(transcript.toString());
+            transcript.setLength(0);
         }
     }
 
@@ -382,6 +436,7 @@ public class MockInterviewQuestionsFragment extends Fragment {
     public void onDestroyView() {
         //remove timer and call normal on destroy
         stopTimer();
+        speechManager.destroy();
         super.onDestroyView();
         binding = null;
     }

@@ -73,7 +73,7 @@ public class AuthActivity extends AppCompatActivity {
 
       navController.addOnDestinationChangedListener(
           (controller, destination, arguments) -> {
-            binding.toolbar.toolbarTitle.setText(destination.getLabel());
+
           }
       );
     }

@@ -23,11 +23,11 @@ public class BottomNavUtils {
             );
         }
 
-        // 2. Settings -> User Profile
-        View navSettings = bottomNavView.findViewById(R.id.nav_settings);
-        if (navSettings != null) {
-            navSettings.setOnClickListener(v ->
-                    Navigation.findNavController(v).navigate(R.id.userProfileFragment)
+        // 2. Start Interview -> Select Difficulty
+        View navStartInterview = bottomNavView.findViewById(R.id.nav_start_interview);
+        if (navStartInterview != null) {
+            navStartInterview.setOnClickListener(v ->
+                    Navigation.findNavController(v).navigate(R.id.selectDifficultyFragment)
             );
         }
 

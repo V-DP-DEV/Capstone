@@ -17,8 +17,11 @@ import com.example.capstone.AppContainer;
 import com.example.capstone.MyApplication;
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentEditProfileBinding;
+
 import com.example.capstone.viewmodel.ProfileViewModel;
 import com.example.capstone.viewmodel.ViewModelFactory;
+
+import com.example.capstone.util.BottomNavUtils;
 
 public class EditProfileFragment extends Fragment {
 
@@ -62,10 +65,16 @@ public class EditProfileFragment extends Fragment {
         ).get(ProfileViewModel.class);
 
         setupClickListeners();
+
         observeViewModel();
 
         // Load the user's existing profile information.
         profileViewModel.loadProfile();
+
+        View bottomBar = view.findViewById(R.id.bottom_nav_container);
+        if (bottomBar != null) {
+            BottomNavUtils.setupBottomNavigation(bottomBar);
+        }
     }
 
     private void setupClickListeners() {

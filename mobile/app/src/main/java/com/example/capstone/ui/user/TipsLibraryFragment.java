@@ -12,6 +12,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.capstone.R;
 import com.example.capstone.ui.components.BottomNavHelper;
+import com.example.capstone.util.BottomNavUtils;
 
 public class TipsLibraryFragment extends Fragment {
 
@@ -37,28 +38,9 @@ public class TipsLibraryFragment extends Fragment {
 
         // Setup Bottom Navigation Bar Actions
         View bottomBar = view.findViewById(R.id.bottom_nav_container);
-        BottomNavHelper.setupNavListeners(this, bottomBar);
+        if (bottomBar != null) {
+            BottomNavUtils.setupBottomNavigation(bottomBar);
+        }
     }
 
-    private void setupBottomNavigation(View rootView) {
-        View bottomNavContainer = rootView.findViewById(R.id.bottom_nav_container);
-        if (bottomNavContainer == null) return;
-
-        // Home Tab
-        View navHome = bottomNavContainer.findViewById(R.id.nav_home);
-        if (navHome != null) {
-            navHome.setOnClickListener(v -> {
-                NavHostFragment.findNavController(this)
-                        .navigate(R.id.action_tipsLibraryFragment_to_homeFragment);
-            });
-        }
-
-        // Interview/Presentation Tab
-        View navPresentation = bottomNavContainer.findViewById(R.id.nav_presentation);
-        if (navPresentation != null) {
-            navPresentation.setOnClickListener(v -> {
-                NavHostFragment.findNavController(this)
-                        .navigate(R.id.action_tipsLibraryFragment_to_selectInterviewFragment);
-            });
-        }
-    }}
+    }

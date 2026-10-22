@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.capstone.AppContainer;
 import com.example.capstone.MyApplication;
 import com.example.capstone.R;
+import com.example.capstone.adapter.CompetencyFeedbackAdapter;
 import com.example.capstone.adapter.ReviewInterviewAdapter;
 import com.example.capstone.databinding.FragmentReviewInterviewBinding;
 import com.example.capstone.domainModels.UserAttemptCompetencyBreakdownFeedback;
@@ -30,6 +31,7 @@ import com.example.capstone.domainModels.UserQuestionAttempt;
 import com.example.capstone.repository.IInterviewAttemptsRepository;
 import com.example.capstone.ui.BaseActivity;
 import com.example.capstone.ui.components.BottomNavHelper;
+import com.example.capstone.util.BottomNavUtils;
 import com.example.capstone.viewmodel.ReviewViewModel;
 import com.example.capstone.viewmodel.ViewModelFactory;
 
@@ -44,6 +46,8 @@ public class ReviewInterviewFragment extends Fragment {
     private static final String TAG = "ReviewInterviewFragment";
     private FragmentReviewInterviewBinding binding;
     private ReviewInterviewAdapter adapter;
+
+    private CompetencyFeedbackAdapter competencyFeedbackAdapter;
 
     private UserInterviewAttempt currentAttempt;
     private boolean isStrengthsExpanded = false;
@@ -112,17 +116,21 @@ public class ReviewInterviewFragment extends Fragment {
                 }
 
                 // Handle State 1 vs State 2 UI updates
+
                 if (analysed) {
-                    bindCompetencyFeedbackData();
-                    if (binding.cardCompetencies != null) {
-                        binding.cardCompetencies.setVisibility(View.VISIBLE);
+                    // Populate duplicated competency cards via adapter
+                    if (competencyFeedbackAdapter != null && attempt.getCompetencyFeedbacks() != null) {
+                        competencyFeedbackAdapter.setData(attempt.getCompetencyFeedbacks());
+                    }
+                    if (binding.rvCompetencyCards != null) {
+                        binding.rvCompetencyCards.setVisibility(View.VISIBLE);
                     }
                     if (binding.reviewQuestions != null) {
                         binding.reviewQuestions.setText("Review questions");
                     }
                 } else {
-                    if (binding.cardCompetencies != null) {
-                        binding.cardCompetencies.setVisibility(View.GONE);
+                    if (binding.rvCompetencyCards != null) {
+                        binding.rvCompetencyCards.setVisibility(View.GONE);
                     }
                     if (binding.reviewQuestions != null) {
                         binding.reviewQuestions.setText("Request Analysis");
@@ -183,10 +191,11 @@ public class ReviewInterviewFragment extends Fragment {
         });
 
         setupClickListeners();
-        setupDropdownListeners();
 
         View bottomBar = view.findViewById(R.id.bottom_nav_container);
-        BottomNavHelper.setupNavListeners(this, bottomBar);
+        if (bottomBar != null) {
+            BottomNavUtils.setupBottomNavigation(bottomBar);
+        }
     }
 
     private void setupRecyclerView() {
@@ -203,6 +212,12 @@ public class ReviewInterviewFragment extends Fragment {
             binding.rvQList.setAdapter(adapter);
             binding.rvQList.setNestedScrollingEnabled(false);
         }
+        if (competencyFeedbackAdapter == null && binding.rvCompetencyCards != null) {
+            competencyFeedbackAdapter = new CompetencyFeedbackAdapter();
+            binding.rvCompetencyCards.setLayoutManager(new LinearLayoutManager(requireContext()));
+            binding.rvCompetencyCards.setAdapter(competencyFeedbackAdapter);
+            binding.rvCompetencyCards.setNestedScrollingEnabled(false);
+        }
     }
 
     private void displaySessionMetadata() {
@@ -218,6 +233,11 @@ public class ReviewInterviewFragment extends Fragment {
             int questionCount = currentAttempt.getQuestions() != null ? currentAttempt.getQuestions().size() : 0;
             binding.tv10Questions.setText(String.format(Locale.getDefault(), "%d questions", questionCount));
         }
+        if (binding.hard != null) {
+            String difficulty = currentAttempt.getDifficulty() != null ? currentAttempt.getDifficulty() : "";
+            binding.hard.setText(difficulty);
+            binding.hard.setTextColor(getColorForDifficulty(difficulty));
+        }
         if (binding.tvDuration != null) {
             long totalSeconds = currentAttempt.getTotalSecondsSpent();
             long minutes = Math.floorDiv(totalSeconds, 60);
@@ -232,35 +252,18 @@ public class ReviewInterviewFragment extends Fragment {
             SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
             binding.tvDate.setText(sdf.format(new Date(currentAttempt.getCompletedAt())));
         }
-    }
-
-    private void setupDropdownListeners() {
-        if (binding == null) return;
-
-        if (binding.sectionStrengths != null) {
-            binding.sectionStrengths.setOnClickListener(v -> {
-                isStrengthsExpanded = !isStrengthsExpanded;
-                if (binding.layoutStrengthsContent != null) {
-                    binding.layoutStrengthsContent.setVisibility(isStrengthsExpanded ? View.VISIBLE : View.GONE);
-                }
-                if (binding.tvStrengthsPlus != null) {
-                    binding.tvStrengthsPlus.setText(isStrengthsExpanded ? "-" : "+");
-                }
-            });
-        }
-
-        if (binding.sectionAreasImprove != null) {
-            binding.sectionAreasImprove.setOnClickListener(v -> {
-                isAreasExpanded = !isAreasExpanded;
-                if (binding.layoutAreasContent != null) {
-                    binding.layoutAreasContent.setVisibility(isAreasExpanded ? View.VISIBLE : View.GONE);
-                }
-                if (binding.tvAreasPlus != null) {
-                    binding.tvAreasPlus.setText(isAreasExpanded ? "-" : "+");
-                }
-            });
+        if (binding.tvAnalysedTag != null) {
+            if (currentAttempt.isAnalysed()) {
+                binding.tvAnalysedTag.setVisibility(View.VISIBLE);
+                binding.tvAnalysedTag.setText("Analysed");
+                binding.tvAnalysedTag.setTextColor(Color.parseColor("#FF08B425")); // Green tag
+            } else {
+                binding.tvAnalysedTag.setVisibility(View.GONE); // Hide until analysis is requested & completed
+            }
         }
     }
+
+
 
     private void setupClickListeners() {
         if (binding == null) return;
@@ -283,47 +286,6 @@ public class ReviewInterviewFragment extends Fragment {
         }
     }
 
-    private void bindCompetencyFeedbackData() {
-        if (currentAttempt == null || currentAttempt.getCompetencyFeedbacks() == null || currentAttempt.getCompetencyFeedbacks().isEmpty()) {
-            return;
-        }
-
-        UserAttemptCompetencyFeedback cf = currentAttempt.getCompetencyFeedbacks().get(0);
-
-        if (binding.tvScorePercent != null) {
-            double percentage = cf.getCompetencyPercentage();
-            double normalizedPercentage = percentage <= 1.0 ? percentage * 100.0 : percentage;
-
-            binding.tvScorePercent.setText(String.format(Locale.getDefault(), "%.0f%%", normalizedPercentage));
-            binding.tvScorePercent.setTextColor(getColorForPercentage(normalizedPercentage));
-        }
-
-        if (binding.layoutStrengthsContent != null) {
-            binding.layoutStrengthsContent.removeAllViews();
-            List<UserAttemptCompetencyBreakdownFeedback> strengths = cf.getStrengths();
-            if (strengths != null && !strengths.isEmpty()) {
-                for (UserAttemptCompetencyBreakdownFeedback item : strengths) {
-                    addBreakdownItemView(binding.layoutStrengthsContent, item);
-                }
-            } else {
-                TextView tvEmpty = new TextView(requireContext());
-                tvEmpty.setText("No recorded strengths.");
-                tvEmpty.setTextColor(getResources().getColor(android.R.color.darker_gray, null));
-                tvEmpty.setTextSize(14f);
-                binding.layoutStrengthsContent.addView(tvEmpty);
-            }
-        }
-
-        if (binding.layoutAreasContent != null) {
-            binding.layoutAreasContent.removeAllViews();
-            List<UserAttemptCompetencyBreakdownFeedback> improvements = cf.getImprovements();
-            if (improvements != null && !improvements.isEmpty()) {
-                for (UserAttemptCompetencyBreakdownFeedback item : improvements) {
-                    addBreakdownItemView(binding.layoutAreasContent, item);
-                }
-            }
-        }
-    }
 
     private void addBreakdownItemView(ViewGroup container, UserAttemptCompetencyBreakdownFeedback breakdownItem) {
         if (container == null || breakdownItem == null) return;
@@ -358,6 +320,20 @@ public class ReviewInterviewFragment extends Fragment {
         container.addView(itemLayout);
     }
 
+    private int getColorForDifficulty(String difficulty) {
+        if (difficulty == null) return Color.parseColor("#FF8A8A97");
+
+        switch (difficulty.trim().toLowerCase(Locale.ROOT)) {
+            case "easy":
+                return Color.parseColor("#FF08B425"); // Green
+            case "medium":
+                return Color.parseColor("#FFF7A93B"); // Orange
+            case "hard":
+                return Color.parseColor("#FFEF5350"); // Red
+            default:
+                return Color.parseColor("#FF8A8A97"); // Default Gray
+        }
+    }
     private int getColorForPercentage(double percentage) {
         if (percentage < 40.0) {
             return Color.parseColor("#FFEF5350"); // Red

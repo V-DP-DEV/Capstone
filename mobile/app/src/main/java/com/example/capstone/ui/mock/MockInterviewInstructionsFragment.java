@@ -21,6 +21,7 @@ import com.example.capstone.repository.IAuthRepository;
 import com.example.capstone.repository.IInterviewAttemptsRepository;
 import com.example.capstone.repository.IInterviewRepository;
 import com.example.capstone.ui.BaseActivity;
+import com.example.capstone.util.BottomNavUtils;
 import com.example.capstone.viewmodel.AnswerViewModel;
 import com.example.capstone.viewmodel.LoginViewModel;
 import com.example.capstone.viewmodel.ViewModelFactory;
@@ -127,7 +128,9 @@ public class MockInterviewInstructionsFragment extends Fragment {
         setupClickListeners();
 
         View bottomBar = view.findViewById(R.id.bottom_nav_container);
-        BottomNavHelper.setupNavListeners(this, bottomBar);
+        if (bottomBar != null) {
+            BottomNavUtils.setupBottomNavigation(bottomBar);
+        }
     }
 
 

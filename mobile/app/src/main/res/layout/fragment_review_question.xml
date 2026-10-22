@@ -11,10 +11,10 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/div_topbar"
         android:layout_width="match_parent"
-        android:layout_height="65dp"
+        android:layout_height="70dp"
         android:background="#FFFCFDFE"
         android:paddingStart="26dp"
-        android:paddingTop="6dp"
+        android:paddingTop="26dp"
         android:paddingEnd="26dp"
         android:paddingBottom="22dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,7 +41,7 @@
             android:gravity="center"
             android:text="Review question"
             android:textColor="#FF1C1C28"
-            android:textSize="22sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -50,10 +50,9 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Sub-header Meta Data Bar (Stepper & Session Metadata) -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/div_subbar"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#FFFCFDFE"
         android:paddingStart="26dp"
@@ -63,12 +62,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/div_topbar">
 
-        <!-- Question Stepper Control: < Question 1 / 8 > -->
+        <!-- Question Stepper Control: < Question 1 / 7 > -->
         <LinearLayout
             android:id="@+id/layout_stepper"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
@@ -77,8 +76,8 @@
 
             <ImageButton
                 android:id="@+id/btnPrevQuestion"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Previous Question"
                 android:src="@drawable/ic_chevron_left"
@@ -88,17 +87,17 @@
                 android:id="@+id/tv_question_counter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
+                android:layout_marginHorizontal="12dp"
                 android:fontFamily="sans-serif"
-                android:text="Question 1 / 8"
+                android:text="Question 1 / 7"
                 android:textColor="#FF8A8A97"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textStyle="bold" />
 
             <ImageButton
                 android:id="@+id/btnNextQuestion"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Next Question"
                 android:src="@drawable/ic_chevron_right"
@@ -110,11 +109,11 @@
             android:id="@+id/tv_score_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:fontFamily="sans-serif"
             android:text="Score"
             android:textColor="#FF8A8A97"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layout_stepper" />
@@ -125,9 +124,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:fontFamily="sans-serif"
-            android:text="5/5"
+            android:text="0,00/5,00"
             android:textColor="#FF08B425"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/tv_score_label"
             app:layout_constraintStart_toEndOf="@id/tv_score_label"
@@ -138,25 +137,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
-            android:text="01:24"
+            android:text="00:01"
             android:textColor="#FF7A7A86"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/tv_score_label"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_score_label" />
 
-        <!-- Role, Difficulty, and Date Row -->
+        <!-- Role, Difficulty, and Date Row (Properly constrained to prevent collision) -->
         <TextView
             android:id="@+id/tv_role_title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="6dp"
+            android:ellipsize="end"
             android:fontFamily="sans-serif"
-            android:text="C# Developer"
+            android:maxLines="1"
+            android:text="C# Intermediate Development"
             android:textColor="#FF8A8A97"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/tv_difficulty"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_score_label" />
 
@@ -164,13 +169,15 @@
             android:id="@+id/tv_difficulty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:fontFamily="sans-serif"
-            android:text="Hard"
-            android:textColor="#FFE49596"
-            android:textSize="15sp"
+            android:maxLines="1"
+            android:text="medium"
+            android:textColor="#FFF7A93B"
+            android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/tv_role_title"
+            app:layout_constraintEnd_toStartOf="@id/tv_date"
             app:layout_constraintStart_toEndOf="@id/tv_role_title"
             app:layout_constraintTop_toTopOf="@id/tv_role_title" />
 
@@ -179,12 +186,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
-            android:text="18 August 2026"
+            android:maxLines="1"
+            android:text="19 October 2026"
             android:textColor="#FF8A8A97"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/tv_role_title"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_difficulty"
             app:layout_constraintTop_toTopOf="@id/tv_role_title" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

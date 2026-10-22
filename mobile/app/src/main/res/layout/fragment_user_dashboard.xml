@@ -7,15 +7,17 @@
     android:background="@color/screen_background">
 
   <!-- Header Avatar -->
-  <ImageView
+  <ImageButton
       android:id="@+id/img_profile_avatar"
-      android:layout_width="44dp"
-      android:layout_height="44dp"
+      android:layout_width="48dp"
+      android:layout_height="48dp"
       android:layout_marginStart="24dp"
       android:layout_marginTop="16dp"
       android:background="@drawable/bg_circle_action"
       android:backgroundTint="#33312CAA"
+      android:contentDescription="User Profile"
       android:padding="10dp"
+      android:scaleType="centerInside"
       android:src="@drawable/ic_person"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
@@ -234,7 +236,7 @@
 
         <!-- 4. Disabled Slot / Extra -->
         <LinearLayout
-            android:id="@+id/skill_analysis"
+            android:id="@+id/btn_skills_anaylsis"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

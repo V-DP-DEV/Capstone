@@ -24,6 +24,7 @@ import com.example.capstone.adapter.InterviewHistoryAdapter;
 import com.example.capstone.domainModels.UserInterviewAttemptSummary;
 import com.example.capstone.repository.IInterviewAttemptsRepository;
 import com.example.capstone.ui.BaseActivity;
+import com.example.capstone.util.BottomNavUtils;
 import com.example.capstone.viewmodel.HistoryViewModel;
 import com.example.capstone.viewmodel.ViewModelFactory;
 
@@ -70,6 +71,11 @@ return view;
         tabHighest = view.findViewById(R.id.tab_highest);
         tabLowest = view.findViewById(R.id.tab_lowest);
         btnBack = view.findViewById(R.id.btnBack);
+
+        View bottomBar = view.findViewById(R.id.bottom_nav_container);
+        if (bottomBar != null) {
+            BottomNavUtils.setupBottomNavigation(bottomBar);
+        }
 
         setupRecyclerView();
         setupTabs();

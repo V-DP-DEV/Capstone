@@ -10,12 +10,7 @@ import com.example.capstone.domainModels.UserInterviewAttemptSummary;
 import com.example.capstone.model.request.DeleteAttemptRequest;
 import com.example.capstone.network.ApiCallback;
 import com.example.capstone.network.ApiResponse;
-import com.example.capstone.network.ApiClient;
 import com.example.capstone.repository.IInterviewAttemptsRepository;
-import com.example.capstone.repository.InterviewAttemptsRepository;
-import com.example.capstone.service.InterviewAttemptsService;
-import com.example.capstone.util.SecureSession;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -136,10 +131,10 @@ public class HistoryViewModel extends ViewModel {
 
         switch (filterType) {
             case HIGHEST:
-                Collections.sort(sortedList, (a, b) -> Long.compare(b.getTotalSecondsSpent(), a.getTotalSecondsSpent()));
+                Collections.sort(sortedList, (a, b) -> Double.compare(b.getScore(), a.getScore()));
                 break;
             case LOWEST:
-                Collections.sort(sortedList, (a, b) -> Long.compare(a.getTotalSecondsSpent(), b.getTotalSecondsSpent()));
+                Collections.sort(sortedList, (a, b) -> Double.compare(a.getScore(), b.getScore()));
                 break;
             case ALL:
             default:

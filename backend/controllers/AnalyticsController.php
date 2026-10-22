@@ -23,4 +23,10 @@
             $response = $this->analyticsService->getCompetenciesAnalytics($sortBy,$sortOrder,$last);
             JsonResponse::success($response);
         }
+
+        public function userDashboard(){
+            Request::requireMethod("GET");
+            $response = $this->analyticsService->userDashboard();
+            JsonResponse::success($response);
+        }
     }

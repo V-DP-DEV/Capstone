@@ -151,6 +151,12 @@ public class UserProfileFragment extends Fragment {
                         Navigation.findNavController(v)
                                 .navigate(R.id.userProfileFragment)
                 );
+            // Bottom Nav: Start Interview -> Select Difficulty
+            View navStartInterview = binding.bottomNavContainer.getRoot().findViewById(R.id.nav_start_interview);
+            if (navStartInterview != null) {
+                navStartInterview.setOnClickListener(v -> {
+                    Navigation.findNavController(v).navigate(R.id.selectDifficultyFragment);
+                });
             }
 
             View navAnalytics = binding.bottomNavContainer.getRoot()
