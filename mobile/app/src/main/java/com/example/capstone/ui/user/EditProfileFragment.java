@@ -119,7 +119,7 @@ public class EditProfileFragment extends Fragment {
                         return;
                     }
 
-                    binding.etFirstName.setText(user.getFirstName());
+                    binding.etFirstName.setText(user.getFirstname());
                     binding.etSurname.setText(user.getSurname());
                 }
         );
