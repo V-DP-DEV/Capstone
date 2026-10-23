@@ -16,7 +16,7 @@ admin@example.com admin2@example.com admin3@example.com
 
 ## Project Structure
 - [Backend Documentation](backend/README.md)
-- [Frontend Documentation](frontend/README.md)
+- [Frontend Documentation](mobile/README.md)
 
 ## Getting Started
 See the relevant README for setup instructions.
