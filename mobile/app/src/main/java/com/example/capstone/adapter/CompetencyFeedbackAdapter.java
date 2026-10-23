@@ -19,6 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * RecyclerView Adapter responsible for displaying structured competency feedback cards,
+ * including score percentages, dynamic lists of strengths, areas for improvement,
+ * and interactive expand/collapse toggle sections.
+ */
 public class CompetencyFeedbackAdapter extends RecyclerView.Adapter<CompetencyFeedbackAdapter.ViewHolder> {
 
     private List<UserAttemptCompetencyFeedback> feedbackList = new ArrayList<>();
@@ -75,7 +80,6 @@ public class CompetencyFeedbackAdapter extends RecyclerView.Adapter<CompetencyFe
                 tvCategoryTitle.setText(item.getName() != null ? item.getName() : "Competency");
             }
 
-            // Score Percentage
             double percentage = item.getCompetencyPercentage();
             double normalized = percentage <= 1.0 ? percentage * 100.0 : percentage;
             if (tvScorePercent != null) {
@@ -83,7 +87,6 @@ public class CompetencyFeedbackAdapter extends RecyclerView.Adapter<CompetencyFe
                 tvScorePercent.setTextColor(getColorForPercentage(normalized));
             }
 
-            // Bind Strengths
             layoutStrengthsContent.removeAllViews();
             List<UserAttemptCompetencyBreakdownFeedback> strengths = item.getStrengths();
             if (strengths != null && !strengths.isEmpty()) {
@@ -94,7 +97,6 @@ public class CompetencyFeedbackAdapter extends RecyclerView.Adapter<CompetencyFe
                 addEmptyText(context, layoutStrengthsContent, "No clear strength demonstrated.");
             }
 
-            // Bind Areas to Improve
             layoutAreasContent.removeAllViews();
             List<UserAttemptCompetencyBreakdownFeedback> improvements = item.getImprovements();
             if (improvements != null && !improvements.isEmpty()) {
@@ -105,7 +107,7 @@ public class CompetencyFeedbackAdapter extends RecyclerView.Adapter<CompetencyFe
                 addEmptyText(context, layoutAreasContent, "No areas to improve recorded.");
             }
 
-            // Expand / Collapse listeners per card
+
             sectionStrengths.setOnClickListener(v -> {
                 isStrengthsExpanded = !isStrengthsExpanded;
                 layoutStrengthsContent.setVisibility(isStrengthsExpanded ? View.VISIBLE : View.GONE);
@@ -118,6 +120,7 @@ public class CompetencyFeedbackAdapter extends RecyclerView.Adapter<CompetencyFe
                 tvAreasPlus.setText(isAreasExpanded ? "-" : "+");
             });
         }
+
 
         private void addBreakdownRow(Context context, ViewGroup container, UserAttemptCompetencyBreakdownFeedback breakdown) {
             LinearLayout row = new LinearLayout(context);
@@ -158,10 +161,12 @@ public class CompetencyFeedbackAdapter extends RecyclerView.Adapter<CompetencyFe
             container.addView(tvEmpty);
         }
 
+
+
         private int getColorForPercentage(double percentage) {
-            if (percentage < 40.0) return Color.parseColor("#FFEF5350"); // Red
-            if (percentage < 70.0) return Color.parseColor("#FFF7A93B"); // Orange
-            return Color.parseColor("#FF08B425"); // Green
+            if (percentage < 40.0) return Color.parseColor("#FFEF5350");
+            if (percentage < 70.0) return Color.parseColor("#FFF7A93B");
+            return Color.parseColor("#FF08B425");
         }
     }
 }

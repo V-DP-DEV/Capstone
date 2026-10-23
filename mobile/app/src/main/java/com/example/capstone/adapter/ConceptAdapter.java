@@ -15,6 +15,12 @@ import com.example.capstone.domainModels.ConceptAnalysis;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * RecyclerView Adapter responsible for displaying concept analysis summary cards,
+ * showing skill names, total testing frequency counts, and color-coded percentage scores
+ * mapped from {@link ConceptAnalysis}.
+ */
+
 public class ConceptAdapter extends RecyclerView.Adapter<ConceptAdapter.ViewHolder> {
 
     private List<ConceptAnalysis> conceptList = new ArrayList<>();
@@ -62,23 +68,18 @@ public class ConceptAdapter extends RecyclerView.Adapter<ConceptAdapter.ViewHold
             if (tvPercentage != null) {
                 double percentage = item.getPercentage()*100;
                 tvPercentage.setText(String.format("%.0f%%", percentage));
-                // Dynamically color-code the percentage text based on score
                 tvPercentage.setTextColor(getColorForPercentage(percentage));
             }
         }
 
-        /**
-         * Returns Red for very low marks (< 40%),
-         * Orange for mid-range (40% - 69%),
-         * Green for higher marks (>= 70%).
-         */
+
         private int getColorForPercentage(double percentage) {
             if (percentage < 40.0) {
-                return Color.parseColor("#FFEF5350"); // Red
+                return Color.parseColor("#FFEF5350");
             } else if (percentage < 70.0) {
-                return Color.parseColor("#FFF7A93B"); // Orange
+                return Color.parseColor("#FFF7A93B");
             } else {
-                return Color.parseColor("#FF08B425"); // Green
+                return Color.parseColor("#FF08B425");
             }
         }
     }

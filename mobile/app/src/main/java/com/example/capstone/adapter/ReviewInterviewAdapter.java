@@ -18,6 +18,12 @@ import com.google.android.material.chip.ChipGroup;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * RecyclerView Adapter responsible for rendering individual question attempts in the review interview list.
+ * Handles conditional score visibility based on analysis state, time formatting, dynamic Material Chips
+ * for types and difficulties, and score threshold color coding.
+ */
+
 public class ReviewInterviewAdapter extends RecyclerView.Adapter<ReviewInterviewAdapter.ViewHolder> {
 
     private List<UserQuestionAttempt> questionAttempts;
@@ -52,17 +58,17 @@ public class ReviewInterviewAdapter extends RecyclerView.Adapter<ReviewInterview
         if (questionAttempts == null || position >= questionAttempts.size()) return;
         UserQuestionAttempt attempt = questionAttempts.get(position);
 
-        // Badge Question Number
+
         if (holder.tvQuestionNumber != null) {
             holder.tvQuestionNumber.setText(String.valueOf(position + 1));
         }
 
-        // Question Body
+
         if (holder.tvQuestionText != null) {
             holder.tvQuestionText.setText(attempt.getQuestion() != null ? attempt.getQuestion() : "No question text");
         }
 
-        // State 1 vs State 2: Score visibility & color coding based on analysis status
+
         if (holder.tvQuestionScore != null) {
             if (isAnalysed) {
                 holder.tvQuestionScore.setVisibility(View.VISIBLE);
@@ -73,19 +79,19 @@ public class ReviewInterviewAdapter extends RecyclerView.Adapter<ReviewInterview
                 double percentage = maxScore > 0 ? (score / maxScore) * 100.0 : 0.0;
                 holder.tvQuestionScore.setTextColor(getColorForPercentage(percentage));
             } else {
-                // State 1: Hide scores before analysis is requested
+
                 holder.tvQuestionScore.setVisibility(View.GONE);
             }
         }
 
-        // Seconds Spent
+
         if (holder.tvQuestionTime != null) {
             long minutes = attempt.getSecondsSpent() / 60;
             long seconds = attempt.getSecondsSpent() % 60;
             holder.tvQuestionTime.setText(String.format(Locale.getDefault(), "⏱ %02d:%02d", minutes, seconds));
         }
 
-        // Question Type & Difficulty Chips
+
         if (holder.chipGroupTags != null) {
             holder.chipGroupTags.removeAllViews();
             Context context = holder.itemView.getContext();
