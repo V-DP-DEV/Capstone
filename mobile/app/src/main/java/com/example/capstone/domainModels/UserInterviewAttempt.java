@@ -1,6 +1,11 @@
 package com.example.capstone.domainModels;
 
 import java.util.List;
+/**
+ * Domain model representing a completed or ongoing mock interview attempt record.
+ * Stores comprehensive session metadata, completion timestamps, analysis states, review flags,
+ * total time metrics, question attempt details, and competency feedback lists.
+ */
 
 public class UserInterviewAttempt {
 

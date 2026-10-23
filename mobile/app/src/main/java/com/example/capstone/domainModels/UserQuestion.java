@@ -1,5 +1,9 @@
 package com.example.capstone.domainModels;
 
+/**
+ * Domain model representing an individual question within a mock interview session.
+ * Stores question identification, text content, difficulty level, and question type classifications.
+ */
 public class UserQuestion {
     public String getId() {
         return id;

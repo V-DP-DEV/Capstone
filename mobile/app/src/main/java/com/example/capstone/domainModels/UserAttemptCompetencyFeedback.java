@@ -1,7 +1,11 @@
 package com.example.capstone.domainModels;
 
 import java.util.List;
-
+/**
+ * Domain model representing structured competency feedback for an interview attempt.
+ * Stores category-level score percentages, along with lists of identified strengths
+ * and areas for improvement breakdown items.
+ */
 public class UserAttemptCompetencyFeedback {
 
 
