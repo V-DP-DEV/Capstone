@@ -39,9 +39,7 @@
             $payload= $this->evalBuilder->build($questionsRows,$questionCompetenciesRows,$questionConceptsRows,$interviewCompetenciesRows);
             $data = $this->aiService->createResponse($payload);
             //extract low level data from response
-            //return json_decode($data['usage'],true);
             $aiResponse=  json_decode($data['output'][0]['content'][0]['text'],true);
-            //$aiTokenUsage = json_decode($data['usage']['input_tokens'],true);
             $inputTokens = json_decode($data['usage']['input_tokens'],true);
             $outputTokens = json_decode($data['usage']['output_tokens'],true);
             $aiQuestions = $aiResponse['questions'];

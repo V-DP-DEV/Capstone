@@ -74,16 +74,11 @@ public class SplashActivity extends Activity {
 
       @Override
       public void onSuccess() {
-        System.out.println("Refresh succeeded");
         routeToCorrectDashboard(manager.getRole());
       }
 
       @Override
       public void onError(RefreshError error) {
-        System.out.println(
-            "Clearing due to refresh failing: " + error
-        );
-
         clearSessionAndRouteToAuth();
       }
     });

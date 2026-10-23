@@ -76,7 +76,6 @@ public class SpeechManager {
   }
 
   private void safeRestart() {
-    System.out.println("Safely trying to restart");
     if (isListening) {
       mainHandler.postDelayed(() -> {
         // Double check user didn't hit stop during the timeout window
