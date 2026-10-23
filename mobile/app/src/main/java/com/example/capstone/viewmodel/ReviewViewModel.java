@@ -54,10 +54,13 @@ public class ReviewViewModel extends ViewModel {
   private final MutableLiveData<Boolean> analysed =
       new MutableLiveData<>(false);
 
+  private final MutableLiveData<Boolean> analysedCallSuccesful= new MutableLiveData<>(false);
 
   public ReviewViewModel(IInterviewAttemptsRepository interviewAttemptsRepository) {
     this.interviewAttemptsRepository = interviewAttemptsRepository;
   }
+
+  public MutableLiveData<Boolean> getAnalysedCallSuccesful(){return analysedCallSuccesful;}
 
   public MutableLiveData<String> getAnalysisError() {return analysisError;}
 
@@ -200,6 +203,7 @@ public class ReviewViewModel extends ViewModel {
       public void onSuccess(ApiResponse<Void> response) {
         isAnalysing.setValue(false);
         analysed.setValue(true);
+        analysedCallSuccesful.setValue(true);
       }
 
       @Override

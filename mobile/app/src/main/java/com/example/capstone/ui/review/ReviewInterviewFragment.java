@@ -179,10 +179,11 @@ public class ReviewInterviewFragment extends Fragment {
         });
 
         // Observe Successful Analysis Completion
-        viewModel.getAnalysed().observe(getViewLifecycleOwner(), analysed -> {
+        viewModel.getAnalysedCallSuccesful().observe(getViewLifecycleOwner(), analysed -> {
             if (Boolean.TRUE.equals(analysed)) {
                 if (getActivity() instanceof BaseActivity) {
                     ((BaseActivity) getActivity()).showAlertDialog("Analysed!", "Your attempt has been analysed successfully.");
+                    viewModel.getAnalysedCallSuccesful().setValue(false);
                 }
                 if (attemptId != -1) {
                     viewModel.loadInterview(attemptId);
@@ -207,11 +208,13 @@ public class ReviewInterviewFragment extends Fragment {
                 } else {
                     Toast.makeText(requireContext(), "Request analysis to review individual answers.", Toast.LENGTH_SHORT).show();
                 }
+                viewModel.moveToQuestion(position);
+                navigateToQuestionReview();
             });
-            binding.rvQList.setLayoutManager(new LinearLayoutManager(requireContext()));
-            binding.rvQList.setAdapter(adapter);
-            binding.rvQList.setNestedScrollingEnabled(false);
         }
+        binding.rvQList.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.rvQList.setAdapter(adapter);
+        binding.rvQList.setNestedScrollingEnabled(false);
         if (competencyFeedbackAdapter == null && binding.rvCompetencyCards != null) {
             competencyFeedbackAdapter = new CompetencyFeedbackAdapter();
             binding.rvCompetencyCards.setLayoutManager(new LinearLayoutManager(requireContext()));
