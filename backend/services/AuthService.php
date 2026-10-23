@@ -43,7 +43,6 @@
             $refreshTokenHash = Token::hashToken($refreshToken);
             $refreshExpiresAt = date('Y-m-d H:i:s', strtotime('+30 days'));
             //create the token in db
-            //AuthTokenRepository::create($user['id'],$tokenHash,$expiresAt,$data['deviceId'],$data['deviceName']);
             $this->db->transaction(function() use ($deviceId, $deviceName, $user,$tokenHash,$expiresAt,$refreshTokenHash,$refreshExpiresAt){
                 $this->authTokenRepository->create($user['id'],$tokenHash,$expiresAt,$deviceId,$deviceName);
                 $this->refreshTokenRepository->create($user['id'],$refreshTokenHash,$refreshExpiresAt,$deviceId,$deviceName);
@@ -142,8 +141,7 @@
             });
             
 
-            //refresh the token
-            //AuthTokenRepository::refreshToken($dbToken['id']);
+
             //try to log the action
             $this->log->tryAuthLog($dbToken['user_id'],'REFRESH',$dbToken['id']);
 

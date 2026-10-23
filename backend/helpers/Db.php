@@ -34,22 +34,20 @@
         public function queryOne($sql,$params = []){
             //connect to db, and prepare sql
             $stmt = $this->connect()->prepare($sql);
-            $this->bindParams($stmt,$params);
-            $stmt->execute();
             //add params to prevent sql injection
-            //$stmt->execute($params);
+            $this->bindParams($stmt,$params);
             //fetch only one record
+            $stmt->execute();
             return $stmt->fetch(PDO::FETCH_ASSOC);
         }
 
         public function queryAll($sql,$params = []){
             //connect to db, and prepare sql
             $stmt = $this->connect()->prepare($sql);
-            $this->bindParams($stmt,$params);
-            $stmt->execute();
             //add params to prevent sql injection
-            //$stmt->execute($params);
+            $this->bindParams($stmt,$params);
             //fetch all records
+            $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 

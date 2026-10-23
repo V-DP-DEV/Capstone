@@ -87,8 +87,6 @@ public class LoginViewModel extends ViewModel {
 
 
   public void login() {
-    Log.d(TAG, "login() called in LoginViewModel");
-
     emailError.setValue(null);
     passwordError.setValue(null);
     generalError.setValue(null);
@@ -98,8 +96,6 @@ public class LoginViewModel extends ViewModel {
 
     boolean validPassword =
             FormValidator.isValidPassword(password.getValue());
-
-    Log.d(TAG, "Validation check -> validEmail: " + validEmail + ", validPassword: " + validPassword);
 
     if (!validEmail) {
       emailError.setValue(
@@ -114,7 +110,6 @@ public class LoginViewModel extends ViewModel {
     }
 
     if (!validEmail || !validPassword) {
-      Log.w(TAG, "Validation failed! Returning early without calling repository.");
       return;
     }
 
@@ -126,7 +121,6 @@ public class LoginViewModel extends ViewModel {
     request.setDeviceId();
     request.setDeviceName();
 
-    Log.d(TAG, "Calling authRepository.login...");
     loading.setValue(true);
 
     authRepository.login(
@@ -137,14 +131,12 @@ public class LoginViewModel extends ViewModel {
               public void onSuccess(
                       ApiResponse<LoginResponse> response
               ) {
-                Log.d(TAG, "authRepository.login onSuccess() triggered!");
                 loading.setValue(false);
                 loginSuccess.setValue(true);
               }
 
               @Override
               public void onGeneralError(Exception e) {
-                Log.e(TAG, "authRepository.login onGeneralError() triggered! Exception: ", e);
                 loading.setValue(false);
 
                 // Show the real error message on the screen label:
@@ -159,7 +151,6 @@ public class LoginViewModel extends ViewModel {
               public void onHttpError(
                       ApiResponse<LoginResponse> response
               ) {
-                Log.e(TAG, "authRepository.login onHttpError() triggered! Response: " + response);
                 loading.setValue(false);
 
                 if (response != null
