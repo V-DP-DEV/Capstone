@@ -1,6 +1,8 @@
-
 package com.example.capstone.viewmodel;
-
+/**
+ * ViewModel responsible for managing completed interview attempt review sessions,
+ * question-by-question result navigation, AI analysis triggering, and repository communication in the MVVM architecture.
+ */
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;

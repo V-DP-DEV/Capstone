@@ -51,12 +51,10 @@ public class EditProfileFragment extends Fragment {
     ) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Retrieve the AppContainer from the actual application class.
         AppContainer appContainer =
                 ((MyApplication) requireActivity().getApplication())
                         .getAppContainer();
 
-        // Create the ProfileViewModel using the repository in AppContainer.
         profileViewModel = new ViewModelProvider(
                 this,
                 new ViewModelFactory<>(
@@ -68,7 +66,6 @@ public class EditProfileFragment extends Fragment {
 
         observeViewModel();
 
-        // Load the user's existing profile information.
         profileViewModel.loadProfile();
 
         View bottomBar = view.findViewById(R.id.bottom_nav_container);
@@ -79,12 +76,10 @@ public class EditProfileFragment extends Fragment {
 
     private void setupClickListeners() {
 
-        // Navigate back.
         binding.btnBack.setOnClickListener(v ->
                 Navigation.findNavController(v).popBackStack()
         );
 
-        // Save profile changes.
         binding.btnSaveProfile.setOnClickListener(v -> {
             String firstName =
                     binding.etFirstName.getText().toString();
@@ -95,7 +90,6 @@ public class EditProfileFragment extends Fragment {
             profileViewModel.updateProfile(firstName, surname);
         });
 
-        // Hide field errors when the user returns to a field.
         binding.etFirstName.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 binding.tvFirstNameError.setVisibility(View.GONE);
@@ -111,7 +105,6 @@ public class EditProfileFragment extends Fragment {
 
     private void observeViewModel() {
 
-        // Display the user's current profile information.
         profileViewModel.getProfile().observe(
                 getViewLifecycleOwner(),
                 user -> {
@@ -124,7 +117,6 @@ public class EditProfileFragment extends Fragment {
                 }
         );
 
-        // Observe first-name validation errors.
         profileViewModel.getFirstNameError().observe(
                 getViewLifecycleOwner(),
                 error -> {
@@ -141,7 +133,6 @@ public class EditProfileFragment extends Fragment {
                 }
         );
 
-        // Observe surname validation errors.
         profileViewModel.getSurnameError().observe(
                 getViewLifecycleOwner(),
                 error -> {
@@ -158,7 +149,6 @@ public class EditProfileFragment extends Fragment {
                 }
         );
 
-        // Display general API or network errors.
         profileViewModel.getGeneralError().observe(
                 getViewLifecycleOwner(),
                 error -> {
@@ -175,7 +165,6 @@ public class EditProfileFragment extends Fragment {
                 }
         );
 
-        // Prevent repeated submissions while loading.
         profileViewModel.getLoading().observe(
                 getViewLifecycleOwner(),
                 loading -> {
@@ -191,7 +180,6 @@ public class EditProfileFragment extends Fragment {
                 }
         );
 
-        // Notify the user when the update succeeds.
         profileViewModel.getUpdateSuccess().observe(
                 getViewLifecycleOwner(),
                 success -> {

@@ -11,7 +11,10 @@ import com.example.capstone.network.ApiResponse;
 import com.example.capstone.repository.IAnalyticsRepository;
 
 import java.util.List;
-
+/**
+ * ViewModel responsible for managing skills and competencies analytics state, including loading performance metrics
+ * for core competencies and concepts, toggle states for UI tabs, asynchronous data fetching, and repository communication in the MVVM architecture.
+ */
 public class SkillsAnalysisViewModel extends ViewModel {
 
     private final IAnalyticsRepository analyticsRepository;

@@ -12,7 +12,10 @@ import com.example.capstone.repository.IInterviewRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * ViewModel responsible for managing mock interview setup state, including loading available categories,
+ * filtering and retrieving interview summaries, handling user selections, and repository communication in the MVVM architecture.
+ */
 public class SetupViewModel extends ViewModel {
 
     private final IInterviewRepository interviewRepository;

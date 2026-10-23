@@ -32,7 +32,6 @@ import java.util.Locale;
  */
 public class MockInterviewResult extends Fragment {
 
-    // Bundle argument keys for passing session results downstream
     public static final String ARG_INTERVIEW_TITLE = "arg_interview_title";
     public static final String ARG_DIFFICULTY = "arg_difficulty";
     public static final String ARG_ANSWERED_COUNT = "arg_answered_count";
@@ -62,7 +61,6 @@ public class MockInterviewResult extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Inflate layout using ViewBinding
         binding = FragmentMockInterviewResultBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -70,24 +68,16 @@ public class MockInterviewResult extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        // Get app-wide repository
         MyApplication app =
             (MyApplication) requireActivity().getApplication();
 
         AppContainer container = app.getAppContainer();
-
-        //gets repositories needed
         IInterviewRepository interviewRepository = container.interviewRepository;
         IInterviewAttemptsRepository interviewAttemptsRepository = container.interviewAttemptsRepository;
-
-        // Create ViewModel factory
         ViewModelFactory<AnswerViewModel> factory =
             new ViewModelFactory<>(
                 () -> new AnswerViewModel(interviewRepository,interviewAttemptsRepository)
             );
-
-        // Create ViewModel
         answerViewModel = new ViewModelProvider(requireActivity(), factory)
             .get(AnswerViewModel.class);
 
@@ -104,7 +94,6 @@ public class MockInterviewResult extends Fragment {
      * Extracts session metadata from the argument bundle and populates the results screen TextViews.
      */
     private void displaySessionDetails() {
-        //if (getArguments() == null || binding == null) return;
         String title = answerViewModel.getCurrentInterview().getValue().getName();
         //String title = getArguments().getString(ARG_INTERVIEW_TITLE, "Mock Interview");
         String difficulty = answerViewModel.getCurrentInterview().getValue().getDifficulty();
@@ -156,7 +145,6 @@ public class MockInterviewResult extends Fragment {
         if (isAdded()) {
             Bundle args = new Bundle();
             args.putLong("attempt_id",answerViewModel.getAttemptId());
-            // Pass forward the current arguments bundle so ReviewInterviewFragment can read the session metadata
 
             NavOptions navOptions = new NavOptions.Builder()
                 .setPopUpTo(R.id.userDashboardFragment, false)
@@ -173,7 +161,6 @@ public class MockInterviewResult extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // Clear binding reference to prevent memory leaks
         binding = null;
     }
 }

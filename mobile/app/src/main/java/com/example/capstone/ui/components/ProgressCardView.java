@@ -40,7 +40,6 @@ public class ProgressCardView extends MaterialCardView {
             progressChart.setProgress(percentage);
         }
         if (tvProgressValue != null) {
-            // Displays actual progress vs goal (e.g., "1/4" or "3/4")
             tvProgressValue.setText(String.format("%d/%d", count, goal));
         }
         if (tvProgressLabel != null) {
@@ -63,7 +62,6 @@ public class ProgressCardView extends MaterialCardView {
         }
     }
     private void init(Context context) {
-        // Enforce background and clean rounded corners without borders
         setCardBackgroundColor(getResources().getColor(R.color.card_background, context.getTheme()));
 
         float radiusInPx = 24 * context.getResources().getDisplayMetrics().density;

@@ -1,4 +1,3 @@
-
 package com.example.capstone.viewmodel;
 
 import androidx.lifecycle.LiveData;
@@ -20,6 +19,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * ViewModel responsible for managing interview session state, question navigation,
+ * real-time user response caching, and final submission logic in the MVVM architecture.
+ */
 public class AnswerViewModel extends ViewModel {
 
     private final IInterviewRepository interviewRepository;

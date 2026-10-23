@@ -45,8 +45,6 @@ public class AuthLoginFragment extends Fragment {
             @Nullable Bundle savedInstanceState
     ) {
         super.onViewCreated(view, savedInstanceState);
-
-        // Get app-wide repository
         MyApplication app =
                 (MyApplication) requireActivity().getApplication();
 
@@ -54,19 +52,14 @@ public class AuthLoginFragment extends Fragment {
 
         IAuthRepository authRepository = container.authRepository;
 
-        // Create ViewModel factory
         ViewModelFactory<LoginViewModel> factory =
                 new ViewModelFactory<>(
                         () -> new LoginViewModel(authRepository)
                 );
 
-        // Create ViewModel
+
         viewModel = new ViewModelProvider(this, factory)
                 .get(LoginViewModel.class);
-
-        // --------------------------------------------------
-        // INPUT → VIEWMODEL
-        // --------------------------------------------------
 
         binding.etEmail.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
@@ -84,10 +77,6 @@ public class AuthLoginFragment extends Fragment {
             }
         });
 
-        // --------------------------------------------------
-        // SIGN IN
-        // --------------------------------------------------
-
         binding.btnSignIn.setOnClickListener(v -> {
 
             Log.d("LOGIN_TEST", "SIGN IN BUTTON CLICKED");
@@ -103,10 +92,6 @@ public class AuthLoginFragment extends Fragment {
             viewModel.login();
         });
 
-        // --------------------------------------------------
-        // OBSERVE EMAIL VALIDATION
-        // --------------------------------------------------
-
         viewModel.getEmailError().observe(
                 getViewLifecycleOwner(),
                 error -> {
@@ -120,10 +105,6 @@ public class AuthLoginFragment extends Fragment {
                     }
                 }
         );
-
-        // --------------------------------------------------
-        // OBSERVE PASSWORD VALIDATION
-        // --------------------------------------------------
 
         viewModel.getPasswordError().observe(
                 getViewLifecycleOwner(),
@@ -139,10 +120,6 @@ public class AuthLoginFragment extends Fragment {
                 }
         );
 
-        // --------------------------------------------------
-        // OBSERVE GENERAL ERROR
-        // --------------------------------------------------
-
         viewModel.getGeneralError().observe(
                 getViewLifecycleOwner(),
                 error -> {
@@ -153,10 +130,6 @@ public class AuthLoginFragment extends Fragment {
                     }
                 }
         );
-
-        // --------------------------------------------------
-        // OBSERVE LOADING
-        // --------------------------------------------------
 
         viewModel.getLoading().observe(
                 getViewLifecycleOwner(),

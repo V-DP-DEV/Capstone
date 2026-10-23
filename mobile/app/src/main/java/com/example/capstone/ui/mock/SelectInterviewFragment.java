@@ -40,7 +40,6 @@ import java.util.List;
  */
 public class SelectInterviewFragment extends Fragment {
 
-    // Bundle argument key for receiving the selected difficulty level
     public static final String ARG_DIFFICULTY = "selected_difficulty";
 
     private FragmentSelectInterviewBinding binding;
@@ -72,12 +71,10 @@ public class SelectInterviewFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // 1. Retrieve difficulty argument passed from SelectDifficultyFragment
         if (getArguments() != null && getArguments().containsKey(ARG_DIFFICULTY)) {
             selectedDifficulty = getArguments().getString(ARG_DIFFICULTY, "All");
         }
 
-        // 2. Instantiate SetupViewModel using AppContainer and ViewModelFactory
         MyApplication app = (MyApplication) requireActivity().getApplication();
         AppContainer container = app.getAppContainer();
         IInterviewRepository interviewRepository = container.interviewRepository;
@@ -87,24 +84,19 @@ public class SelectInterviewFragment extends Fragment {
         );
         setupViewModel = new ViewModelProvider(this, factory).get(SetupViewModel.class);
 
-        // 3. Setup UI components
         setupHeader();
         setupRecyclerView();
         setupSearchFilter();
         setupActionButtons();
         updateContinueButtonState();
 
-
-        // 4. Setup Bottom Navigation
         View bottomBar = view.findViewById(R.id.bottom_nav_container);
         if (bottomBar != null) {
             BottomNavHelper.setupNavListeners(this, bottomBar);
         }
 
-        // 5. Setup Observers for ViewModel
         setupObservers();
 
-        // 6. Trigger data fetch
         String filterDifficulty = "All".equalsIgnoreCase(selectedDifficulty) ? "" : selectedDifficulty;
         setupViewModel.loadInterviews(0, "", filterDifficulty);
     }
@@ -113,7 +105,6 @@ public class SelectInterviewFragment extends Fragment {
      * Observes LiveData from SetupViewModel
      */
     private void setupObservers() {
-        // Observe interview list
         setupViewModel.getInterviews().observe(getViewLifecycleOwner(), interviewSummaries -> {
             if (interviewSummaries != null && !interviewSummaries.isEmpty()) {
                 List<UserInterview> mappedList = new ArrayList<>();
@@ -129,7 +120,6 @@ public class SelectInterviewFragment extends Fragment {
             }
         });
 
-        // Observe loading state
         setupViewModel.getLoading().observe(getViewLifecycleOwner(), isLoading -> {
             if (getActivity() instanceof BaseActivity) {
                 if (Boolean.TRUE.equals(isLoading)) {
@@ -140,7 +130,6 @@ public class SelectInterviewFragment extends Fragment {
             }
         });
 
-        // Observe errors
         setupViewModel.getError().observe(getViewLifecycleOwner(), errorMsg -> {
             if (errorMsg != null && !errorMsg.trim().isEmpty()) {
                 Toast.makeText(requireContext(), errorMsg, Toast.LENGTH_SHORT).show();
