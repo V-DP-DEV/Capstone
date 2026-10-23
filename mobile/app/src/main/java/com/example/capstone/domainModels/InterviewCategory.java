@@ -1,5 +1,10 @@
 package com.example.capstone.domainModels;
 
+/**
+ * Domain model representing an interview category (e.g., Software Engineering,
+ * Data Science, Product Management, etc.) used to categorize mock interview sessions.
+ */
+
 public class InterviewCategory {
   private int id;
   private String name;

@@ -1,7 +1,11 @@
 package com.example.capstone.domainModels;
 
 import java.util.List;
-
+/**
+ * Domain model representing an individual question attempt within an interview session.
+ * Stores question and user response text, expected answers, difficulty level,
+ * time spent, scoring metrics, question type, and associated concept-level scores.
+ */
 public class UserQuestionAttempt {
 
   public int getId() {

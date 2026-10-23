@@ -1,14 +1,18 @@
 package com.example.capstone.domainModels;
 
 import java.util.List;
-
+/**
+ * Domain model representing a summary of a user's interview attempt.
+ * Optimized for list views and history screens, using integer representations (0/1)
+ * for boolean flags to ensure seamless Gson deserialization from backend responses.
+ */
 public class UserInterviewAttemptSummary {
   private String name;
   private long id;
   private String difficulty;
   private long completedAt;
 
-  // Stored as ints to match backend 0/1 numbers, preventing Gson crash
+
   private int analysed;
   private int completedInTime;
   private int reviewed;

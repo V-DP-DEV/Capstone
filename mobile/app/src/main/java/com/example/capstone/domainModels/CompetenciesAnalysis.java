@@ -2,6 +2,11 @@ package com.example.capstone.domainModels;
 
 import java.util.List;
 
+/**
+ * Domain model representing competency-level analysis data for an interview attempt.
+ * Stores overall category names, score percentages, and nested sub-breakdown analytics.
+ */
+
 public class CompetenciesAnalysis {
   public String getName() {
     return name;

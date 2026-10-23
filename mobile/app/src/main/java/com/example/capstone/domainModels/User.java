@@ -1,5 +1,8 @@
 package com.example.capstone.domainModels;
 
+/**
+ * Domain model representing an authenticated system user profile.
+ */
 import java.io.Serializable;
 
 public class User implements Serializable {
