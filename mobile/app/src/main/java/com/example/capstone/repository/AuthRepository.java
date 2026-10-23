@@ -40,7 +40,6 @@ public class AuthRepository implements IAuthRepository {
   }
 
   public void refreshToken(RefreshCallback callback) {
-    callback.onSuccess();
     authService.refresh(callback);
   }
 }
