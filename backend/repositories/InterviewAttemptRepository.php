@@ -345,5 +345,10 @@
             $query = "UPDATE interview_user_attempts SET reviewed = ? WHERE id=?";
             return $this->db->execute($query,[true,$attemptId]);
         }
+
+        public function updateTokenUsage(int $attemptId, int $inputTokens, int $outputTokens):int{
+            $query = "UPDATE interview_user_attempts SET input_tokens = ?,output_tokens = ? WHERE id=?";
+            return $this->db->execute($query,[$inputTokens,$outputTokens,$attemptId]);
+        }
     }
 ?>
