@@ -80,8 +80,8 @@
 
                     $conceptId = $concept['concept_id'];
                     $score = $concept['score'];
-                    $totalQuestionConceptScore+=5;
-                    $maxQuestionConceptScore+=5;
+                    $totalQuestionConceptScore+=2;
+                    $maxQuestionConceptScore+=2;
 
                     //map to what will be saved for db
                     $dbToSaveQuestionConcepts[] = ['concept_id'=>$conceptId,'score'=>$score,'question_attempt_id'=>$questionAttemptId];
