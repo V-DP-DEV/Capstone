@@ -19,14 +19,13 @@ public class BottomNavHelper {
     public static void setupNavListeners(Fragment fragment, View bottomNavRoot) {
         if (bottomNavRoot == null || !fragment.isAdded()) return;
 
-        // Find each ImageView using the exact IDs from your XML
+
         View navHome = bottomNavRoot.findViewById(R.id.nav_home);
         View navStartInterview = bottomNavRoot.findViewById(R.id.nav_start_interview);
         View navAnalytics = bottomNavRoot.findViewById(R.id.nav_analytics);
         View navPresentation = bottomNavRoot.findViewById(R.id.nav_presentation);
         View navProfile = bottomNavRoot.findViewById(R.id.nav_profile);
 
-        // Wire up Home icon
         if (navHome != null) {
             navHome.setOnClickListener(v -> {
                 if (fragment.isAdded()) {
@@ -38,7 +37,6 @@ public class BottomNavHelper {
             });
         }
 
-        // Wire up Start Interview icon
         if (navStartInterview != null) {
             navStartInterview.setOnClickListener(v -> {
                 if (fragment.isAdded()) {
@@ -50,14 +48,12 @@ public class BottomNavHelper {
             });
         }
 
-        // Wire up Analytics icon
         if (navAnalytics != null) {
             navAnalytics.setOnClickListener(v -> {
-                // Add destination ID when ready
+
             });
         }
 
-        // Wire up Presentation / Tips & Library icon
         if (navPresentation != null) {
             navPresentation.setOnClickListener(v -> {
                 if (fragment.isAdded()) {
@@ -69,10 +65,9 @@ public class BottomNavHelper {
             });
         }
 
-        // Wire up Profile icon
+
         if (navProfile != null) {
             navProfile.setOnClickListener(v -> {
-                // Add destination ID when ready
             });
         }
     }

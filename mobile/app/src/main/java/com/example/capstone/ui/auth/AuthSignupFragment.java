@@ -47,7 +47,6 @@ public class AuthSignupFragment extends Fragment {
   ) {
     super.onViewCreated(view, savedInstanceState);
 
-    // Get application container
     MyApplication app =
             (MyApplication) requireActivity().getApplication();
 
@@ -57,19 +56,16 @@ public class AuthSignupFragment extends Fragment {
     IAuthRepository authRepository =
             appContainer.authRepository;
 
-    // Create ViewModel factory
     ViewModelFactory<SignupViewModel> factory =
             new ViewModelFactory<>(
                     () -> new SignupViewModel(authRepository)
             );
 
-    // Create ViewModel
     signupViewModel =
             new ViewModelProvider(this, factory)
                     .get(SignupViewModel.class);
 
 
-    // CREATE PROFILE BUTTON
     binding.btnDone.setOnClickListener(v -> {
 
       signupViewModel.setFirstname(
@@ -96,7 +92,6 @@ public class AuthSignupFragment extends Fragment {
     });
 
 
-    // FIRST NAME ERROR
     signupViewModel.getFirstnameError().observe(
             getViewLifecycleOwner(),
             error -> {
@@ -112,7 +107,6 @@ public class AuthSignupFragment extends Fragment {
     );
 
 
-    // SURNAME ERROR
     signupViewModel.getSurnameError().observe(
             getViewLifecycleOwner(),
             error -> {
@@ -128,7 +122,6 @@ public class AuthSignupFragment extends Fragment {
     );
 
 
-    // EMAIL ERROR
     signupViewModel.getEmailError().observe(
             getViewLifecycleOwner(),
             error -> {
@@ -144,7 +137,6 @@ public class AuthSignupFragment extends Fragment {
     );
 
 
-    // PASSWORD ERROR
     signupViewModel.getPasswordError().observe(
             getViewLifecycleOwner(),
             error -> {
@@ -160,7 +152,6 @@ public class AuthSignupFragment extends Fragment {
     );
 
 
-    // CONFIRM PASSWORD ERROR
     signupViewModel.getConfirmPasswordError().observe(
             getViewLifecycleOwner(),
             error -> {
@@ -175,8 +166,6 @@ public class AuthSignupFragment extends Fragment {
             }
     );
 
-
-    // GENERAL ERROR
     signupViewModel.getGeneralError().observe(
             getViewLifecycleOwner(),
             error -> {
@@ -188,8 +177,6 @@ public class AuthSignupFragment extends Fragment {
             }
     );
 
-
-    // LOADING
     signupViewModel.getLoading().observe(
             getViewLifecycleOwner(),
             loading -> {
@@ -209,8 +196,6 @@ public class AuthSignupFragment extends Fragment {
             }
     );
 
-
-    // SIGNUP SUCCESS
     signupViewModel.getSignUpSuccess().observe(
             getViewLifecycleOwner(),
             success -> {

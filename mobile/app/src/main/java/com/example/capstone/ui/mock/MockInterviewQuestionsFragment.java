@@ -54,7 +54,7 @@ public class MockInterviewQuestionsFragment extends Fragment {
     private SpeechManager speechManager;
     private StringBuilder transcript = new StringBuilder();
 
-    // Standard 3-minute limit per question
+
     private static final int DEFAULT_QUESTION_DURATION_SECONDS = 180;
 
     private android.os.Handler timerHandler = new android.os.Handler();
@@ -67,7 +67,6 @@ public class MockInterviewQuestionsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Inflate the layout using ViewBinding
         binding = FragmentMockInterviewQuestionsBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -81,25 +80,19 @@ public class MockInterviewQuestionsFragment extends Fragment {
             BottomNavUtils.setupBottomNavigation(bottomBar);
         }
 
-
-
-        // Get app-wide repository
         MyApplication app =
             (MyApplication) requireActivity().getApplication();
 
         AppContainer container = app.getAppContainer();
 
-        //gets repositories needed
         IInterviewRepository interviewRepository = container.interviewRepository;
         IInterviewAttemptsRepository interviewAttemptsRepository = container.interviewAttemptsRepository;
 
-        // Create ViewModel factory
         ViewModelFactory<AnswerViewModel> factory =
             new ViewModelFactory<>(
                 () -> new AnswerViewModel(interviewRepository,interviewAttemptsRepository)
             );
 
-        // Create ViewModel
         answerViewModel = new ViewModelProvider(requireActivity(), factory)
             .get(AnswerViewModel.class);
 
@@ -129,13 +122,11 @@ public class MockInterviewQuestionsFragment extends Fragment {
             getViewLifecycleOwner(),isLoading->{
                 if(Boolean.TRUE.equals(isLoading)){
                     if (getActivity() instanceof BaseActivity) {
-                        // 1. Show loading spinner
                         ((BaseActivity) getActivity()).showLoadingDialog("Submitting your interview...");
                     }
                 }
                 else{
                     if (getActivity() instanceof BaseActivity) {
-                        // 1. Show loading spinner
                         ((BaseActivity) getActivity()).hideLoadingDialog();
                     }
                 }
@@ -158,7 +149,6 @@ public class MockInterviewQuestionsFragment extends Fragment {
         speechManager = new SpeechManager(requireContext(), new SpeechManager.SpeechCallback() {
             @Override
             public void onSpeechResult(String textChunk) {
-                //append text when it arrives
                 transcript.append(textChunk).append(" ");
                 binding.etAnswer.setText(transcript.toString());
             }
@@ -170,15 +160,13 @@ public class MockInterviewQuestionsFragment extends Fragment {
             }
         });
 
-        // Initialize the modern Android launcher to request the microphone
+
         requestPermissionLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(),
             isGranted -> {
                 if (isGranted) {
-                    // Permission granted! Start listening safely
                     speechManager.startListening();
                 } else {
-                    // Permission denied! Warn the user
                     Toast.makeText(requireContext(), "Microphone permission is required for text-to-speech.", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -187,15 +175,12 @@ public class MockInterviewQuestionsFragment extends Fragment {
 
     private void startSpeechRecordingSafe() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-            // if permission start
             speechManager.startListening();
         } else {
-            // else trigger permission
             requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO);
         }
     }
     private void setupNewEventListeners(){
-        //event listened for both continue and skip
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -204,8 +189,6 @@ public class MockInterviewQuestionsFragment extends Fragment {
 
                 String answer = binding.etAnswer.getText().toString();
                 int seconds = getElapsedSeconds();
-
-                //for if just before last question
                 if (index == total - 1) {
                     boolean saved = answerViewModel.saveCurrentResponse(
                         binding.etAnswer.getText().toString(),
@@ -220,7 +203,6 @@ public class MockInterviewQuestionsFragment extends Fragment {
                     return;
                 }
 
-                //clear transcript and stop speach manager
                 transcript.setLength(0);
                 speechManager.stopListening();
                 answerViewModel.moveToNextQuestion(answer, seconds);
@@ -234,18 +216,15 @@ public class MockInterviewQuestionsFragment extends Fragment {
     private void displayQuestionAtIndex(int index) {
         UserQuestion currentQuestion = answerViewModel.getQuestions().get(index);
 
-        // Update question counter & progress bar UI
         int totalQuestions = answerViewModel.getQuestions().size();
         binding.tvQuestionProgress.setText(String.format(Locale.getDefault(), "Question %d / %d", index + 1, totalQuestions));
 
         int progressPercentage = (int) (((float) (index + 1) / totalQuestions) * 100);
         binding.progressBar.setProgress(progressPercentage);
 
-        // Display category or difficulty tag
         String category = currentQuestion.getType() != null ? currentQuestion.getType() : currentQuestion.getDifficulty();
         binding.tvCategory.setText(category != null ? category.toUpperCase(Locale.getDefault()) : "TECHNICAL");
 
-        // Dynamically toggle between standard text view and scrollable code snippet view
         if (isCodeQuestion(currentQuestion)) {
             binding.tvQuestionText.setVisibility(View.GONE);
             binding.scrollCodeSnippet.setVisibility(View.VISIBLE);
@@ -255,12 +234,8 @@ public class MockInterviewQuestionsFragment extends Fragment {
             binding.scrollCodeSnippet.setVisibility(View.GONE);
             binding.tvQuestionText.setText(currentQuestion.getText());
         }
-
-        // Reset text answer input and recording visual state
         binding.etAnswer.setText("");
         stopRecordingState();
-
-        // Start countdown timer for the current question
         startTimer();
     }
 
@@ -283,10 +258,7 @@ public class MockInterviewQuestionsFragment extends Fragment {
      * Starts a count-up timer from 00:00 for the current question.
      */
     private void startTimer() {
-        //stop timer
         stopTimer();
-
-        //uses the systems start clock time and subtracts from current time
         startTime = SystemClock.elapsedRealtime();
         elapsedTime = 0;
         isTimerRunning = true;
@@ -296,21 +268,14 @@ public class MockInterviewQuestionsFragment extends Fragment {
         timerRunnable = new Runnable() {
             @Override
             public void run() {
-                //stops loop if not valid
                 if (binding == null || !isTimerRunning) {
                     return;
                 }
-
-                //calculates estimated time
                 elapsedTime =
                     SystemClock.elapsedRealtime() - startTime;
-
-                //calculates minutes and seconds to display
                 long totalSeconds = elapsedTime / 1000;
                 long minutes = totalSeconds / 60;
                 long seconds = totalSeconds % 60;
-
-                //formats the timer and sets the text
                 binding.tvTimer.setText(
                     String.format(
                         Locale.getDefault(),
@@ -319,12 +284,11 @@ public class MockInterviewQuestionsFragment extends Fragment {
                         seconds
                     )
                 );
-                //run the event every second
                 timerHandler.postDelayed(this, 1000);
             }
         };
 
-        //create the timer on seperate thread
+
         timerHandler.post(timerRunnable);
     }
 
@@ -332,17 +296,13 @@ public class MockInterviewQuestionsFragment extends Fragment {
      * Stops the current count-up timer.
      */
     private void stopTimer() {
-        //change boolean
         isTimerRunning = false;
-
-        //remove callbacks if object exists and make the object null
         if (timerRunnable != null) {
             timerHandler.removeCallbacks(timerRunnable);
             timerRunnable = null;
         }
     }
 
-    //gets elapsed seconds
     private int getElapsedSeconds() {
         return (int) ((SystemClock.elapsedRealtime() - startTime) / 1000);
     }
@@ -362,7 +322,6 @@ public class MockInterviewQuestionsFragment extends Fragment {
             startMicPulseAnimation();
         } else {
             stopRecordingState();
-            //stop listining and set the edit text
             speechManager.stopListening();
             binding.etAnswer.setText(transcript.toString());
             transcript.setLength(0);
@@ -419,7 +378,6 @@ public class MockInterviewQuestionsFragment extends Fragment {
 
 
     private void finishInterview() {
-        //destroy timer
         stopTimer();
     }
 
@@ -434,7 +392,6 @@ public class MockInterviewQuestionsFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        //remove timer and call normal on destroy
         stopTimer();
         speechManager.destroy();
         super.onDestroyView();

@@ -1,5 +1,10 @@
 package com.example.capstone.domainModels;
 
+/**
+ * Domain model representing concept-level analysis data.
+ * Tracks performance statistics for individual core technical concepts or skills
+ * tested across interview sessions, including test frequency and average score percentage.
+ */
 public class ConceptAnalysis {
   public String getName() {
     return name;

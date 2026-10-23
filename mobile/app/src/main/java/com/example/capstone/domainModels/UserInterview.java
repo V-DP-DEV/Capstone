@@ -1,6 +1,11 @@
 package com.example.capstone.domainModels;
 
 import java.util.List;
+/**
+ * Domain model representing a complete mock interview session.
+ * Stores interview metadata including identifiers, titles, difficulty levels,
+ * total question counts, duration, associated questions, and category details.
+ */
 
 public class UserInterview {
   private int id;

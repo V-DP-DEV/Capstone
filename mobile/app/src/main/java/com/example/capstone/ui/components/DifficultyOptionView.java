@@ -34,7 +34,6 @@ public class DifficultyOptionView extends FrameLayout {
     }
 
     private void init(Context context, AttributeSet attrs) {
-        // Inflate component_difficulty_option.xml into this FrameLayout
         binding = ComponentDifficultyOptionBinding.inflate(LayoutInflater.from(context), this, true);
 
         if (attrs != null) {

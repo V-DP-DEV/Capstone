@@ -52,7 +52,6 @@ public class MockInterviewInstructionsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Inflate layout using ViewBinding
         binding = FragmentMockInterviewInstructionsBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -61,7 +60,6 @@ public class MockInterviewInstructionsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Get app-wide repository
         MyApplication app =
             (MyApplication) requireActivity().getApplication();
 
@@ -70,13 +68,13 @@ public class MockInterviewInstructionsFragment extends Fragment {
         IInterviewRepository interviewRepository = container.interviewRepository;
         IInterviewAttemptsRepository interviewAttemptsRepository = container.interviewAttemptsRepository;
 
-        // Create ViewModel factory
+
         ViewModelFactory<AnswerViewModel> factory =
             new ViewModelFactory<>(
                 () -> new AnswerViewModel(interviewRepository,interviewAttemptsRepository)
             );
 
-        // Create ViewModel
+
         answerViewModel = new ViewModelProvider(requireActivity(), factory)
             .get(AnswerViewModel.class);
 
@@ -92,7 +90,6 @@ public class MockInterviewInstructionsFragment extends Fragment {
                 }
             });
 
-        //observe loading and show or hide the loading
         answerViewModel.getIsLoading().observe(getViewLifecycleOwner(),isLoading->{
             if(Boolean.TRUE.equals(isLoading)){
                 if (getActivity() instanceof BaseActivity) {
@@ -106,7 +103,6 @@ public class MockInterviewInstructionsFragment extends Fragment {
             }
         });
 
-        //if error display in box and than return to previous screen
         answerViewModel.getError().observe(getViewLifecycleOwner(),error->{
             if (error != null && !error.isEmpty()) {
                 BaseActivity baseActivity = ((BaseActivity) getActivity());
@@ -116,7 +112,6 @@ public class MockInterviewInstructionsFragment extends Fragment {
             }
         });
 
-        //load args from select screens
         Bundle args = getArguments();
 
         if (args != null) {
@@ -199,7 +194,6 @@ public class MockInterviewInstructionsFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // Clear binding reference to prevent memory leaks
         binding = null;
     }
 }

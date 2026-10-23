@@ -1,4 +1,3 @@
-
 package com.example.capstone.viewmodel;
 
 import androidx.lifecycle.LiveData;
@@ -10,6 +9,10 @@ import com.example.capstone.network.ApiCallback;
 import com.example.capstone.network.ApiResponse;
 import com.example.capstone.repository.IUserRepository;
 
+/**
+ * ViewModel responsible for managing password change state, form validation rules
+ * (length, numeric, and special character checks), and secure repository communication in the MVVM architecture.
+ */
 public class ChangePasswordViewModel extends ViewModel {
 
     private final IUserRepository userRepository;

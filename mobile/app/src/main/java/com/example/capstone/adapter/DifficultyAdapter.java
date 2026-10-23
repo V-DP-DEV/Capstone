@@ -25,9 +25,7 @@ import java.util.List;
  */
 public class DifficultyAdapter extends RecyclerView.Adapter<DifficultyAdapter.DifficultyViewHolder> {
 
-    /**
-     * Interface definition for a callback to be invoked when an interview item is selected.
-     */
+
     public interface OnDifficultySelectedListener {
         void onDifficultySelected(UserInterview userInterview);
     }
@@ -36,12 +34,7 @@ public class DifficultyAdapter extends RecyclerView.Adapter<DifficultyAdapter.Di
     private final OnDifficultySelectedListener listener;
     private int selectedPosition = -1;
 
-    /**
-     * Constructs a new DifficultyAdapter.
-     *
-     * @param userInterviews Initial list of interview items to display.
-     * @param listener       Callback listener for item selection events.
-     */
+
     public DifficultyAdapter(List<UserInterview> userInterviews, OnDifficultySelectedListener listener) {
         this.userInterviews = userInterviews;
         this.listener = listener;
@@ -50,7 +43,6 @@ public class DifficultyAdapter extends RecyclerView.Adapter<DifficultyAdapter.Di
     @NonNull
     @Override
     public DifficultyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflate the individual card layout for each list item
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_difficulty, parent, false);
         return new DifficultyViewHolder(view);
@@ -58,7 +50,6 @@ public class DifficultyAdapter extends RecyclerView.Adapter<DifficultyAdapter.Di
 
     @Override
     public void onBindViewHolder(@NonNull DifficultyViewHolder holder, int position) {
-        // Bind item data and pass whether this specific position is currently selected
         holder.bind(userInterviews.get(position), position == selectedPosition);
     }
 
@@ -67,17 +58,13 @@ public class DifficultyAdapter extends RecyclerView.Adapter<DifficultyAdapter.Di
         return userInterviews != null ? userInterviews.size() : 0;
     }
 
-    /**
-     * Public data injection hook for Person 2 / ViewModel to push updated lists into the adapter.
-     */
+
     public void updateData(List<UserInterview> newList) {
         this.userInterviews = newList;
         notifyDataSetChanged();
     }
 
-    /**
-     * ViewHolder class holding references to views within an individual interview list item.
-     */
+
     class DifficultyViewHolder extends RecyclerView.ViewHolder {
         private final TextView tvName;
         private final TextView tvDescription;
@@ -89,10 +76,6 @@ public class DifficultyAdapter extends RecyclerView.Adapter<DifficultyAdapter.Di
             tvDescription = itemView.findViewById(R.id.tvDifficultyDesc);
             chipGroup = itemView.findViewById(R.id.chipGroupTags);
         }
-
-        /**
-         * Binds interview data to UI components and configures selection highlighting and click listeners.
-         */
         public void bind(final UserInterview userInterview, boolean isSelected) {
             if (tvName != null && userInterview.getName() != null) {
                 tvName.setText(userInterview.getName());
@@ -102,7 +85,7 @@ public class DifficultyAdapter extends RecyclerView.Adapter<DifficultyAdapter.Di
                 tvDescription.setText(userInterview.getDifficulty());
             }
 
-            // Clear previous chips and dynamically generate new ones for tags
+
             chipGroup.removeAllViews();
             Context context = itemView.getContext();
 
@@ -120,15 +103,15 @@ public class DifficultyAdapter extends RecyclerView.Adapter<DifficultyAdapter.Di
                 }
             }
 
-            // Apply selected background state to the root view
+
             itemView.setSelected(isSelected);
 
-            // Handle card click events, updating single-selection states visually
+
             itemView.setOnClickListener(v -> {
                 int previousSelected = selectedPosition;
                 selectedPosition = getBindingAdapterPosition();
 
-                // Refresh previously selected item and newly selected item to update highlight states
+
                 if (previousSelected != RecyclerView.NO_POSITION) {
                     notifyItemChanged(previousSelected);
                 }
@@ -136,27 +119,24 @@ public class DifficultyAdapter extends RecyclerView.Adapter<DifficultyAdapter.Di
                     notifyItemChanged(selectedPosition);
                 }
 
-                // Trigger selection callback listener
+
                 if (listener != null && selectedPosition != RecyclerView.NO_POSITION) {
                     listener.onDifficultySelected(userInterview);
                 }
             });
         }
 
-        /**
-         * Extracts a deduplicated list of tags (Category name + unique question types) from the interview object.
-         */
         private List<String> getTagsList(UserInterview interview) {
             if (interview == null) return null;
 
             List<String> tags = new ArrayList<>();
 
-            // 1. Add Category name if present
+
             if (interview.getCategory() != null && interview.getCategory().getName() != null) {
                 tags.add(interview.getCategory().getName());
             }
 
-            // 2. Extract unique question types from nested UserQuestion objects
+
             if (interview.getQuestions() != null) {
                 for (UserQuestion q : interview.getQuestions()) {
                     if (q != null && q.getType() != null && !q.getType().trim().isEmpty()) {

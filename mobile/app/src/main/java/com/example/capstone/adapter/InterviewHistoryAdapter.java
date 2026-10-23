@@ -19,6 +19,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * RecyclerView Adapter responsible for displaying user interview history summaries.
+ * Features item click listeners, option overflow menus (View/Delete), conditional percentage
+ * display based on analysis state, and dynamic color-coding for scores and difficulty levels.
+ */
 public class InterviewHistoryAdapter extends RecyclerView.Adapter<InterviewHistoryAdapter.ViewHolder> {
 
     private List<UserInterviewAttemptSummary> attemptList;
@@ -58,7 +63,7 @@ public class InterviewHistoryAdapter extends RecyclerView.Adapter<InterviewHisto
 
 
         /*
-        // Bind and color-code score percentage
+
         if (holder.tvPercentage != null) {
             double scorePercentage = summary.getScore();
 

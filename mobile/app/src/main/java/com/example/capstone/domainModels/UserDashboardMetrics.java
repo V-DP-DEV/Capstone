@@ -1,5 +1,10 @@
 package com.example.capstone.domainModels;
 
+/**
+ * Domain model representing dashboard performance metrics and summary statistics for a user,
+ * including interview completion counts for the current month, current week, and difficult sessions.
+ */
+
 public class UserDashboardMetrics {
 
   private int totalMonth;
