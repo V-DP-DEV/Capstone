@@ -15,6 +15,11 @@ import com.example.capstone.util.FormValidator;
 
 import java.util.Map;
 
+/**
+ * ViewModel responsible for managing user authentication state, form input validation
+ * (email format and password strength), device metadata binding, and login repository communication
+ * in the MVVM architecture.
+ */
 public class LoginViewModel extends ViewModel {
 
   private static final String TAG = "LOGIN_DEBUG";

@@ -26,7 +26,6 @@ public class TipsLibraryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Header Back Button Navigation
         ImageButton btnBack = view.findViewById(R.id.btnBack);
         if (btnBack != null) {
             btnBack.setOnClickListener(v -> {
@@ -35,8 +34,6 @@ public class TipsLibraryFragment extends Fragment {
                 }
             });
         }
-
-        // Setup Bottom Navigation Bar Actions
         View bottomBar = view.findViewById(R.id.bottom_nav_container);
         if (bottomBar != null) {
             BottomNavUtils.setupBottomNavigation(bottomBar);

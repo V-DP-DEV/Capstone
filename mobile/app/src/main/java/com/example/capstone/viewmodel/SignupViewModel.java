@@ -13,7 +13,11 @@ import com.example.capstone.repository.IAuthRepository;
 import com.example.capstone.util.FormValidator;
 
 import java.util.Map;
-
+/**
+ * ViewModel responsible for managing user registration (signup) state, comprehensive client-side form validation
+ * (first name, surname, email format, password strength, and password confirmation matching), server-side validation error mapping,
+ * and repository communication in the MVVM architecture.
+ */
 public class SignupViewModel extends ViewModel {
 
   private static final String TAG = "PROFILE_DEBUG";

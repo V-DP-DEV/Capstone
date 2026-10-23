@@ -1,4 +1,3 @@
-
 package com.example.capstone.viewmodel;
 
 import androidx.lifecycle.LiveData;
@@ -10,6 +9,11 @@ import com.example.capstone.model.request.UpdateUserRequest;
 import com.example.capstone.network.ApiCallback;
 import com.example.capstone.network.ApiResponse;
 import com.example.capstone.repository.IUserRepository;
+
+/**
+ * ViewModel responsible for managing user profile retrieval, input validation
+ * for first name and surname fields, profile update actions, and repository communication in the MVVM architecture.
+ */
 
 public class ProfileViewModel extends ViewModel {
 
