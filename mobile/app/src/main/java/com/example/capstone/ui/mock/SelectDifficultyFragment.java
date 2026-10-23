@@ -1,17 +1,21 @@
 package com.example.capstone.ui.mock;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentSelectDifficultyBinding;
 import com.example.capstone.ui.components.BottomNavHelper;
+import com.example.capstone.util.BottomNavUtils;
 
 /**
  * SelectDifficultyFragment presents static options (Easy, Medium, Hard) for the user to choose
@@ -58,7 +62,9 @@ public class SelectDifficultyFragment extends Fragment {
         updateContinueButtonState();
 
         View bottomBar = view.findViewById(R.id.bottom_nav_container);
-        BottomNavHelper.setupNavListeners(this, bottomBar);
+        if (bottomBar != null) {
+            BottomNavUtils.setupBottomNavigation(bottomBar);
+        }
     }
 
     /**
@@ -81,9 +87,27 @@ public class SelectDifficultyFragment extends Fragment {
         binding.optionMedium.setSelected(difficulty == Difficulty.MEDIUM);
         binding.optionHard.setSelected(difficulty == Difficulty.HARD);
 
+
+        updateCardHighlight(binding.optionEasy, difficulty == Difficulty.EASY);
+        updateCardHighlight(binding.optionMedium, difficulty == Difficulty.MEDIUM);
+        updateCardHighlight(binding.optionHard, difficulty == Difficulty.HARD);
         updateContinueButtonState();
     }
+    /**
+     * Toggles explicit card background color to provide immediate visual selection feedback.
+     */
+    private void updateCardHighlight(View cardView, boolean isSelected) {
+        cardView.setSelected(isSelected);
 
+        int backgroundColor = isSelected
+                ? ContextCompat.getColor(requireContext(), R.color.color_icon_inactive)
+                : Color.WHITE;
+        if (cardView instanceof CardView) {
+            ((CardView) cardView).setCardBackgroundColor(backgroundColor);
+        } else {
+            cardView.setBackgroundColor(backgroundColor);
+        }
+    }
     /**
      * Toggles the Continue button state and visual opacity based on whether a difficulty is selected.
      */

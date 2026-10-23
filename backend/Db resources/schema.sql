@@ -9,6 +9,7 @@ CREATE TABLE users (
     role ENUM('USER', 'ADMIN') NOT NULL DEFAULT 'USER',
     firstname varchar(255) NOT NULL,
     surname varchar(255) NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT uk_users_email
         UNIQUE (email)
@@ -192,6 +193,8 @@ CREATE TABLE interview_user_attempts (
     analysed BOOLEAN NOT NULL DEFAULT FALSE,
     reviewed BOOLEAN NOT NULL DEFAULT FALSE,
     score_percentage DECIMAL(5,2),
+    input_tokens int NOT NULL DEFAULT 0,
+    output_tokens int NOT NULL DEFAULT 0,  
     status ENUM('NOT_REQUESTED', 'PROCESSING', 'COMPLETED', 'FAILED') NOT NULL DEFAULT 'NOT_REQUESTED',
 
     CONSTRAINT fk_interview_user_attempts_user

@@ -37,7 +37,7 @@ public class UserActivity extends BaseActivity {
       v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
       return insets;
     });
-    setSupportActionBar(binding.toolbar.commonToolbar);
+
 
     if (getSupportActionBar() != null) {
       getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -58,7 +58,6 @@ public class UserActivity extends BaseActivity {
 
     navController.addOnDestinationChangedListener(
         (controller, destination, arguments) -> {
-          binding.toolbar.toolbarTitle.setText(destination.getLabel());
         }
     );
   }

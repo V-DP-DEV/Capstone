@@ -25,7 +25,7 @@
             return $this->db->execute($query,$params);
         }
 
-        public function getQuestionsMatching($questionIds,$interviewId){
+        public function getQuestionsMatching(array $questionIds,int $interviewId):array|false{
             //checks if questions belong to interview
             $placeholders = implode(',', array_fill(0, count($questionIds), '?'));
             $query = "
@@ -39,11 +39,11 @@
         }
 
         //gets the users attempt and returns all information, without questions
-        public function getAttempt(int $attemptId):array{
+        public function getAttempt(int $attemptId):array|false{
             return $this->db->queryOne("SELECT * FROM interview_user_attempts WHERE id=?",[$attemptId]);
         }
 
-        public function getAttemptDetails(int $attemptId):array{
+        public function getAttemptDetails(int $attemptId):array|false{
             //coalesce used to ensure if null->0
             //case used to do bool check if completed in time
             //
@@ -85,7 +85,7 @@
         //gets competency feedback with overall percentage
         //competency breakdown percentage
         //and strength + improvement
-        public function getCompetenciesFeedback($attemptId){
+        public function getCompetenciesFeedback(int $attemptId):array|false{
             //with used to make query more readable
             //CTE 1 
             //breakdown scores gets percentage, competency breakdown name and competency
@@ -144,7 +144,7 @@
         //gets scores if there is any scores for competencies
         //gets scores if any for concepts but still returns concepts
         //the competency score will be the question score
-        public function getAttemptQuestions(int $attemptId):array{
+        public function getAttemptQuestions(int $attemptId):array|false{
             //with and CTEs used for readibility
             //first cte calculates the score
             //groups to do it per question
@@ -199,7 +199,7 @@
 
 
         //gets high overall summary of attempts
-        public function getAttempts(int $userId, SortOptions $sortOptions){
+        public function getAttempts(int $userId, SortOptions $sortOptions):array|false{
             //sort options maps field and throws error if not in field.
             //used for security
             $sort_collumns = [
@@ -226,8 +226,9 @@
                         iua.completed_at as completedAt,
                         iua.analysed as analysed,
                         iua.status as analysedStatus,
+                        iua.score_percentage as percentage,
                         i.estimated_time_in_minutes as estimatedMinutes,
-                        iua.reviewed as reviewed
+                        iua.reviewed as reviewed,
                         
                         
                         COALESCE(iqa.totalSecondsSpent, 0) AS totalSecondsSpent,
@@ -263,7 +264,7 @@
         }
 
         //adds the analysed question concepts for an attempt
-        public function addAnalyseQuestionConcepts($aiQuestionsConcepts){
+        public function addAnalyseQuestionConcepts(mixed $aiQuestionsConcepts):int{
             //creates the params and placeholders to do one bulk query
             $placeHolders = [];
             $params = [];
@@ -276,11 +277,11 @@
 
             //performs the query for all questions
             $query = 'INSERT INTO question_concept_scores (question_attempt_id,concept_id,score) VALUES ' . implode(',',$placeHolders);
-            $this->db->execute($query,$params);
+            return $this->db->execute($query,$params);
         }
 
         //adds the analysed interview competencies
-        public function addAnalyseInterview($aiInterviewCompetencies){
+        public function addAnalyseInterview(mixed $aiInterviewCompetencies):int{
             //creates the params and placeholders to do one bulk query
             $placeHolders = [];
             $params = [];
@@ -295,11 +296,11 @@
 
             //performs the query for all competencies
             $query = 'INSERT INTO interview_competency_breakdown_feedbacks (interview_attempt_id,competency_breakdown_id,strength,improvement) VALUES ' . implode(',',$placeHolders);
-            $this->db->execute($query,$params);
+            return $this->db->execute($query,$params);
         }
 
         //inserts data into question competencies analysed
-        public function addAnalyseQuestionCompetencies($aiQuestionCompetencies){
+        public function addAnalyseQuestionCompetencies(mixed $aiQuestionCompetencies):int{
             //creates the params and placeholders to do one bulk query
             $placeHolders = [];
             $params = [];
@@ -313,29 +314,29 @@
             
             //performs the query for all questions
             $query = 'INSERT INTO question_competency_breakdown_scores (question_attempt_id,competency_breakdown_id,score) VALUES ' . implode(',',$placeHolders);
-            $this->db->execute($query,$params);
+            return $this->db->execute($query,$params);
         }
 
-        public function updateAttemptToAnalysed($interviewAttemptId){
+        public function updateAttemptToAnalysed(int $interviewAttemptId):int{
             $query = 'UPDATE interview_user_attempts SET analysed = 1 WHERE id=?';
             return $this->db->execute($query,[$interviewAttemptId]);
         }
 
-        public function updateAnalyseStatus($interviewAttemptId,$status){
+        public function updateAnalyseStatus(int $interviewAttemptId,string $status):int{
             $query = 'UPDATE interview_user_attempts SET status = ? WHERE id=?';
             return $this->db->execute($query,[$status,$interviewAttemptId]);
         }
-        public function updateScorePercentage($interviewAttemptId,$percentage){
+        public function updateScorePercentage(int $interviewAttemptId,float $percentage):int{
             $query = 'UPDATE interview_user_attempts SET score_percentage = ? WHERE id=?';
             return $this->db->execute($query,[$percentage,$interviewAttemptId]);
         }
 
-        public function deleteAttempt($interviewAttemptId){
+        public function deleteAttempt(int $interviewAttemptId):int{
             $query = "DELETE FROM interview_user_attempts WHERE id = ?";
             return $this->db->execute($query,[$interviewAttemptId]);
         }
 
-        public function deleteAttempts($userId){
+        public function deleteAttempts(int $userId):int{
             $query = "DELETE FROM interview_user_attempts WHERE user_id = ?";
             return $this->db->execute($query,[$userId]);
         }
@@ -343,6 +344,11 @@
         public function setToReviewed(int $attemptId):int{
             $query = "UPDATE interview_user_attempts SET reviewed = ? WHERE id=?";
             return $this->db->execute($query,[true,$attemptId]);
+        }
+
+        public function updateTokenUsage(int $attemptId, int $inputTokens, int $outputTokens):int{
+            $query = "UPDATE interview_user_attempts SET input_tokens = ?,output_tokens = ? WHERE id=?";
+            return $this->db->execute($query,[$inputTokens,$outputTokens,$attemptId]);
         }
     }
 ?>

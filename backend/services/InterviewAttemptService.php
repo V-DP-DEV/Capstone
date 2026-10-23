@@ -4,7 +4,16 @@
 
         }
 
-        public function submitAttempt($interviewId,$answers){
+        public function submitAttempt(?int $interviewId,mixed $answers){
+            //check if input send
+            
+            if(empty($interviewId)){
+                throw new ValidationException("No id provided");
+            }
+            if(empty($answers)){
+                throw new ValidationException("No answer send");
+            }
+            
             //gets question ids and does validation checks
             $questionIds = array_column($answers, 'id');
             //check if duplicates
@@ -59,12 +68,16 @@
                 $id = $attempt['interview_id'];
 
                 $attempt['questionTypes'] =$typesByInterview[$id] ?? [];
+                $attempt['completedAt'] = TimeUtil::toMillis($attempt['completedAt']);
                 unset($attempt);
             }
             return $attempts;
         }
 
-        public function getAttempt($id){
+        public function getAttempt(?int $id){
+            if(empty($id)){
+                throw new ValidationException("No id specified");
+            }
             //get attempt as base for to return
             $attempt = $this->interviewAttemptRepository->getAttemptDetails($id);
             //check if exists otherwise throw exception
@@ -143,13 +156,17 @@
                     ];
                 }
                 //when all competencies are mapped add to attempt
-                $attempt['competencies'] = $competencies;
+                $attempt['competencyFeedbacks'] = array_values($competencies);
             }   
 
+            $attempt['completedAt'] = TimeUtil::toMillis($attempt['completedAt']);
             return $attempt;
         }
 
-        public function deleteAttempt($id){
+        public function deleteAttempt(?int $id){
+            if(empty($id)){
+                throw new ValidationException("No attempt id specified");
+            }
             //gets attempt
             $attempt = $this->interviewAttemptRepository->getAttempt($id);
             //check if exists and belongs to user
@@ -171,7 +188,10 @@
             //call the delete all function
         }
 
-        public function setToReviewed(int $attemptId){
+        public function setToReviewed(?int $attemptId){
+            if(empty($attemptId)){
+                throw new ValidationException("No attempt id specified");
+            }
             //get attempt and do ownership checks
             $attempt= $this->interviewAttemptRepository->getAttempt($attemptId);
             if(!$attempt){

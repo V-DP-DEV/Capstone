@@ -7,15 +7,17 @@
     android:background="@color/screen_background">
 
   <!-- Header Avatar -->
-  <ImageView
+  <ImageButton
       android:id="@+id/img_profile_avatar"
-      android:layout_width="44dp"
-      android:layout_height="44dp"
+      android:layout_width="48dp"
+      android:layout_height="48dp"
       android:layout_marginStart="24dp"
       android:layout_marginTop="16dp"
       android:background="@drawable/bg_circle_action"
       android:backgroundTint="#33312CAA"
+      android:contentDescription="User Profile"
       android:padding="10dp"
+      android:scaleType="centerInside"
       android:src="@drawable/ic_person"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
@@ -103,17 +105,25 @@
           android:orientation="horizontal">
 
         <com.example.capstone.ui.components.ProgressCardView
-            android:id="@+id/progress_card_interviews"
+            android:id="@+id/total_month"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
+            android:layout_height="180dp"
+            android:layout_marginEnd="6dp"
             android:layout_weight="1" />
 
         <com.example.capstone.ui.components.ProgressCardView
-            android:id="@+id/progress_card_target"
+            android:id="@+id/total_week"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_height="180dp"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="3dp"
+            android:layout_weight="1" />
+
+        <com.example.capstone.ui.components.ProgressCardView
+            android:id="@+id/total_difficult"
+            android:layout_width="0dp"
+            android:layout_height="180dp"
+            android:layout_marginStart="6dp"
             android:layout_weight="1" />
       </LinearLayout>
 
@@ -132,7 +142,7 @@
           android:layout_height="wrap_content"
           android:layout_marginTop="12dp"
           android:orientation="horizontal"
-          android:weightSum="3"
+          android:weightSum="4"
           android:gravity="center">
 
         <!-- 1. Start Interview -->
@@ -234,7 +244,7 @@
 
         <!-- 4. Disabled Slot / Extra -->
         <LinearLayout
-            android:id="@+id/btn_disabled_slot"
+            android:id="@+id/btn_skills_anaylsis"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -244,7 +254,22 @@
             android:focusable="true"
             android:background="?attr/selectableItemBackground"
             android:padding="4dp">
-
+          <ImageView
+              android:layout_width="56dp"
+              android:layout_height="56dp"
+              android:background="@drawable/bg_white_circle"
+              android:padding="14dp"
+              android:src="@drawable/ic_database"
+              app:tint="@color/color_orange_progress" />
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="8dp"
+              android:gravity="center"
+              android:textAlignment="center"
+              android:textColor="@android:color/black"
+              android:textSize="14sp"
+              android:text="Skills Analysis" />
         </LinearLayout>
 
       </LinearLayout>

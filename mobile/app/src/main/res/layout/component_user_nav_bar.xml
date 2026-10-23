@@ -28,12 +28,12 @@
             app:tint="@color/primary_blue" />
 
         <ImageView
-            android:id="@+id/nav_settings"
+            android:id="@+id/nav_start_interview"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:padding="30dp"
-            android:src="@drawable/ic_settings"
+            android:src="@drawable/ic_start_interview_nav"
             app:tint="#FF868DA6" />
 
         <ImageView
@@ -59,8 +59,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:padding="24dp"
-            android:src="@drawable/ic_person"
+            android:padding="30dp"
+            android:src="@drawable/ic_person_nav"
             app:tint="#FF868DA6" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

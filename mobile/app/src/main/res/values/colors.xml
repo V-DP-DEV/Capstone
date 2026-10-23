@@ -58,4 +58,5 @@
   <color name="red">#FF0000</color>
   <color name="tag_bg">#FFF0F2F6</color>
   <color name="tag_text">#FF353E5C</color>
+    <color name="color_grey">#FFB7C0D2</color>
 </resources>

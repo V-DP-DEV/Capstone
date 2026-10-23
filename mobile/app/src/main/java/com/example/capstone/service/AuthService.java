@@ -220,7 +220,7 @@ public class AuthService {
 
         System.out.println("requesting refresh token");
 
-        apiClient.execute(
+        apiClient.executeRequest(
                 request,
                 RefreshResponse.class,
                 new ApiCallback<RefreshResponse>() {

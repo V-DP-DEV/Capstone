@@ -18,9 +18,51 @@
         android:id="@+id/action_userDashboardFragment_to_tipsLibraryFragment"
         app:destination="@id/tipsLibraryFragment" />
     <action
+        android:id="@+id/action_userDashboardFragment_to_interviewHistoryFragment"
+        app:destination="@id/interviewHistoryFragment" />
+    <action
+        android:id="@+id/action_userDashboardFragment_to_skillAnalysisFragment"
+        app:destination="@id/skillsAnalysisFragment" />
+    <action
         android:id="@+id/action_userDashboardFragment_self"
         app:destination="@id/userDashboardFragment" />
+    <action
+        android:id="@+id/action_userDashboardFragment_to_userProfileFragment"
+        app:destination="@id/userProfileFragment" />
+
   </fragment>
+
+  <!-- User Profile Screen -->
+  <fragment
+      android:id="@+id/userProfileFragment"
+      android:name="com.example.capstone.ui.user.UserProfileFragment"
+      android:label="User Profile"
+      tools:layout="@layout/fragment_user_profile">
+
+    <!-- Action to Edit Profile -->
+    <action
+        android:id="@+id/action_userProfileFragment_to_editProfileFragment"
+        app:destination="@id/editProfileFragment" />
+
+    <!-- Action to Change Password -->
+    <action
+        android:id="@+id/action_userProfileFragment_to_changePasswordFragment"
+        app:destination="@id/changePasswordFragment" />
+  </fragment>
+
+  <!-- Edit Profile Screen -->
+  <fragment
+      android:id="@+id/editProfileFragment"
+      android:name="com.example.capstone.ui.user.EditProfileFragment"
+      android:label="Edit Profile"
+      tools:layout="@layout/fragment_edit_profile" />
+
+  <!-- Change Password Screen -->
+  <fragment
+      android:id="@+id/changePasswordFragment"
+      android:name="com.example.capstone.ui.user.ChangePasswordFragment"
+      android:label="Change Password"
+      tools:layout="@layout/fragment_change_password" />
 
   <!-- Select Difficulty Screen -->
   <fragment
@@ -134,5 +176,24 @@
         android:id="@+id/action_tipsLibraryFragment_to_selectInterviewFragment"
         app:destination="@id/selectInterviewFragment" />
   </fragment>
+
+  <!-- Interview History Screen -->
+  <fragment
+      android:id="@+id/interviewHistoryFragment"
+      android:name="com.example.capstone.ui.review.InterviewHistoryFragment"
+      android:label="Interview History"
+      tools:layout="@layout/fragment_interview_history">
+    <action
+        android:id="@+id/action_history_to_review"
+        app:destination="@id/reviewInterviewFragment" />
+  </fragment>
+
+  <!-- Skills Analysis Screen -->
+  <fragment
+      android:id="@+id/skillsAnalysisFragment"
+      android:name="com.example.capstone.ui.analysis.SkillsAnalysisFragment"
+      android:label="Skills Analysis"
+      tools:layout="@layout/fragment_skills_analysis" />
+
 
 </navigation>

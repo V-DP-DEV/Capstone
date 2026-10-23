@@ -41,7 +41,10 @@ public class AnswerViewModel extends ViewModel {
 
     private final Map<Integer, QuestionAnswerRequest> answers =
         new LinkedHashMap<>();
-
+    private long attemptId = 0;
+    public long getAttemptId(){
+        return attemptId;
+    }
     public MutableLiveData<Boolean> getIsSubmitted() {
         return isSubmitted;
     }
@@ -262,6 +265,7 @@ public class AnswerViewModel extends ViewModel {
             public void onSuccess(ApiResponse<SubmitAttemptResponse> response) {
                 isSubmitted.setValue(true);
                 isLoading.setValue(false);
+                attemptId = response.getData().getInterviewAttemptId();
             }
 
             @Override

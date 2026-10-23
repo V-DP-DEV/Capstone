@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:fontFamily="sans-serif-medium"
-        android:text="Interview"
+        android:text="Select Difficulty"
         android:textColor="@color/text_primary"
         android:textSize="20sp"
         android:textStyle="bold"

@@ -4,7 +4,10 @@
 
         }
 
-        public function analysis($attemptId){
+        public function analysis(?int $attemptId){
+            if(empty($attemptId)){
+                throw new ValidationException("No attempt id was provided");
+            }
             //get attempt
             $attempt  =$this->interviewAttemptRepository->getAttempt($attemptId);
             //do validation checks
@@ -36,7 +39,11 @@
             $payload= $this->evalBuilder->build($questionsRows,$questionCompetenciesRows,$questionConceptsRows,$interviewCompetenciesRows);
             $data = $this->aiService->createResponse($payload);
             //extract low level data from response
+            //return json_decode($data['usage'],true);
             $aiResponse=  json_decode($data['output'][0]['content'][0]['text'],true);
+            //$aiTokenUsage = json_decode($data['usage']['input_tokens'],true);
+            $inputTokens = json_decode($data['usage']['input_tokens'],true);
+            $outputTokens = json_decode($data['usage']['output_tokens'],true);
             $aiQuestions = $aiResponse['questions'];
             $aiInterviewCompetencies = $aiResponse["interview_competencies"];
             
@@ -73,8 +80,8 @@
 
                     $conceptId = $concept['concept_id'];
                     $score = $concept['score'];
-                    $totalQuestionConceptScore+=5;
-                    $maxQuestionConceptScore+=5;
+                    $totalQuestionConceptScore+=2;
+                    $maxQuestionConceptScore+=2;
 
                     //map to what will be saved for db
                     $dbToSaveQuestionConcepts[] = ['concept_id'=>$conceptId,'score'=>$score,'question_attempt_id'=>$questionAttemptId];
@@ -108,6 +115,7 @@
                 $this->interviewAttemptRepository->updateScorePercentage($attemptId,$percentage);
                 $this->interviewAttemptRepository->updateAttemptToAnalysed($attemptId);
                 $this->interviewAttemptRepository->updateAnalyseStatus($attemptId,'COMPLETED');
+                $this->interviewAttemptRepository->updateTokenUsage($attemptId,$inputTokens,$outputTokens);
                 $this->db->commit();
             }
             //if errors

@@ -9,9 +9,9 @@
             //gets the data from the body
             $data = Request::json();
             //gets the id
-            $interviewId = $data["id"];
+            $interviewId = $data["id"]??null;
             //gets the answer
-            $answers = $data["answers"];
+            $answers = $data["answers"]??null;
 
             //passes it to the submit attempt service
             $attemptId = $this->interviewAttemptService->submitAttempt($interviewId,$answers);
@@ -23,7 +23,7 @@
             Request::requireMethod("POST");
             //extract id
             $data = Request::json();
-            $attemptId = $data["id"];
+            $attemptId = $data["id"]??null;
             
             //attempt analysis
             $this->interviewAnalysisService->analysis($attemptId);
@@ -36,10 +36,6 @@
             Request::requireMethod("GET");
             //extracts the id from filters
             $id = $filters['id'] ?? null;
-            //check if id not null
-            if($id === null){
-                throw new ValidationException("Missing required parameter: id");
-            }
             //attempts to return the attempt data
             JsonResponse::success($this->interviewAttemptService->getAttempt($id));
             //return json
@@ -60,7 +56,7 @@
             Request::requireMethod("DELETE");
             //extract attempt id
             $data = Request::json();
-            $attemptId =$data['id'];
+            $attemptId =$data['id']??null;
             //delete the attempt
             $this->interviewAttemptService->deleteAttempt($attemptId);
             //returns success
@@ -80,7 +76,7 @@
         public function setToReviewed(){
             Request::requireMethod("PATCH");
             $data = Request::json();
-            $attemptId = $data['id'];
+            $attemptId = $data['id']??null;
             $this->interviewAttemptService->setToReviewed($attemptId);
             JsonResponse::success();
         }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="rv_interview_history" type="id" />
+    <item name="tab_lowest" type="id" />
+    <item name="tab_highest" type="id" />
+    <item name="tab_all" type="id" />
+    <item name="layout_filter_tabs" type="id" />
+    <item name="action_history_to_review" type="id" />
+    <item name="userProfileFragment" type="id" />
+    <item name="skillsAnalysisFragment" type="id" />
+</resources>

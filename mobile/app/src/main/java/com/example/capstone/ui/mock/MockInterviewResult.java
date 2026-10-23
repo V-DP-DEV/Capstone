@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.capstone.AppContainer;
@@ -18,6 +19,7 @@ import com.example.capstone.model.request.QuestionAnswerRequest;
 import com.example.capstone.repository.IInterviewAttemptsRepository;
 import com.example.capstone.repository.IInterviewRepository;
 import com.example.capstone.ui.components.BottomNavHelper;
+import com.example.capstone.util.BottomNavUtils;
 import com.example.capstone.viewmodel.AnswerViewModel;
 import com.example.capstone.viewmodel.ViewModelFactory;
 
@@ -93,7 +95,9 @@ public class MockInterviewResult extends Fragment {
         setupClickListeners();
 
         View bottomBar = view.findViewById(R.id.bottom_nav_container);
-        BottomNavHelper.setupNavListeners(this, bottomBar);
+        if (bottomBar != null) {
+            BottomNavUtils.setupBottomNavigation(bottomBar);
+        }
     }
 
     /**
@@ -150,11 +154,19 @@ public class MockInterviewResult extends Fragment {
      */
     private void navigateToReview() {
         if (isAdded()) {
+            Bundle args = new Bundle();
+            args.putLong("attempt_id",answerViewModel.getAttemptId());
             // Pass forward the current arguments bundle so ReviewInterviewFragment can read the session metadata
-            Bundle args = getArguments() != null ? new Bundle(getArguments()) : new Bundle();
 
-            NavHostFragment.findNavController(this)
-                    .navigate(R.id.action_mockInterviewResult_to_reviewInterviewFragment, args);
+            NavOptions navOptions = new NavOptions.Builder()
+                .setPopUpTo(R.id.userDashboardFragment, false)
+                .build();
+
+            NavHostFragment.findNavController(this).navigate(
+                R.id.action_mockInterviewResult_to_reviewInterviewFragment,
+                args,
+                navOptions
+            );
         }
     }
 
