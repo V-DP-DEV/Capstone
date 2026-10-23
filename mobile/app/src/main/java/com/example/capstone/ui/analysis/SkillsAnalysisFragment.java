@@ -34,7 +34,6 @@ public class SkillsAnalysisFragment extends Fragment {
     private CompetenciesAdapter competenciesAdapter;
     private ConceptAdapter conceptAdapter;
 
-    // Current filter states
     private int currentLastInterviews = 3;
     private String currentSortBy = "percentage";
     private String currentSortOrder = "ASC"; // Weakest first
@@ -49,18 +48,16 @@ public class SkillsAnalysisFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // 1. Get repository from AppContainer
+
         MyApplication app = (MyApplication) requireActivity().getApplication();
         AppContainer container = app.getAppContainer();
         IAnalyticsRepository analyticsRepository = container.analyticsRepository;
 
-        // 2. Setup ViewModel via Factory
         ViewModelFactory<SkillsAnalysisViewModel> factory = new ViewModelFactory<>(
                 () -> new SkillsAnalysisViewModel(analyticsRepository)
         );
         viewModel = new ViewModelProvider(this, factory).get(SkillsAnalysisViewModel.class);
 
-        // 3. Setup Navigation & UI Components
         View bottomBar = view.findViewById(R.id.bottom_nav_container);
         if (bottomBar != null) {
             BottomNavUtils.setupBottomNavigation(bottomBar);
@@ -86,7 +83,6 @@ public class SkillsAnalysisFragment extends Fragment {
             binding.btnBack.setOnClickListener(v -> Navigation.findNavController(v).popBackStack());
         }
 
-        // --- Core Skills vs Other Skills Tabs ---
         binding.tabCoreSkills.setOnClickListener(v -> {
             viewModel.setCoreSkillsSelected(true);
             binding.rvSkillsBody.setAdapter(competenciesAdapter);
@@ -99,7 +95,6 @@ public class SkillsAnalysisFragment extends Fragment {
             fetchData();
         });
 
-        // --- Interview Filters (Last 3, Last 5, All) ---
         binding.tabInterviewLast3.setOnClickListener(v -> {
             currentLastInterviews = 3;
             updateInterviewFilterUI(0);
@@ -116,7 +111,6 @@ public class SkillsAnalysisFragment extends Fragment {
             fetchData();
         });
 
-        // --- Skills Filters (Weakest, Strongest, All) ---
         binding.tabSkillWeakest.setOnClickListener(v -> {
             currentSortOrder = "ASC";
             updateSkillFilterUI(0);
@@ -195,7 +189,6 @@ public class SkillsAnalysisFragment extends Fragment {
         binding.tabInterviewAll.setBackground(selectedIndex == 2 ? ContextCompat.getDrawable(requireContext(), activeBg) : null);
         binding.tabInterviewAll.setTextColor(selectedIndex == 2 ? activeText : inactiveText);
 
-        // Update top pill label text
         if (selectedIndex == 0) binding.pillInterviewFilter.setText("Last 3 interviews");
         else if (selectedIndex == 1) binding.pillInterviewFilter.setText("Last 5 interviews");
         else binding.pillInterviewFilter.setText("All interviews");
@@ -215,7 +208,6 @@ public class SkillsAnalysisFragment extends Fragment {
         binding.tabSkillAll.setBackground(selectedIndex == 2 ? ContextCompat.getDrawable(requireContext(), activeBg) : null);
         binding.tabSkillAll.setTextColor(selectedIndex == 2 ? activeText : inactiveText);
 
-        // Update top pill label text
         if (selectedIndex == 0) binding.pillSkillFilter.setText("Weakest skills");
         else if (selectedIndex == 1) binding.pillSkillFilter.setText("Strongest skills");
         else binding.pillSkillFilter.setText("All skills");

@@ -15,7 +15,7 @@ public class BottomNavUtils {
     public static void setupBottomNavigation(View bottomNavView) {
         if (bottomNavView == null) return;
 
-        // 1. Home -> User Dashboard
+        //User Dashboard
         View navHome = bottomNavView.findViewById(R.id.nav_home);
         if (navHome != null) {
             navHome.setOnClickListener(v ->
@@ -23,7 +23,7 @@ public class BottomNavUtils {
             );
         }
 
-        // 2. Start Interview -> Select Difficulty
+        //Select Difficulty
         View navStartInterview = bottomNavView.findViewById(R.id.nav_start_interview);
         if (navStartInterview != null) {
             navStartInterview.setOnClickListener(v ->
@@ -31,7 +31,7 @@ public class BottomNavUtils {
             );
         }
 
-        // 3. Analytics -> Skills Analysis
+        //Skills Analysis
         View navAnalytics = bottomNavView.findViewById(R.id.nav_analytics);
         if (navAnalytics != null) {
             navAnalytics.setOnClickListener(v ->
@@ -39,7 +39,7 @@ public class BottomNavUtils {
             );
         }
 
-        // 4. Presentation -> Interview History
+        //Interview History
         View navPresentation = bottomNavView.findViewById(R.id.nav_presentation);
         if (navPresentation != null) {
             navPresentation.setOnClickListener(v ->
@@ -47,7 +47,7 @@ public class BottomNavUtils {
             );
         }
 
-        // 5. Profile -> User Profile
+        //User Profile
         View navProfile = bottomNavView.findViewById(R.id.nav_profile);
         if (navProfile != null) {
             navProfile.setOnClickListener(v ->

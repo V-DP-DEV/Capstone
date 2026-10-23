@@ -195,11 +195,8 @@ public class ApiClient {
   private <T> ApiResponse<T> parseResponse(String body, int statusCode, Type responseType) throws IOException {
     ApiResponse<T> response;
     try {
-      System.out.println(body);
       response = gson.fromJson(body, TypeToken.getParameterized(ApiResponse.class, responseType).getType());
-      System.out.println(gson.toJson(response));
     } catch (JsonSyntaxException e) {
-      System.out.println(e.getMessage());
       throw new IOException("Unexpected response from server (HTTP " + statusCode + ")", e);
     }
     if (response == null) {

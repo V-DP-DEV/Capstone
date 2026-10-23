@@ -22,7 +22,10 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
+/**
+ * ViewModel responsible for managing completed interview attempt review sessions,
+ * question-by-question result navigation, AI analysis triggering, and repository communication in the MVVM architecture.
+ */
 public class ReviewViewModel extends ViewModel {
   private final IInterviewAttemptsRepository interviewAttemptsRepository;
   private final MutableLiveData<UserInterviewAttempt> currentInterviewAttempt =
@@ -54,10 +57,13 @@ public class ReviewViewModel extends ViewModel {
   private final MutableLiveData<Boolean> analysed =
       new MutableLiveData<>(false);
 
+  private final MutableLiveData<Boolean> analysedCallSuccesful= new MutableLiveData<>(false);
 
   public ReviewViewModel(IInterviewAttemptsRepository interviewAttemptsRepository) {
     this.interviewAttemptsRepository = interviewAttemptsRepository;
   }
+
+  public MutableLiveData<Boolean> getAnalysedCallSuccesful(){return analysedCallSuccesful;}
 
   public MutableLiveData<String> getAnalysisError() {return analysisError;}
 
@@ -200,6 +206,7 @@ public class ReviewViewModel extends ViewModel {
       public void onSuccess(ApiResponse<Void> response) {
         isAnalysing.setValue(false);
         analysed.setValue(true);
+        analysedCallSuccesful.setValue(true);
       }
 
       @Override

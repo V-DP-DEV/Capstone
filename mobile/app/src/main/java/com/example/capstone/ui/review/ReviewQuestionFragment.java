@@ -134,9 +134,15 @@ public class ReviewQuestionFragment extends Fragment {
             }
         }
         if(binding.tvScoreVal!= null){
-            double score = q.getScore();
-            double maxScore = q.getMaxScore();
-            binding.tvScoreVal.setText(String.format("%.2f/%.2f", score, maxScore));
+            if(viewModel.getCurrentInterviewAttempt().getValue().isAnalysed()){
+                double score = q.getScore();
+                double maxScore = q.getMaxScore();
+                binding.tvScoreVal.setText(String.format("%.2f/%.2f", score, maxScore));
+            }
+            else{
+                binding.tvScoreVal.setText("N/A");
+                binding.tvScoreVal.setTextColor(Color.rgb(0,0,0));
+            }
         }
     }
     private int getColorForDifficulty(String difficulty) {

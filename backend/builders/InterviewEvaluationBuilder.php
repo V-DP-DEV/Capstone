@@ -10,8 +10,6 @@
                 'input'=>$this->buildInput($interviewQuestionResponse, $questionCompetencies,$questionConcepts,$interviewCompetency),
                 'text'=>$this->buildOutput()
             ];
-            //return ['input'=>$this->buildInput($interviewQuestionResponse, $questionCompetencies,$questionConcepts,$interviewCompetency)];
-
         }
 
         private function buildInstructions(): string

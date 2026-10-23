@@ -212,13 +212,10 @@ public class AuthService {
         RefreshRequest refreshRequest = new RefreshRequest();
         refreshRequest.setRefreshToken(refreshToken);
 
-        System.out.println("Retrieved" +refreshToken);
         ApiRequest request = new ApiRequest("auth/refresh");
         request.setRequiresAuthentication(false);
         request.setBody(refreshRequest);
         request.setMethodPost();
-
-        System.out.println("requesting refresh token");
 
         apiClient.executeRequest(
                 request,

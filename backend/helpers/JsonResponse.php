@@ -42,11 +42,6 @@
                 "error"=>[
                     "code"=>"INTERNAL_ERROR",
                     "message" => "An unexpected error occurred",
-                    "details" => [
-                        "file"=>$e->getFile(),
-                        "line"=>$e->getLine(),
-                        "message"=>$e->getMessage()
-                    ]
                 ]
             ]);
         }

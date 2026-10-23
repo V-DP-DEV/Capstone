@@ -1,7 +1,5 @@
 package com.example.capstone.viewmodel;
 
-
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -15,7 +13,10 @@ import com.example.capstone.repository.IInterviewAttemptsRepository;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
+/**
+ * ViewModel responsible for managing interview attempt history, sorting/filtering performance scores,
+ * loading past session summaries, and handling attempt deletions in the MVVM architecture.
+ */
 public class HistoryViewModel extends ViewModel {
 
     private final IInterviewAttemptsRepository repository;

@@ -14,6 +14,10 @@ import com.example.capstone.domainModels.CompetenciesBreakdownAnalysis;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * RecyclerView Adapter responsible for displaying individual sub-metric breakdown items
+ *  mapped from {@link CompetenciesBreakdownAnalysis}.
+ */
 public class CompetenciesBreakdownAdapter extends RecyclerView.Adapter<CompetenciesBreakdownAdapter.ViewHolder> {
 
     private List<CompetenciesBreakdownAnalysis> breakdownList = new ArrayList<>();

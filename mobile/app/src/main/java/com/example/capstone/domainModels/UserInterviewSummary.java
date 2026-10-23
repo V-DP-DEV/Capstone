@@ -2,6 +2,10 @@ package com.example.capstone.domainModels;
 
 import java.util.List;
 
+/**
+ * Domain model representing a summary of an available mock interview session.
+ * Used primarily for browsing, selecting, and previewing interview details prior to starting.
+ */
 public class UserInterviewSummary {
   private String name;
   private long id;

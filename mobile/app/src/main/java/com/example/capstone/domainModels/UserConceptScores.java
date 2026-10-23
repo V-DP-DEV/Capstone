@@ -1,5 +1,9 @@
 package com.example.capstone.domainModels;
 
+/**
+ * Domain model representing user performance scores associated with a specific concept or skill.
+ * Tracks individual score metrics, maximum achievable scores, and identification details.
+ */
 public class UserConceptScores {
   public int getId() {
     return id;

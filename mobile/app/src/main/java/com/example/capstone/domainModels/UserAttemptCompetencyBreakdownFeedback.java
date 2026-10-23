@@ -1,5 +1,8 @@
 package com.example.capstone.domainModels;
-
+/**
+ * Domain model representing granular feedback and scoring data for an individual
+ * sub-metric breakdown within a competency category (e.g., specific strengths or improvement areas).
+ */
 public class UserAttemptCompetencyBreakdownFeedback {
   private String name;
 

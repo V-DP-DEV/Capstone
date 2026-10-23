@@ -8,7 +8,10 @@ import com.example.capstone.domainModels.UserDashboardMetrics;
 import com.example.capstone.network.ApiCallback;
 import com.example.capstone.network.ApiResponse;
 import com.example.capstone.repository.IAnalyticsRepository;
-
+/**
+ * ViewModel responsible for managing user dashboard analytics state, including fetching performance metrics,
+ * loading indicators, error handling, and repository communication in the MVVM architecture.
+ */
 public class UserDashboardViewModel extends ViewModel {
 
     private final IAnalyticsRepository analyticsRepository;

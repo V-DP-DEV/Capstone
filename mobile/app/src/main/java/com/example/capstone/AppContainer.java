@@ -98,15 +98,6 @@ public class AppContainer {
     return secureSession;
   }
 
-  public Gson getGson() {
-    return gson;
-  }
-
-  public SetupViewModel createSetupViewModel() {
-    return new SetupViewModel(interviewRepository);
-  }
-
-
   public SettingsViewModel createSettingsViewModel() {
     return new SettingsViewModel(authRepository, userRepository);
   }
