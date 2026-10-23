@@ -54,7 +54,27 @@ public class ReviewViewModel extends ViewModel {
   private final MutableLiveData<Boolean> analysed =
       new MutableLiveData<>(false);
 
+  private long activeAttemptId = -1;
 
+  public void setActiveAttemptId(long id) {
+    if (this.activeAttemptId != id || currentInterviewAttempt.getValue() == null) {
+      this.activeAttemptId = id;
+      loadInterview(id);
+    } else {
+      // Force LiveData re-notification to ensure listeners get the latest state
+      UserInterviewAttempt current = currentInterviewAttempt.getValue();
+      if (current != null) {
+        currentInterviewAttempt.setValue(current);
+        if (current.isAnalysed()) {
+          analysed.setValue(true);
+        }
+      }
+    }
+  }
+
+  public long getActiveAttemptId() {
+    return activeAttemptId;
+  }
   public ReviewViewModel(IInterviewAttemptsRepository interviewAttemptsRepository) {
     this.interviewAttemptsRepository = interviewAttemptsRepository;
   }
@@ -215,7 +235,6 @@ public class ReviewViewModel extends ViewModel {
       }
     });
 
-    // Call your repository's submission method here.
   }
 
   public void clearViewModel(){
