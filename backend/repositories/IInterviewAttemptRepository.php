@@ -19,5 +19,5 @@
         public function deleteAttempt(int $interviewAttemptId);
         public function deleteAttempts(int $userId);
         public function setToReviewed(int $attemptId):int;
-        
+        public function updateTokenUsage(int $attemptId, int $inputTokens, int $outputTokens):int;
     }
