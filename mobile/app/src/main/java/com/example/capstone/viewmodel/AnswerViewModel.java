@@ -253,6 +253,14 @@ public class AnswerViewModel extends ViewModel {
         }
     }
 
+    public String getSavedAnswerForQuestion(UserQuestion question) {
+        if (question == null) return "";
+        Integer questionId = parseQuestionId(question.getId());
+        if (questionId == null) return "";
+        QuestionAnswerRequest request = answers.get(questionId);
+        return request != null ? request.getAnswer() : "";
+    }
+
     public void submitInterview() {
         SubmitInterviewAttemptRequest request =
             buildSubmissionRequest();

@@ -263,7 +263,8 @@ public class MockInterviewQuestionsFragment extends Fragment {
             binding.scrollCodeSnippet.setVisibility(View.GONE);
             binding.tvQuestionText.setText(currentQuestion.getText());
         }
-        binding.etAnswer.setText("");
+        String savedAnswer = answerViewModel.getSavedAnswerForQuestion(currentQuestion);
+        binding.etAnswer.setText(savedAnswer);
         stopRecordingState();
         startTimer();
     }
@@ -421,6 +422,11 @@ public class MockInterviewQuestionsFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+        if (binding != null && answerViewModel != null) {
+            String currentAnswerText = binding.etAnswer.getText().toString();
+            int seconds = getElapsedSeconds();
+            answerViewModel.saveCurrentResponse(currentAnswerText, seconds);
+        }
         stopTimer();
         speechManager.destroy();
         super.onDestroyView();
