@@ -22,6 +22,7 @@ import com.example.capstone.MyApplication;
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentUserProfileBinding;
 import com.example.capstone.ui.auth.AuthActivity;
+import com.example.capstone.util.BottomNavUtils;
 import com.example.capstone.viewmodel.ProfileViewModel;
 import com.example.capstone.viewmodel.SettingsViewModel;
 import com.example.capstone.viewmodel.ViewModelFactory;
@@ -133,36 +134,7 @@ public class UserProfileFragment extends Fragment {
 
         // Bottom navigation
         if (binding.bottomNavContainer != null) {
-
-            View navHome = binding.bottomNavContainer.getRoot()
-                    .findViewById(R.id.nav_home);
-
-            if (navHome != null) {
-                navHome.setOnClickListener(v ->
-                        Navigation.findNavController(v)
-                                .navigate(R.id.userDashboardFragment)
-                );
-            }
-
-            View navStartInterview =
-                    binding.bottomNavContainer.getRoot()
-                            .findViewById(R.id.nav_start_interview);
-
-            if (navStartInterview != null) {
-                navStartInterview.setOnClickListener(v ->
-                        Navigation.findNavController(v)
-                                .navigate(R.id.selectDifficultyFragment)
-                );
-            }
-
-            View navProfile = binding.bottomNavContainer.getRoot()
-                    .findViewById(R.id.nav_profile);
-
-            if (navProfile != null) {
-                navProfile.setOnClickListener(v -> {
-                    // Already on the profile page.
-                });
-            }
+            BottomNavUtils.setupBottomNavigation(binding.bottomNavContainer.getRoot());
         }
     }
 
