@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -37,6 +38,7 @@ import java.util.ArrayList;
 public class InterviewHistoryFragment extends Fragment {
 
     private RecyclerView recyclerView;
+    private TextView tvEmptyState;
     private InterviewHistoryAdapter adapter;
     private HistoryViewModel historyViewModel;
 
@@ -67,6 +69,7 @@ return view;
         historyViewModel = new ViewModelProvider(this, factory).get(HistoryViewModel.class);
 
         recyclerView = view.findViewById(R.id.rv_interview_history);
+        tvEmptyState = view.findViewById(R.id.tv_empty_state);
         tabAll = view.findViewById(R.id.tab_all);
         tabHighest = view.findViewById(R.id.tab_highest);
         tabLowest = view.findViewById(R.id.tab_lowest);
@@ -96,7 +99,14 @@ return view;
 
             @Override
             public void onDeleteClick(UserInterviewAttemptSummary summary, int position) {
-                historyViewModel.deleteAttempt((int) summary.getId());
+                new AlertDialog.Builder(requireContext())
+                    .setTitle("Delete Interview")
+                    .setMessage("Are you sure you want to delete this interview attempt?")
+                    .setPositiveButton("Delete", (dialog, which) -> {
+                        historyViewModel.deleteAttempt((int) summary.getId());
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
             }
         });
         recyclerView.setAdapter(adapter);
@@ -117,6 +127,9 @@ return view;
         historyViewModel.getHistoryList().observe(getViewLifecycleOwner(), attempts -> {
             if (attempts != null) {
                 adapter.updateData(attempts);
+                if (tvEmptyState != null) {
+                    tvEmptyState.setVisibility(attempts.isEmpty() ? View.VISIBLE : View.GONE);
+                }
             }
         });
 
