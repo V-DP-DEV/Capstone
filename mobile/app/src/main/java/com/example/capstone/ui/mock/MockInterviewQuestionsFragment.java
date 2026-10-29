@@ -25,6 +25,7 @@ import com.example.capstone.AppContainer;
 import com.example.capstone.MyApplication;
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentMockInterviewQuestionsBinding;
+import com.example.capstone.domainModels.UserInterview;
 import com.example.capstone.domainModels.UserQuestion;
 import com.example.capstone.repository.IInterviewAttemptsRepository;
 import com.example.capstone.repository.IInterviewRepository;
@@ -96,14 +97,42 @@ public class MockInterviewQuestionsFragment extends Fragment {
         answerViewModel = new ViewModelProvider(requireActivity(), factory)
             .get(AnswerViewModel.class);
 
-        Integer index =
-            answerViewModel.getCurrentQuestionIndex().getValue();
-        binding.tvHeaderTitle.setText(answerViewModel.getCurrentInterview().getValue().getName());
-        displayQuestionAtIndex(index != null ? index : 0);
+        UserInterview interview = answerViewModel.getCurrentInterview().getValue();
+        if (interview != null && interview.getName() != null) {
+            binding.tvHeaderTitle.setText(interview.getName());
+            Integer index = answerViewModel.getCurrentQuestionIndex().getValue();
+            if (interview.getQuestions() != null && !interview.getQuestions().isEmpty()) {
+                displayQuestionAtIndex(index != null ? index : 0);
+            }
+        } else {
+            binding.tvHeaderTitle.setText("Mock Interview");
+            Bundle args = getArguments();
+            if (args != null) {
+                int id = args.getInt(MockInterviewInstructionsFragment.ARG_INPUT_ID, -1);
+                if (id != -1) {
+                    answerViewModel.loadInterview(id);
+                }
+            }
+        }
+
+        answerViewModel.getCurrentInterview().observe(
+            getViewLifecycleOwner(), updatedInterview -> {
+                if (updatedInterview != null) {
+                    if (binding != null && binding.tvHeaderTitle != null) {
+                        binding.tvHeaderTitle.setText(updatedInterview.getName() != null ? updatedInterview.getName() : "Mock Interview");
+                    }
+                    Integer index = answerViewModel.getCurrentQuestionIndex().getValue();
+                    if (updatedInterview.getQuestions() != null && !updatedInterview.getQuestions().isEmpty()) {
+                        displayQuestionAtIndex(index != null ? index : 0);
+                    }
+                }
+            });
 
         answerViewModel.getCurrentQuestionIndex().observe(
             getViewLifecycleOwner(), qindex -> {
-                if (answerViewModel.getCurrentInterview().getValue() != null
+                UserInterview currentInt = answerViewModel.getCurrentInterview().getValue();
+                if (currentInt != null
+                    && currentInt.getQuestions() != null
                     && qindex != null) {
                     displayQuestionAtIndex(qindex);
                 }

@@ -15,6 +15,7 @@ import com.example.capstone.AppContainer;
 import com.example.capstone.MyApplication;
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentMockInterviewResultBinding;
+import com.example.capstone.domainModels.UserInterview;
 import com.example.capstone.model.request.QuestionAnswerRequest;
 import com.example.capstone.repository.IInterviewAttemptsRepository;
 import com.example.capstone.repository.IInterviewRepository;
@@ -94,14 +95,11 @@ public class MockInterviewResult extends Fragment {
      * Extracts session metadata from the argument bundle and populates the results screen TextViews.
      */
     private void displaySessionDetails() {
-        String title = answerViewModel.getCurrentInterview().getValue().getName();
-        //String title = getArguments().getString(ARG_INTERVIEW_TITLE, "Mock Interview");
-        String difficulty = answerViewModel.getCurrentInterview().getValue().getDifficulty();
-        //String difficulty = getArguments().getString(ARG_DIFFICULTY, "Medium");
-        int answered = answerViewModel.getCurrentInterview().getValue().getTotalQuestions();
-        //int answered = getArguments().getInt(ARG_ANSWERED_COUNT, 0);
-        //int total = getArguments().getInt(ARG_TOTAL_QUESTIONS, 0);
-        int total = answerViewModel.getCurrentInterview().getValue().getTotalQuestions();
+        UserInterview interview = answerViewModel.getCurrentInterview().getValue();
+        String title = (interview != null && interview.getName() != null) ? interview.getName() : "Mock Interview";
+        String difficulty = (interview != null && interview.getDifficulty() != null) ? interview.getDifficulty() : "Medium";
+        int answered = (interview != null) ? interview.getTotalQuestions() : 0;
+        int total = answered;
         int totalSeconds = 0;
 
         for (QuestionAnswerRequest answer : answerViewModel.getAnswers().values()) {

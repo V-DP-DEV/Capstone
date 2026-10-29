@@ -289,7 +289,12 @@ public class AnswerViewModel extends ViewModel {
 
 
     public SubmitInterviewAttemptRequest buildSubmissionRequest() {
-        int interviewId = getCurrentInterview().getValue().getId();
+        UserInterview interview = getCurrentInterview().getValue();
+        if (interview == null) {
+            error.setValue("Interview session data is missing.");
+            return null;
+        }
+        int interviewId = interview.getId();
         List<QuestionAnswerRequest> submissionAnswers =
             new ArrayList<>();
 
