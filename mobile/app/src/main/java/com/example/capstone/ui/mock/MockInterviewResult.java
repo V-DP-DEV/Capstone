@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -89,6 +90,13 @@ public class MockInterviewResult extends Fragment {
         if (bottomBar != null) {
             BottomNavUtils.setupBottomNavigation(bottomBar);
         }
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                navigateToDashboard();
+            }
+        });
     }
 
     /**
@@ -130,9 +138,29 @@ public class MockInterviewResult extends Fragment {
     private void setupClickListeners() {
         if (binding == null) return;
 
+        if (binding.btnBack != null) {
+            binding.btnBack.setOnClickListener(v -> navigateToDashboard());
+        }
+
         if (binding.btnViewReview != null) {
+            binding.btnViewReview.setOnClickListener(v -> {
+                answerViewModel.clearViewModel();
+                navigateToReview();
+            });
+        }
+    }
+
+    private void navigateToDashboard() {
+        if (isAdded()) {
             answerViewModel.clearViewModel();
-            binding.btnViewReview.setOnClickListener(v -> navigateToReview());
+            NavOptions navOptions = new NavOptions.Builder()
+                .setPopUpTo(R.id.userDashboardFragment, false)
+                .build();
+            NavHostFragment.findNavController(this).navigate(
+                R.id.action_mockInterviewResult_to_userDashboardFragment,
+                null,
+                navOptions
+            );
         }
     }
 
