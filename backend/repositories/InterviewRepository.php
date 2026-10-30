@@ -27,12 +27,25 @@
              return $this->db->queryAll($query,[$id]);
         }
 
-        public function getUserInterviews(?int $categoryId = null, ?string $name = null, ?string $difficulty = null):array|false{
+        public function getUserInterviews(int $userId,?int $categoryId = null, ?string $name = null, ?string $difficulty = null):array|false{
             //map name for frontEnd purposes
-            $query = "SELECT id,interview_name as name,difficulty FROM interviews WHERE 1=1 AND active =1";
+            //checks what interview user has done to prevent duplicates
+            $query = "SELECT
+                            i.id,
+                            i.interview_name AS name,
+                            i.difficulty
+                        FROM interviews i
+                        WHERE i.active = 1
+                        AND NOT EXISTS (
+                            SELECT 1
+                            FROM interview_user_attempts iua
+                            WHERE iua.interview_id = i.id
+                            AND iua.user_id = ?
+                        )";
 
             //add filters
             $params = [];
+            $params[] = $userId;
             if($categoryId !== null){
                 $query .= " AND category_id = ?";
                 $params[] = $categoryId;
