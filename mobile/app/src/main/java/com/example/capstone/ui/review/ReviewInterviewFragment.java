@@ -119,12 +119,37 @@ public class ReviewInterviewFragment extends Fragment {
 
                 if (analysed) {
                     // Populate duplicated competency cards via adapter
+                    System.out.println(competencyFeedbackAdapter.getItemCount());
+                    System.out.println(attempt.getCompetencyFeedbacks()!=null);
                     if (competencyFeedbackAdapter != null && attempt.getCompetencyFeedbacks() != null) {
                         competencyFeedbackAdapter.setData(attempt.getCompetencyFeedbacks());
                     }
+                    System.out.println(competencyFeedbackAdapter.getItemCount());
                     if (binding.rvCompetencyCards != null) {
                         binding.rvCompetencyCards.setVisibility(View.VISIBLE);
                     }
+
+                    binding.rvCompetencyCards.post(() -> {
+                        Log.d(TAG, "Visibility: "
+                            + binding.rvCompetencyCards.getVisibility());
+
+                        Log.d(TAG, "Adapter count: "
+                            + competencyFeedbackAdapter.getItemCount());
+
+                        Log.d(TAG, "RecyclerView height: "
+                            + binding.rvCompetencyCards.getHeight());
+
+                        Log.d(TAG, "Measured height: "
+                            + binding.rvCompetencyCards.getMeasuredHeight());
+
+                        Log.d(TAG, "Layout manager: "
+                            + binding.rvCompetencyCards.getLayoutManager());
+
+                        Log.d(TAG, "Child count: "
+                            + binding.rvCompetencyCards.getChildCount());
+                    });
+
+                    System.out.println(binding.rvCompetencyCards.getVisibility());
                     if (binding.reviewQuestions != null) {
                         binding.reviewQuestions.setText("Review questions");
                     }
@@ -215,12 +240,12 @@ public class ReviewInterviewFragment extends Fragment {
         binding.rvQList.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvQList.setAdapter(adapter);
         binding.rvQList.setNestedScrollingEnabled(false);
-        if (competencyFeedbackAdapter == null && binding.rvCompetencyCards != null) {
+        if (competencyFeedbackAdapter == null) {
             competencyFeedbackAdapter = new CompetencyFeedbackAdapter();
-            binding.rvCompetencyCards.setLayoutManager(new LinearLayoutManager(requireContext()));
-            binding.rvCompetencyCards.setAdapter(competencyFeedbackAdapter);
-            binding.rvCompetencyCards.setNestedScrollingEnabled(false);
         }
+
+        binding.rvCompetencyCards.setLayoutManager(new LinearLayoutManager(requireContext()));binding.rvCompetencyCards.setAdapter(competencyFeedbackAdapter);
+        binding.rvCompetencyCards.setNestedScrollingEnabled(false);
     }
 
     private void displaySessionMetadata() {
