@@ -95,12 +95,6 @@ public class ReviewInterviewFragment extends Fragment {
         viewModel = new ViewModelProvider(requireActivity(), factory)
                 .get(ReviewViewModel.class);
 
-        if (attemptId != -1) {
-            viewModel.loadInterview(attemptId);
-        } else {
-            Toast.makeText(requireContext(), "Error: Interview ID not found", Toast.LENGTH_SHORT).show();
-        }
-
         // Observe Interview Attempt LiveData
         viewModel.getCurrentInterviewAttempt().observe(getViewLifecycleOwner(), attempt -> {
             if (attempt != null) {
@@ -164,19 +158,6 @@ public class ReviewInterviewFragment extends Fragment {
             }
         });
 
-        // Observe Loading State
-        viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
-            if (Boolean.TRUE.equals(isLoading)) {
-                if (getActivity() instanceof BaseActivity) {
-                    ((BaseActivity) getActivity()).showLoadingDialog("Getting interview...");
-                }
-            } else {
-                if (getActivity() instanceof BaseActivity) {
-                    ((BaseActivity) getActivity()).hideLoadingDialog();
-                }
-            }
-        });
-
         // Observe Analysis Loading State
         viewModel.getIsAnalysing().observe(getViewLifecycleOwner(), isAnalysing -> {
             if (Boolean.TRUE.equals(isAnalysing)) {
@@ -220,6 +201,25 @@ public class ReviewInterviewFragment extends Fragment {
                 }
             }
         });
+
+        viewModel.getIsLoading().observe(getViewLifecycleOwner(), loading->{
+            if(Boolean.TRUE.equals(loading)){
+                if (getActivity() instanceof BaseActivity) {
+                    ((BaseActivity) getActivity()).showLoadingDialog("Getting interview...");
+                }
+            }
+            else{
+                if (getActivity() instanceof BaseActivity) {
+                    ((BaseActivity) getActivity()).hideLoadingDialog();
+                }
+            }
+        });
+
+        if (attemptId != -1) {
+            viewModel.loadInterview(attemptId);
+        } else {
+            Toast.makeText(requireContext(), "Error: Interview ID not found", Toast.LENGTH_SHORT).show();
+        }
 
 
         setupClickListeners();
