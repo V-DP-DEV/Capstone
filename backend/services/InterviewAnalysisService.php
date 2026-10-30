@@ -78,7 +78,7 @@
 
                     $conceptId = $concept['concept_id'];
                     $score = $concept['score'];
-                    $totalQuestionConceptScore+=2;
+                    $totalQuestionConceptScore+=$score;
                     $maxQuestionConceptScore+=2;
 
                     //map to what will be saved for db

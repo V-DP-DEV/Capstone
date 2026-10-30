@@ -67,7 +67,7 @@ public class SecureSession {
   }
 
   public boolean isAccessTokenExpired(){
-    return getSessionExpiration()<=System.currentTimeMillis();
+    return getSessionExpiration()+20000<=System.currentTimeMillis();
   }
   public boolean isRefreshExpired(){
     return getRefreshExpiration()<=System.currentTimeMillis();

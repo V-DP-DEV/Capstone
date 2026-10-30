@@ -109,7 +109,6 @@ public class ReviewViewModel extends ViewModel {
 
             if (interview == null) {
               error.setValue("Interview not found.");
-              isLoading.setValue(false);
               return;
             }
 
@@ -132,6 +131,7 @@ public class ReviewViewModel extends ViewModel {
           @Override
           public void onHttpError(
               ApiResponse<UserInterviewAttempt> response) {
+            isLoading.setValue(false);
             error.setValue(response.getError().getMessage());
           }
         });
@@ -196,9 +196,12 @@ public class ReviewViewModel extends ViewModel {
   }
 
   public void analyseAttempt() {
+    if(Boolean.TRUE.equals(isAnalysing.getValue())){
+      return;
+    }
+    isAnalysing.setValue(true);
     AnalyseRequest request = new AnalyseRequest();
     request.setId((int)currentInterviewAttempt.getValue().getId());
-    isAnalysing.setValue(true);
     error.setValue(null);
 
     interviewAttemptsRepository.requestAnalysis(request, new ApiCallback<Void>() {

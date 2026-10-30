@@ -95,12 +95,6 @@ public class ReviewInterviewFragment extends Fragment {
         viewModel = new ViewModelProvider(requireActivity(), factory)
                 .get(ReviewViewModel.class);
 
-        if (attemptId != -1) {
-            viewModel.loadInterview(attemptId);
-        } else {
-            Toast.makeText(requireContext(), "Error: Interview ID not found", Toast.LENGTH_SHORT).show();
-        }
-
         // Observe Interview Attempt LiveData
         viewModel.getCurrentInterviewAttempt().observe(getViewLifecycleOwner(), attempt -> {
             if (attempt != null) {
@@ -119,12 +113,37 @@ public class ReviewInterviewFragment extends Fragment {
 
                 if (analysed) {
                     // Populate duplicated competency cards via adapter
+                    System.out.println(competencyFeedbackAdapter.getItemCount());
+                    System.out.println(attempt.getCompetencyFeedbacks()!=null);
                     if (competencyFeedbackAdapter != null && attempt.getCompetencyFeedbacks() != null) {
                         competencyFeedbackAdapter.setData(attempt.getCompetencyFeedbacks());
                     }
+                    System.out.println(competencyFeedbackAdapter.getItemCount());
                     if (binding.rvCompetencyCards != null) {
                         binding.rvCompetencyCards.setVisibility(View.VISIBLE);
                     }
+
+                    binding.rvCompetencyCards.post(() -> {
+                        Log.d(TAG, "Visibility: "
+                            + binding.rvCompetencyCards.getVisibility());
+
+                        Log.d(TAG, "Adapter count: "
+                            + competencyFeedbackAdapter.getItemCount());
+
+                        Log.d(TAG, "RecyclerView height: "
+                            + binding.rvCompetencyCards.getHeight());
+
+                        Log.d(TAG, "Measured height: "
+                            + binding.rvCompetencyCards.getMeasuredHeight());
+
+                        Log.d(TAG, "Layout manager: "
+                            + binding.rvCompetencyCards.getLayoutManager());
+
+                        Log.d(TAG, "Child count: "
+                            + binding.rvCompetencyCards.getChildCount());
+                    });
+
+                    System.out.println(binding.rvCompetencyCards.getVisibility());
                     if (binding.reviewQuestions != null) {
                         binding.reviewQuestions.setText("Review questions");
                     }
@@ -139,19 +158,6 @@ public class ReviewInterviewFragment extends Fragment {
             }
         });
 
-        // Observe Loading State
-        viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
-            if (Boolean.TRUE.equals(isLoading)) {
-                if (getActivity() instanceof BaseActivity) {
-                    ((BaseActivity) getActivity()).showLoadingDialog("Getting interview...");
-                }
-            } else {
-                if (getActivity() instanceof BaseActivity) {
-                    ((BaseActivity) getActivity()).hideLoadingDialog();
-                }
-            }
-        });
-
         // Observe Analysis Loading State
         viewModel.getIsAnalysing().observe(getViewLifecycleOwner(), isAnalysing -> {
             if (Boolean.TRUE.equals(isAnalysing)) {
@@ -161,6 +167,7 @@ public class ReviewInterviewFragment extends Fragment {
             } else {
                 if (getActivity() instanceof BaseActivity) {
                     ((BaseActivity) getActivity()).hideLoadingDialog();
+                    binding.divPillBtn.setEnabled(true);
                 }
             }
         });
@@ -168,13 +175,18 @@ public class ReviewInterviewFragment extends Fragment {
         // Observe Errors
         viewModel.getError().observe(getViewLifecycleOwner(), error -> {
             if (error != null && !error.isEmpty()) {
-                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
+                BaseActivity baseActivity = ((BaseActivity) getActivity());
+                baseActivity.showAlertDialog("Could not get attempt",error,()->{
+                    navigateBack();
+                });
             }
         });
 
-        viewModel.getAnalysisError().observe(getViewLifecycleOwner(), analysisError -> {
-            if (analysisError != null && !analysisError.isEmpty()) {
-                Toast.makeText(requireContext(), analysisError, Toast.LENGTH_SHORT).show();
+        viewModel.getAnalysisError().observe(getViewLifecycleOwner(), error -> {
+            if (error != null && !error.isEmpty()) {
+                BaseActivity baseActivity = ((BaseActivity) getActivity());
+                baseActivity.showAlertDialog("Could not analyse attempt",error,()->{
+                });
             }
         });
 
@@ -190,6 +202,27 @@ public class ReviewInterviewFragment extends Fragment {
                 }
             }
         });
+
+        viewModel.getIsLoading().observe(getViewLifecycleOwner(), loading->{
+            if(Boolean.TRUE.equals(loading)){
+                if (getActivity() instanceof BaseActivity) {
+                    ((BaseActivity) getActivity()).showLoadingDialog("Getting interview...");
+                }
+            }
+            else{
+                if (getActivity() instanceof BaseActivity) {
+                    ((BaseActivity) getActivity()).hideLoadingDialog();
+                    binding.divPillBtn.setEnabled(true);
+                }
+            }
+        });
+
+        if (attemptId != -1) {
+            viewModel.loadInterview(attemptId);
+        } else {
+            Toast.makeText(requireContext(), "Error: Interview ID not found", Toast.LENGTH_SHORT).show();
+        }
+
 
         setupClickListeners();
 
@@ -215,12 +248,12 @@ public class ReviewInterviewFragment extends Fragment {
         binding.rvQList.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvQList.setAdapter(adapter);
         binding.rvQList.setNestedScrollingEnabled(false);
-        if (competencyFeedbackAdapter == null && binding.rvCompetencyCards != null) {
+        if (competencyFeedbackAdapter == null) {
             competencyFeedbackAdapter = new CompetencyFeedbackAdapter();
-            binding.rvCompetencyCards.setLayoutManager(new LinearLayoutManager(requireContext()));
-            binding.rvCompetencyCards.setAdapter(competencyFeedbackAdapter);
-            binding.rvCompetencyCards.setNestedScrollingEnabled(false);
         }
+
+        binding.rvCompetencyCards.setLayoutManager(new LinearLayoutManager(requireContext()));binding.rvCompetencyCards.setAdapter(competencyFeedbackAdapter);
+        binding.rvCompetencyCards.setNestedScrollingEnabled(false);
     }
 
     private void displaySessionMetadata() {
@@ -280,6 +313,8 @@ public class ReviewInterviewFragment extends Fragment {
             binding.divPillBtn.setOnClickListener(v -> {
                 if (currentAttempt != null) {
                     if (!currentAttempt.isAnalysed()) {
+                        binding.divPillBtn.setEnabled(false);
+                        System.out.println("analyse tapped");
                         viewModel.analyseAttempt();
                     } else {
                         navigateToQuestionReview();
@@ -359,6 +394,7 @@ public class ReviewInterviewFragment extends Fragment {
 
     private void navigateBack() {
         if (isAdded()) {
+            viewModel.clearViewModel();
             NavHostFragment.findNavController(this).navigateUp();
         }
     }

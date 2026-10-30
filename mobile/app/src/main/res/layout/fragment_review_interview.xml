@@ -72,7 +72,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
-            android:text="C# Developer"
             android:textColor="#FF1C1C28"
             android:textSize="15sp"
             android:textStyle="bold"
@@ -82,13 +81,13 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Difficulty Badge -->
+
         <TextView
             android:id="@+id/hard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:fontFamily="sans-serif"
-            android:text="Hard"
             android:textColor="#FFE49596"
             android:textSize="13sp"
             android:textStyle="bold"
@@ -101,7 +100,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:fontFamily="sans-serif"
-            android:text="Analysed"
             android:textColor="@color/primary_blue"
             android:textSize="13sp"
             android:textStyle="bold"
@@ -117,7 +115,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
-            android:text="10 questions"
             android:textColor="#FF8A8A97"
             android:textSize="15sp"
             android:textStyle="bold"
@@ -132,7 +129,6 @@
             android:layout_marginStart="100dp"
             android:layout_marginTop="4dp"
             android:fontFamily="sans-serif"
-            android:text="00:19/30:00"
             android:textColor="#FF08B425"
             android:textSize="13sp"
             android:textStyle="bold"
@@ -146,7 +142,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:fontFamily="sans-serif"
-            android:text="19 October 2026"
             android:textColor="#FF8A8A97"
             android:textSize="13sp"
             android:textStyle="bold"
