@@ -221,18 +221,6 @@ public class ReviewInterviewFragment extends Fragment {
             }
         });
 
-        viewModel.getIsLoading().observe(getViewLifecycleOwner(), loading->{
-            if(Boolean.TRUE.equals(loading)){
-                if (getActivity() instanceof BaseActivity) {
-                    ((BaseActivity) getActivity()).showLoadingDialog("Getting interview...");
-                }
-            }
-            else{
-                if (getActivity() instanceof BaseActivity) {
-                    ((BaseActivity) getActivity()).hideLoadingDialog();
-                }
-            }
-        });
 
         setupClickListeners();
 
