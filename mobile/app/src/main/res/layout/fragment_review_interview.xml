@@ -84,8 +84,8 @@
 
         <TextView
             android:id="@+id/hard"
-            android:layout_width="23dp"
-            android:layout_height="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:fontFamily="sans-serif"
             android:textColor="#FFE49596"
