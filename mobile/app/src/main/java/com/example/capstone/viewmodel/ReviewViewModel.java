@@ -109,7 +109,6 @@ public class ReviewViewModel extends ViewModel {
 
             if (interview == null) {
               error.setValue("Interview not found.");
-              isLoading.setValue(false);
               return;
             }
 
@@ -132,6 +131,7 @@ public class ReviewViewModel extends ViewModel {
           @Override
           public void onHttpError(
               ApiResponse<UserInterviewAttempt> response) {
+            isLoading.setValue(false);
             error.setValue(response.getError().getMessage());
           }
         });
