@@ -1,6 +1,5 @@
 package com.example.capstone.util;
 
-
 import android.graphics.Color;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,6 +9,8 @@ import androidx.navigation.Navigation;
 
 import com.example.capstone.R;
 
+import java.util.function.Consumer;
+
 public class BottomNavUtils {
 
     // Private constructor to prevent instantiation of a utility class
@@ -17,7 +18,12 @@ public class BottomNavUtils {
 
     public static void setupBottomNavigation(View bottomNavView) {
         if (bottomNavView == null) return;
-        NavController navController = Navigation.findNavController(bottomNavView.findViewById(R.id.nav_home));
+        NavController navController;
+        try {
+            navController = Navigation.findNavController(bottomNavView);
+        } catch (Exception e) {
+            return;
+        }
 
         //containers
         View navHome = bottomNavView.findViewById(R.id.nav_home);
@@ -40,37 +46,46 @@ public class BottomNavUtils {
 
         //User Dashboard
         if (navHome != null) {
-            navHome.setOnClickListener(v ->
-                    Navigation.findNavController(v).navigate(R.id.userDashboardFragment)
-            );
+            navHome.setOnClickListener(v -> {
+                if (navController.getCurrentDestination() == null || navController.getCurrentDestination().getId() != R.id.userDashboardFragment) {
+                    navController.navigate(R.id.userDashboardFragment);
+                }
+            });
         }
 
         if (navStartInterview != null) {
-            navStartInterview.setOnClickListener(v ->
-                    Navigation.findNavController(v).navigate(R.id.selectDifficultyFragment)
-            );
+            navStartInterview.setOnClickListener(v -> {
+                if (navController.getCurrentDestination() == null || navController.getCurrentDestination().getId() != R.id.selectDifficultyFragment) {
+                    navController.navigate(R.id.selectDifficultyFragment);
+                }
+            });
         }
 
         if (navAnalytics != null) {
-            navAnalytics.setOnClickListener(v ->
-                    Navigation.findNavController(v).navigate(R.id.skillsAnalysisFragment)
-            );
+            navAnalytics.setOnClickListener(v -> {
+                if (navController.getCurrentDestination() == null || navController.getCurrentDestination().getId() != R.id.skillsAnalysisFragment) {
+                    navController.navigate(R.id.skillsAnalysisFragment);
+                }
+            });
         }
 
         if (navPresentation != null) {
-            navPresentation.setOnClickListener(v ->
-                    Navigation.findNavController(v).navigate(R.id.interviewHistoryFragment)
-            );
+            navPresentation.setOnClickListener(v -> {
+                if (navController.getCurrentDestination() == null || navController.getCurrentDestination().getId() != R.id.interviewHistoryFragment) {
+                    navController.navigate(R.id.interviewHistoryFragment);
+                }
+            });
         }
 
         if (navProfile != null) {
-            navProfile.setOnClickListener(v ->
-                    Navigation.findNavController(v).navigate(R.id.userProfileFragment)
-            );
+            navProfile.setOnClickListener(v -> {
+                if (navController.getCurrentDestination() == null || navController.getCurrentDestination().getId() != R.id.userProfileFragment) {
+                    navController.navigate(R.id.userProfileFragment);
+                }
+            });
         }
-        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            int destId = destination.getId();
 
+        Consumer<Integer> updateSelection = (destId) -> {
             if (indicatorHome != null) indicatorHome.setVisibility(View.GONE);
             if (indicatorInterview != null) indicatorInterview.setVisibility(View.GONE);
             if (indicatorAnalytics != null) indicatorAnalytics.setVisibility(View.GONE);
@@ -102,6 +117,14 @@ public class BottomNavUtils {
                 if (indicatorProfile != null) indicatorProfile.setVisibility(View.VISIBLE);
                 if (iconProfile != null) iconProfile.setColorFilter(activeColor);
             }
+        };
+
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            updateSelection.accept(destination.getId());
         });
+
+        if (navController.getCurrentDestination() != null) {
+            updateSelection.accept(navController.getCurrentDestination().getId());
+        }
     }
 }
