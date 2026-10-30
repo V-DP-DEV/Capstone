@@ -133,9 +133,11 @@ return view;
             }
         });
 
-        historyViewModel.getError().observe(getViewLifecycleOwner(), errorMsg -> {
-            if (errorMsg != null && !errorMsg.isEmpty()) {
-                Toast.makeText(getContext(), errorMsg, Toast.LENGTH_SHORT).show();
+        historyViewModel.getError().observe(getViewLifecycleOwner(), error -> {
+            if (error != null && !error.isEmpty()) {
+                BaseActivity baseActivity = ((BaseActivity) getActivity());
+                baseActivity.showAlertDialog("Error occured",error,()->{
+                });
             }
         });
 

@@ -193,13 +193,18 @@ public class ReviewInterviewFragment extends Fragment {
         // Observe Errors
         viewModel.getError().observe(getViewLifecycleOwner(), error -> {
             if (error != null && !error.isEmpty()) {
-                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
+                BaseActivity baseActivity = ((BaseActivity) getActivity());
+                baseActivity.showAlertDialog("Could not get attempt",error,()->{
+                    navigateBack();
+                });
             }
         });
 
-        viewModel.getAnalysisError().observe(getViewLifecycleOwner(), analysisError -> {
-            if (analysisError != null && !analysisError.isEmpty()) {
-                Toast.makeText(requireContext(), analysisError, Toast.LENGTH_SHORT).show();
+        viewModel.getAnalysisError().observe(getViewLifecycleOwner(), error -> {
+            if (error != null && !error.isEmpty()) {
+                BaseActivity baseActivity = ((BaseActivity) getActivity());
+                baseActivity.showAlertDialog("Could not analyse attempt",error,()->{
+                });
             }
         });
 
