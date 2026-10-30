@@ -196,9 +196,12 @@ public class ReviewViewModel extends ViewModel {
   }
 
   public void analyseAttempt() {
+    if(Boolean.TRUE.equals(isAnalysing.getValue())){
+      return;
+    }
+    isAnalysing.setValue(true);
     AnalyseRequest request = new AnalyseRequest();
     request.setId((int)currentInterviewAttempt.getValue().getId());
-    isAnalysing.setValue(true);
     error.setValue(null);
 
     interviewAttemptsRepository.requestAnalysis(request, new ApiCallback<Void>() {

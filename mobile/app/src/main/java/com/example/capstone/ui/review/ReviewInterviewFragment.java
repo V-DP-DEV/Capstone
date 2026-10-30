@@ -167,6 +167,7 @@ public class ReviewInterviewFragment extends Fragment {
             } else {
                 if (getActivity() instanceof BaseActivity) {
                     ((BaseActivity) getActivity()).hideLoadingDialog();
+                    binding.divPillBtn.setEnabled(true);
                 }
             }
         });
@@ -211,6 +212,7 @@ public class ReviewInterviewFragment extends Fragment {
             else{
                 if (getActivity() instanceof BaseActivity) {
                     ((BaseActivity) getActivity()).hideLoadingDialog();
+                    binding.divPillBtn.setEnabled(true);
                 }
             }
         });
@@ -311,6 +313,8 @@ public class ReviewInterviewFragment extends Fragment {
             binding.divPillBtn.setOnClickListener(v -> {
                 if (currentAttempt != null) {
                     if (!currentAttempt.isAnalysed()) {
+                        binding.divPillBtn.setEnabled(false);
+                        System.out.println("analyse tapped");
                         viewModel.analyseAttempt();
                     } else {
                         navigateToQuestionReview();
