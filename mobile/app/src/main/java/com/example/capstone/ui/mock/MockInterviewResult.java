@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -15,6 +16,7 @@ import com.example.capstone.AppContainer;
 import com.example.capstone.MyApplication;
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentMockInterviewResultBinding;
+import com.example.capstone.domainModels.UserInterview;
 import com.example.capstone.model.request.QuestionAnswerRequest;
 import com.example.capstone.repository.IInterviewAttemptsRepository;
 import com.example.capstone.repository.IInterviewRepository;
@@ -88,20 +90,24 @@ public class MockInterviewResult extends Fragment {
         if (bottomBar != null) {
             BottomNavUtils.setupBottomNavigation(bottomBar);
         }
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                navigateToDashboard();
+            }
+        });
     }
 
     /**
      * Extracts session metadata from the argument bundle and populates the results screen TextViews.
      */
     private void displaySessionDetails() {
-        String title = answerViewModel.getCurrentInterview().getValue().getName();
-        //String title = getArguments().getString(ARG_INTERVIEW_TITLE, "Mock Interview");
-        String difficulty = answerViewModel.getCurrentInterview().getValue().getDifficulty();
-        //String difficulty = getArguments().getString(ARG_DIFFICULTY, "Medium");
-        int answered = answerViewModel.getCurrentInterview().getValue().getTotalQuestions();
-        //int answered = getArguments().getInt(ARG_ANSWERED_COUNT, 0);
-        //int total = getArguments().getInt(ARG_TOTAL_QUESTIONS, 0);
-        int total = answerViewModel.getCurrentInterview().getValue().getTotalQuestions();
+        UserInterview interview = answerViewModel.getCurrentInterview().getValue();
+        String title = (interview != null && interview.getName() != null) ? interview.getName() : "Mock Interview";
+        String difficulty = (interview != null && interview.getDifficulty() != null) ? interview.getDifficulty() : "Medium";
+        int answered = (interview != null) ? interview.getTotalQuestions() : 0;
+        int total = answered;
         int totalSeconds = 0;
 
         for (QuestionAnswerRequest answer : answerViewModel.getAnswers().values()) {
@@ -132,9 +138,29 @@ public class MockInterviewResult extends Fragment {
     private void setupClickListeners() {
         if (binding == null) return;
 
+        if (binding.btnBack != null) {
+            binding.btnBack.setOnClickListener(v -> navigateToDashboard());
+        }
+
         if (binding.btnViewReview != null) {
+            binding.btnViewReview.setOnClickListener(v -> {
+                answerViewModel.clearViewModel();
+                navigateToReview();
+            });
+        }
+    }
+
+    private void navigateToDashboard() {
+        if (isAdded()) {
             answerViewModel.clearViewModel();
-            binding.btnViewReview.setOnClickListener(v -> navigateToReview());
+            NavOptions navOptions = new NavOptions.Builder()
+                .setPopUpTo(R.id.userDashboardFragment, false)
+                .build();
+            NavHostFragment.findNavController(this).navigate(
+                R.id.action_mockInterviewResult_to_userDashboardFragment,
+                null,
+                navOptions
+            );
         }
     }
 

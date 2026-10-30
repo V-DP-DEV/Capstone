@@ -7,290 +7,310 @@
     android:layout_height="match_parent"
     android:background="#FFF6F8FC">
 
-    <!-- Top Navigation Bar -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/div_topbar"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:background="#FFFCFDFE"
-        android:paddingStart="26dp"
-        android:paddingTop="6dp"
-        android:paddingEnd="26dp"
-        android:paddingBottom="22dp"
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageButton
-            android:id="@+id/btnBack"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Back"
-            android:src="@drawable/ic_back_arrow"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="#FF6C63D6" />
-
-        <TextView
-            android:id="@+id/skills_analysis"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:gravity="center"
-            android:text="Skills analysis"
-            android:textColor="#FF1C1C28"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!-- Skills Category Subbar (Core skills vs Other) -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/div_subbar_skills"
-        android:layout_width="match_parent"
-        android:layout_height="90dp"
-        android:background="#FFFCFDFE"
-        android:paddingStart="26dp"
-        android:paddingEnd="26dp"
-        android:paddingBottom="19dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/div_topbar">
-
-        <TextView
-            android:id="@+id/tv_skills_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
-            android:text="Skills"
-            android:textColor="#FF000000"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <LinearLayout
-            android:id="@+id/container_skill_tabs"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/bg_pill_light"
-            android:orientation="horizontal"
-            android:weightSum="2"
-            android:padding="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_skills_label">
-
-            <TextView
-                android:id="@+id/tab_core_skills"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/bg_circle_pill"
-                android:gravity="center"
-                android:text="Core skills"
-                android:textColor="#FFFFFFFF"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/tab_other_skills"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Other"
-                android:textColor="#FF868DA6"
-                android:textSize="14sp" />
-        </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!-- Filters Subbar Section -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/div_subbar_filters"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#FFFCFDFE"
-        android:paddingStart="26dp"
-        android:paddingEnd="26dp"
-        android:paddingBottom="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/div_subbar_skills">
-
-        <TextView
-            android:id="@+id/tv_filters_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
-            android:text="Filters"
-            android:textColor="#FF000000"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <!-- Selected Filter Indicator Pills -->
-        <LinearLayout
-            android:id="@+id/container_dropdown_pills"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal"
-            android:gravity="center"
-            app:layout_constraintTop_toBottomOf="@id/tv_filters_label">
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/pill_interview_filter"
-                android:layout_width="wrap_content"
-                android:layout_height="25dp"
-                android:layout_marginEnd="12dp"
-                android:background="@drawable/bg_pill_grey"
-                android:gravity="center"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:text="Last 3 interviews"
-                android:textColor="#FFFFFFFF"
-                android:textSize="14sp" />
+            <!-- Top Navigation Bar -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/div_topbar"
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:background="#FFFCFDFE"
+                android:paddingStart="26dp"
+                android:paddingTop="6dp"
+                android:paddingEnd="26dp"
+                android:paddingBottom="22dp">
 
-            <TextView
-                android:id="@+id/pill_skill_filter"
-                android:layout_width="wrap_content"
-                android:layout_height="25dp"
-                android:background="@drawable/bg_pill_grey"
-                android:gravity="center"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:text="Weakest skills"
-                android:textColor="#FFFFFFFF"
-                android:textSize="14sp" />
+                <ImageButton
+                    android:id="@+id/btnBack"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Back"
+                    android:src="@drawable/ic_back_arrow"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="#FF6C63D6" />
+
+                <TextView
+                    android:id="@+id/skills_analysis"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:text="Skills analysis"
+                    android:textColor="#FF1C1C28"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.497"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Skills Category Subbar (Core skills vs Other) -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/div_subbar_skills"
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:background="#FFFCFDFE"
+                android:paddingStart="26dp"
+                android:paddingEnd="26dp"
+                android:paddingBottom="19dp">
+
+                <TextView
+                    android:id="@+id/tv_skills_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:text="Skills"
+                    android:textColor="#FF000000"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <LinearLayout
+                    android:id="@+id/container_skill_tabs"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_pill_light"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:padding="4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_skills_label">
+
+                    <TextView
+                        android:id="@+id/tab_core_skills"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_circle_pill"
+                        android:gravity="center"
+                        android:text="Core skills"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tab_other_skills"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Other"
+                        android:textColor="#FF868DA6"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Filters Subbar Section -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/div_subbar_filters"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFFCFDFE"
+                android:paddingStart="26dp"
+                android:paddingEnd="26dp"
+                android:paddingBottom="16dp">
+
+                <TextView
+                    android:id="@+id/tv_filters_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:text="Filters"
+                    android:textColor="#FF000000"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- Selected Filter Indicator Pills -->
+                <LinearLayout
+                    android:id="@+id/container_dropdown_pills"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    app:layout_constraintTop_toBottomOf="@id/tv_filters_label">
+
+                    <TextView
+                        android:id="@+id/pill_interview_filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:layout_marginEnd="12dp"
+                        android:background="@drawable/bg_pill_grey"
+                        android:gravity="center"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:text="Last 3 interviews"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/pill_skill_filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:background="@drawable/bg_pill_grey"
+                        android:gravity="center"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:text="Weakest skills"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <!-- Interviews 3-Item Toggle Group -->
+                <TextView
+                    android:id="@+id/tv_interviews_sublabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:fontFamily="sans-serif"
+                    android:text="Interviews"
+                    android:textColor="#FF000000"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/container_dropdown_pills" />
+
+                <LinearLayout
+                    android:id="@+id/toggle_interviews_group"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/bg_pill_light"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:padding="4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_interviews_sublabel">
+
+                    <TextView
+                        android:id="@+id/tab_interview_last_3"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_pill_grey"
+                        android:gravity="center"
+                        android:text="Last 3"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tab_interview_last_5"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Last 5"
+                        android:textColor="#FF868DA6"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tab_interview_all"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="All"
+                        android:textColor="#FF868DA6"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <!-- Skills 3-Item Toggle Group -->
+                <TextView
+                    android:id="@+id/tv_skills_sublabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:fontFamily="sans-serif"
+                    android:text="Skills"
+                    android:textColor="#FF000000"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/toggle_interviews_group" />
+
+                <LinearLayout
+                    android:id="@+id/toggle_skills_group"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/bg_pill_light"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:padding="4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_skills_sublabel">
+
+                    <TextView
+                        android:id="@+id/tab_skill_weakest"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_pill_grey"
+                        android:gravity="center"
+                        android:text="Weakest"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tab_skill_strongest"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Strongest"
+                        android:textColor="#FF868DA6"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tab_skill_all"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="All"
+                        android:textColor="#FF868DA6"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- RecyclerView Container for Card Items -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_skills_body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:nestedScrollingEnabled="false"
+                tools:listitem="@layout/item_skill_breakdown_card"
+                android:paddingBottom="24dp"
+                android:clipToPadding="false" />
+
         </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
-        <!-- Interviews 3-Item Toggle Group -->
-        <TextView
-            android:id="@+id/tv_interviews_sublabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:fontFamily="sans-serif"
-            android:text="Interviews"
-            android:textColor="#FF000000"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/container_dropdown_pills" />
-
-        <LinearLayout
-            android:id="@+id/toggle_interviews_group"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/bg_pill_light"
-            android:orientation="horizontal"
-            android:weightSum="3"
-            android:padding="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_interviews_sublabel">
-
-            <TextView
-                android:id="@+id/tab_interview_last_3"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/bg_pill_grey"
-                android:gravity="center"
-                android:text="Last 3"
-                android:textColor="#FFFFFFFF"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/tab_interview_last_5"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Last 5"
-                android:textColor="#FF868DA6"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/tab_interview_all"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="All"
-                android:textColor="#FF868DA6"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <!-- Skills 3-Item Toggle Group -->
-        <TextView
-            android:id="@+id/tv_skills_sublabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:fontFamily="sans-serif"
-            android:text="Skills"
-            android:textColor="#FF000000"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toggle_interviews_group" />
-
-        <LinearLayout
-            android:id="@+id/toggle_skills_group"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/bg_pill_light"
-            android:orientation="horizontal"
-            android:weightSum="3"
-            android:padding="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_skills_sublabel">
-
-            <TextView
-                android:id="@+id/tab_skill_weakest"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/bg_pill_grey"
-                android:gravity="center"
-                android:text="Weakest"
-                android:textColor="#FFFFFFFF"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/tab_skill_strongest"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Strongest"
-                android:textColor="#FF868DA6"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/tab_skill_all"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="All"
-                android:textColor="#FF868DA6"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!-- Bottom Navigation Container -->
+    <!-- Bottom Navigation Bar -->
     <include
         android:id="@+id/bottom_nav_container"
         layout="@layout/component_user_nav_bar"
@@ -299,18 +319,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <!-- RecyclerView Container for Card Items -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_skills_body"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:nestedScrollingEnabled="true"
-        app:layout_constraintBottom_toTopOf="@id/bottom_nav_container"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/div_subbar_filters"
-        tools:listitem="@layout/item_skill_breakdown_card" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
