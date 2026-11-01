@@ -129,7 +129,7 @@
             android:layout_marginStart="100dp"
             android:layout_marginTop="4dp"
             android:fontFamily="sans-serif"
-            android:textColor="#FF08B425"
+            android:textColor="#FF8A8A97"
             android:textSize="13sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@id/hard"
