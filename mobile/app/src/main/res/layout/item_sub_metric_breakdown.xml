@@ -1,25 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="8dp">
+    android:paddingVertical="6dp">
 
     <TextView
         android:id="@+id/tvSubMetricName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:textColor="#FF000000"
         android:textSize="14sp"
-        android:textColor="#FF000000" />
+        app:layout_constraintEnd_toStartOf="@id/tvSubMetricPercentage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvSubMetricPercentage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="#FF08B425"
         android:textSize="14sp"
         android:textStyle="bold"
-        android:textColor="#FF08B425" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</LinearLayout>
+    <!-- Progress Track Background -->
+    <View
+        android:id="@+id/trackSubMetric"
+        android:layout_width="0dp"
+        android:layout_height="6dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/bg_pill_light"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvSubMetricName" />
+
+    <!-- Progress Fill Bar -->
+    <View
+        android:id="@+id/indicatorSubMetric"
+        android:layout_width="0dp"
+        android:layout_height="6dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/bg_indicator_green"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvSubMetricName" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

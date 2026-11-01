@@ -90,7 +90,7 @@ public class InterviewHistoryAdapter extends RecyclerView.Adapter<InterviewHisto
 
         if (summary.isCompletedInTime()) {
             holder.tvCompletionStatus.setText("Completed in time");
-            holder.tvCompletionStatus.setTextColor(Color.parseColor("#FF08B425")); // Green (Good)
+            holder.tvCompletionStatus.setTextColor(Color.parseColor("#FF8A8A97"));
         } else {
             holder.tvCompletionStatus.setText("Completed late");
             holder.tvCompletionStatus.setTextColor(Color.parseColor("#FFF7A93B")); // Orange / Warning

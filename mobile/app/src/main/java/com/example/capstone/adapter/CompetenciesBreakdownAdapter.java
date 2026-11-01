@@ -1,5 +1,7 @@
 package com.example.capstone.adapter;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,16 +49,40 @@ public class CompetenciesBreakdownAdapter extends RecyclerView.Adapter<Competenc
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvSubMetricName, tvSubMetricPercentage;
+        View indicatorSubMetric;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvSubMetricName = itemView.findViewById(R.id.tvSubMetricName);
             tvSubMetricPercentage = itemView.findViewById(R.id.tvSubMetricPercentage);
+            indicatorSubMetric = itemView.findViewById(R.id.indicatorSubMetric);
         }
 
         void bind(CompetenciesBreakdownAnalysis item) {
             if (tvSubMetricName != null) tvSubMetricName.setText(item.getName());
-            if (tvSubMetricPercentage != null) tvSubMetricPercentage.setText(String.format("%.1f%%", item.getPercentage()));
+            double raw = item.getPercentage();
+            double pct = raw <= 1.0 ? raw * 100.0 : raw;
+            if (tvSubMetricPercentage != null) {
+                tvSubMetricPercentage.setText(String.format("%.0f%%", pct));
+                tvSubMetricPercentage.setTextColor(getColorForPercentage(pct));
+            }
+            if (indicatorSubMetric != null) {
+                int color = getColorForPercentage(pct);
+                indicatorSubMetric.setBackgroundTintList(ColorStateList.valueOf(color));
+                indicatorSubMetric.setPivotX(0f);
+                float scale = (float) Math.max(0.0, Math.min(1.0, pct / 100.0));
+                indicatorSubMetric.setScaleX(scale);
+            }
+        }
+
+        private int getColorForPercentage(double percentage) {
+            if (percentage < 40.0) {
+                return Color.parseColor("#FFEF5350");
+            } else if (percentage < 70.0) {
+                return Color.parseColor("#FFF7A93B");
+            } else {
+                return Color.parseColor("#FF08B425");
+            }
         }
     }
 }
