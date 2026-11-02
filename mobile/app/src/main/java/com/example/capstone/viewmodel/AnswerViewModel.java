@@ -253,6 +253,14 @@ public class AnswerViewModel extends ViewModel {
         }
     }
 
+    public String getSavedAnswerForQuestion(UserQuestion question) {
+        if (question == null) return "";
+        Integer questionId = parseQuestionId(question.getId());
+        if (questionId == null) return "";
+        QuestionAnswerRequest request = answers.get(questionId);
+        return request != null ? request.getAnswer() : "";
+    }
+
     public void submitInterview() {
         SubmitInterviewAttemptRequest request =
             buildSubmissionRequest();
@@ -289,7 +297,12 @@ public class AnswerViewModel extends ViewModel {
 
 
     public SubmitInterviewAttemptRequest buildSubmissionRequest() {
-        int interviewId = getCurrentInterview().getValue().getId();
+        UserInterview interview = getCurrentInterview().getValue();
+        if (interview == null) {
+            error.setValue("Interview session data is missing.");
+            return null;
+        }
+        int interviewId = interview.getId();
         List<QuestionAnswerRequest> submissionAnswers =
             new ArrayList<>();
 

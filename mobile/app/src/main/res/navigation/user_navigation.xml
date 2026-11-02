@@ -126,6 +126,11 @@
     <action
         android:id="@+id/action_mockInterviewResult_to_reviewQuestionFragment"
         app:destination="@id/reviewQuestionFragment" />
+    <action
+        android:id="@+id/action_mockInterviewResult_to_userDashboardFragment"
+        app:destination="@id/userDashboardFragment"
+        app:popUpTo="@id/userDashboardFragment"
+        app:popUpToInclusive="false" />
   </fragment>
 
   <!-- Review Interview Screen -->

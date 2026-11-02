@@ -1,6 +1,5 @@
 package com.example.capstone.adapter;
 
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.capstone.R;
@@ -19,9 +19,9 @@ import java.util.List;
 
 /**
  * RecyclerView Adapter responsible for displaying competency feedback cards and skill breakdown metrics.
- * Maps data from domain model {@link CompetenciesAnalysis} to card items within a RecyclerView.
+ * Maps data from domain model {@link CompetenciesAnalysis} to card items within a RecyclerView dynamically
+ * supporting any number of sub-metrics (3 or more) pulled from the backend.
  */
-
 public class CompetenciesAdapter extends RecyclerView.Adapter<CompetenciesAdapter.ViewHolder> {
 
     private List<CompetenciesAnalysis> competenciesList = new ArrayList<>();
@@ -49,55 +49,33 @@ public class CompetenciesAdapter extends RecyclerView.Adapter<CompetenciesAdapte
         return competenciesList.size();
     }
 
-
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvCardTitle, tvCardStatus, tvCardPercentageMain;
-
-
-        TextView tvLabelClarity, tvValueClarity;
-        View indicatorClarity;
-
-
-        TextView tvLabelStructure, tvValueStructure;
-        View indicatorStructure;
-
-
-        TextView tvLabelVocabulary, tvValueVocabulary;
-        View indicatorVocabulary;
+        RecyclerView rvSubMetrics;
+        CompetenciesBreakdownAdapter breakdownAdapter;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvCardTitle = itemView.findViewById(R.id.card_title);
             tvCardStatus = itemView.findViewById(R.id.card_status);
             tvCardPercentageMain = itemView.findViewById(R.id.card_percentage_main);
+            rvSubMetrics = itemView.findViewById(R.id.rv_sub_metrics);
 
-
-            tvLabelClarity = itemView.findViewById(R.id.label_clarity);
-            tvValueClarity = itemView.findViewById(R.id.value_clarity);
-            indicatorClarity = itemView.findViewById(R.id.indicator_clarity);
-
-
-            tvLabelStructure = itemView.findViewById(R.id.label_structure);
-            tvValueStructure = itemView.findViewById(R.id.value_structure);
-            indicatorStructure = itemView.findViewById(R.id.indicator_structure);
-
-
-            tvLabelVocabulary = itemView.findViewById(R.id.label_vocabulary);
-            tvValueVocabulary = itemView.findViewById(R.id.value_vocabulary);
-            indicatorVocabulary = itemView.findViewById(R.id.indicator_vocabulary);
+            if (rvSubMetrics != null) {
+                rvSubMetrics.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
+                breakdownAdapter = new CompetenciesBreakdownAdapter();
+                rvSubMetrics.setAdapter(breakdownAdapter);
+            }
         }
 
         private double getNormalizedPercentage(double rawValue) {
-
             return rawValue <= 1.0 ? rawValue * 100.0 : rawValue;
         }
-
 
         void bind(CompetenciesAnalysis item) {
             if (tvCardTitle != null) {
                 tvCardTitle.setText(item.getName());
             }
-
 
             double mainPercentage = getNormalizedPercentage(item.getPercentage());
 
@@ -110,51 +88,10 @@ public class CompetenciesAdapter extends RecyclerView.Adapter<CompetenciesAdapte
             }
 
             List<CompetenciesBreakdownAnalysis> breakdowns = item.getCompetenciesBreakdownAnalysisList();
-            if (breakdowns != null) {
-                if (breakdowns.size() > 0) {
-                    CompetenciesBreakdownAnalysis b0 = breakdowns.get(0);
-                    double p0 = getNormalizedPercentage(b0.getPercentage());
-                    if (tvLabelClarity != null && b0.getName() != null)
-                        tvLabelClarity.setText(b0.getName());
-                    if (tvValueClarity != null) tvValueClarity.setText(String.format("%.0f%%", p0));
-                    applyDynamicIndicator(indicatorClarity, p0);
-                }
-
-                if (breakdowns.size() > 1) {
-                    CompetenciesBreakdownAnalysis b1 = breakdowns.get(1);
-                    double p1 = getNormalizedPercentage(b1.getPercentage());
-                    if (tvLabelStructure != null && b1.getName() != null)
-                        tvLabelStructure.setText(b1.getName());
-                    if (tvValueStructure != null)
-                        tvValueStructure.setText(String.format("%.0f%%", p1));
-                    applyDynamicIndicator(indicatorStructure, p1);
-                }
-
-                if (breakdowns.size() > 2) {
-                    CompetenciesBreakdownAnalysis b2 = breakdowns.get(2);
-                    double p2 = getNormalizedPercentage(b2.getPercentage());
-                    if (tvLabelVocabulary != null && b2.getName() != null)
-                        tvLabelVocabulary.setText(b2.getName());
-                    if (tvValueVocabulary != null)
-                        tvValueVocabulary.setText(String.format("%.0f%%", p2));
-                    applyDynamicIndicator(indicatorVocabulary, p2);
-                }
+            if (breakdownAdapter != null) {
+                breakdownAdapter.setBreakdownList(breakdowns);
             }
         }
-
-        private void applyDynamicIndicator(View indicator, double percentage) {
-            if (indicator == null) return;
-
-
-            int dynamicColor = getColorForPercentage(percentage);
-            indicator.setBackgroundTintList(ColorStateList.valueOf(dynamicColor));
-
-
-            indicator.setPivotX(0f);
-            float scale = (float) Math.max(0.0, Math.min(1.0, percentage / 100.0));
-            indicator.setScaleX(scale);
-        }
-
 
         private int getColorForPercentage(double percentage) {
             if (percentage < 40.0) {

@@ -17,6 +17,7 @@ import com.example.capstone.AppContainer;
 import com.example.capstone.MyApplication;
 import com.example.capstone.R;
 import com.example.capstone.databinding.FragmentMockInterviewInstructionsBinding;
+import com.example.capstone.domainModels.UserInterview;
 import com.example.capstone.repository.IAuthRepository;
 import com.example.capstone.repository.IInterviewAttemptsRepository;
 import com.example.capstone.repository.IInterviewRepository;
@@ -134,10 +135,12 @@ public class MockInterviewInstructionsFragment extends Fragment {
      * Extracts bundle arguments and binds the interview metadata to the corresponding instruction TextViews.
      */
     private void displayInstructionsDetails() {
-        String name = answerViewModel.getCurrentInterview().getValue().getName();
-        String difficulty = answerViewModel.getCurrentInterview().getValue().getDifficulty();
-        int questionCount = answerViewModel.getCurrentInterview().getValue().getTotalQuestions();
-        String duration = String.valueOf(answerViewModel.getCurrentInterview().getValue().getDuration());
+        UserInterview interview = answerViewModel.getCurrentInterview().getValue();
+        if (interview == null) return;
+        String name = interview.getName() != null ? interview.getName() : "Mock Interview";
+        String difficulty = interview.getDifficulty() != null ? interview.getDifficulty() : "Medium";
+        int questionCount = interview.getTotalQuestions();
+        String duration = String.valueOf(interview.getDuration());
         String inputType = "Mic";
 
         if (binding.tvInterviewName != null) {

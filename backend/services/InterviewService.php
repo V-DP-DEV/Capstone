@@ -34,7 +34,7 @@
         //no further checks needed
         if($this->requestContext->getRole() === 'USER'){
             //get interviews
-            $interviews = $this->interviewRepository->getUserInterviews($categoryId,$name,$difficulty);
+            $interviews = $this->interviewRepository->getUserInterviews($this->requestContext->getUserId(),$categoryId,$name,$difficulty);
             //extract interview ids
             $interviewIds = array_column($interviews, 'id');
             //get interview question types

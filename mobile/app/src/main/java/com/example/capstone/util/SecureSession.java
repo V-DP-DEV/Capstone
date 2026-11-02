@@ -29,6 +29,7 @@ public class SecureSession {
   private static final String KEY_REFRESH_TOKEN ="refresh_token";
   private static final String KEY_REFRESH_TOKEN_IV = "refresh_iv";
   private static final String KEY_REFRESH_EXPIRATION = "refresh_expiration";
+  private static final long EXPIRY_BUFFER_MS  = 20000L;
   private final MutableLiveData<Boolean> loggedIn =
       new MutableLiveData<>();
 
@@ -67,7 +68,7 @@ public class SecureSession {
   }
 
   public boolean isAccessTokenExpired(){
-    return getSessionExpiration()<=System.currentTimeMillis();
+    return getSessionExpiration()<=(System.currentTimeMillis()+EXPIRY_BUFFER_MS);
   }
   public boolean isRefreshExpired(){
     return getRefreshExpiration()<=System.currentTimeMillis();

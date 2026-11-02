@@ -127,7 +127,17 @@ public class ApiClient {
         });
         //if any other errors occured handle as network errors
       } catch (Exception e) {
-        mainHandler.post(()->{callback.onGeneralError(e);});
+        Exception error = e;
+
+        if (e instanceof IOException) {
+          error = new NetworkException(e);
+        }
+
+        Exception finalError = error;
+
+        mainHandler.post(() -> {
+          callback.onGeneralError(finalError);
+        });
       }
       //start thread
     }).start();

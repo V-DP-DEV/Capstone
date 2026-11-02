@@ -48,7 +48,7 @@ public class AuthActivity extends AppCompatActivity {
 
       setSupportActionBar(binding.toolbar.commonToolbar);
 
-
+//
 
       if (getSupportActionBar() != null) {
         getSupportActionBar().setDisplayShowTitleEnabled(false);

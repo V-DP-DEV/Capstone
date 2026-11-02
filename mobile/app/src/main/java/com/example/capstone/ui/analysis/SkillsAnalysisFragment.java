@@ -22,6 +22,7 @@ import com.example.capstone.adapter.CompetenciesAdapter;
 import com.example.capstone.adapter.ConceptAdapter;
 import com.example.capstone.databinding.FragmentSkillsAnalysisBinding;
 import com.example.capstone.repository.IAnalyticsRepository;
+import com.example.capstone.ui.BaseActivity;
 import com.example.capstone.util.BottomNavUtils;
 import com.example.capstone.viewmodel.SkillsAnalysisViewModel;
 import com.example.capstone.viewmodel.ViewModelFactory;
@@ -148,9 +149,11 @@ public class SkillsAnalysisFragment extends Fragment {
 
         viewModel.getIsCoreSkillsSelected().observe(getViewLifecycleOwner(), this::updateTabSelectionUI);
 
-        viewModel.getError().observe(getViewLifecycleOwner(), errorMsg -> {
-            if (errorMsg != null && !errorMsg.isEmpty()) {
-                Toast.makeText(requireContext(), errorMsg, Toast.LENGTH_SHORT).show();
+        viewModel.getError().observe(getViewLifecycleOwner(), error -> {
+            if (error != null && !error.isEmpty()) {
+                BaseActivity baseActivity = ((BaseActivity) getActivity());
+                baseActivity.showAlertDialog("Error occured",error,()->{
+                });
             }
         });
     }
